@@ -1,0 +1,146 @@
+# ==========================================
+# Dependencies & Package Managers
+# ==========================================
+node_modules/
+/.pnp
+.pnp.js
+.yarn/
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+yarn-debug.log*
+yarn-error.log*
+yarn-standalone.js
+npm-debug.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+# Never commit credentials, DB URLs, Cloudinary keys, or JWT secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env.local
+
+# ==========================================
+# Node.js & Express Backend
+# ==========================================
+# Build outputs
+dist/
+build/
+out/
+*.seed
+
+# Server logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Prisma / Database
+# Un-comment the line below if you generate local SQLite test databases
+# *.db
+# *.db-journal
+
+# ==========================================
+# React Native & Mobile Apps
+# ==========================================
+# Metro Bundler cache
+.metro-health-check*
+metro-bundler-build/
+
+# Expo (if using Expo)
+.expo/
+.expo-shared/
+web-build/
+*.apk
+*.aab
+*.ipa
+
+# React Native CLI (iOS & Android native build outputs)
+/android/app/build/
+/android/.gradle/
+/android/captures/
+/android/app/debug/
+/android/app/release/
+/ios/build/
+/ios/Pods/
+/ios/DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xcworkspace
+!default.xcworkspace
+
+# Fastlane (iOS/Android deployment automation)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output
+
+# ==========================================
+# Testing & Coverage
+# ==========================================
+coverage/
+.nyc_output/
+.jest/
+*.lcov
+
+# ==========================================
+# IDEs & Code Editors
+# ==========================================
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains / WebStorm / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Xcode
+*.moved-aside
+
+# ==========================================
+# Operating System Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==========================================
+# Temporary Files & Archives
+# ==========================================
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.zip
+*.tar.gz
+*.rar
