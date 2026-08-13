@@ -6,3 +6,189 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  firstName String
+  lastName  String
+  email     String?  @unique
+  phone     String?  @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Care Circle relationships
+  patientCircles CareCircle[] @relation("CirclePatient")
+  ownedCircles   CareCircle[] @relation("CircleOwner")
+
+  // Memberships in other people's Care Circles
+  memberships CareCircleMember[]
+
+  // Invitations sent by this user
+  sentInvitations Invitation[] @relation("InvitationSender")
+
+  // Consents granted by this user
+  consentsGranted Consent[] @relation("ConsentGranter")
+
+  // Audit actions performed by this user
+  auditLogs AuditLog[]
+}
+
+model CareCircle {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  patientId String   @db.Uuid
+  ownerId   String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient     User               @relation("CirclePatient", fields: [patientId], references: [id])
+  owner       User               @relation("CircleOwner", fields: [ownerId], references: [id])
+  memberships CareCircleMember[]
+  invitations Invitation[]
+  consents    Consent[]
+  auditLogs   AuditLog[]
+
+  @@index([patientId])
+  @@index([ownerId])
+}
+
+model CareCircleMember {
+  id        String       @id @default(uuid()) @db.Uuid
+  circleId  String       @db.Uuid
+  userId    String       @db.Uuid
+  roleId    String       @db.Uuid
+  status    MemberStatus @default(ACTIVE)
+  joinedAt  DateTime     @default(now())
+  revokedAt DateTime?
+
+  circle   CareCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     Role       @relation(fields: [roleId], references: [id])
+  consents Consent[]
+
+  @@unique([circleId, userId])
+  @@index([userId])
+  @@index([circleId])
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        RoleName @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  memberships     CareCircleMember[]
+  rolePermissions RolePermission[]
+  invitations     Invitation[]
+}
+
+model Permission {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  roleId       String @db.Uuid
+  permissionId String @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Invitation {
+  id          String           @id @default(uuid()) @db.Uuid
+  circleId    String           @db.Uuid
+  invitedById String           @db.Uuid
+  roleId      String           @db.Uuid
+  email       String?
+  phone       String?
+  tokenHash   String           @unique
+  status      InvitationStatus @default(PENDING)
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime         @default(now())
+
+  circle    CareCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  invitedBy User       @relation("InvitationSender", fields: [invitedById], references: [id])
+  role      Role       @relation(fields: [roleId], references: [id])
+
+  @@index([circleId])
+  @@index([email])
+  @@index([phone])
+  @@index([expiresAt])
+}
+
+model Consent {
+  id          String        @id @default(uuid()) @db.Uuid
+  circleId    String        @db.Uuid
+  memberId    String        @db.Uuid
+  grantedById String        @db.Uuid
+  status      ConsentStatus @default(GRANTED)
+  scope       Json
+  grantedAt   DateTime      @default(now())
+  revokedAt   DateTime?
+  expiresAt   DateTime?
+
+  circle    CareCircle       @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  member    CareCircleMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  grantedBy User             @relation("ConsentGranter", fields: [grantedById], references: [id])
+
+  @@index([circleId])
+  @@index([memberId])
+}
+
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  actorId      String   @db.Uuid
+  circleId     String?  @db.Uuid
+  action       String
+  resourceType String
+  resourceId   String?
+  metadata     Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  actor  User        @relation(fields: [actorId], references: [id])
+  circle CareCircle? @relation(fields: [circleId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([circleId])
+  @@index([resourceType, resourceId])
+  @@index([createdAt])
+}
+
+enum RoleName {
+  OWNER
+  CAREGIVER_FULL
+  CAREGIVER_VIEW
+  PROFESSIONAL
+  PHYSICIAN
+}
+
+enum MemberStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  REVOKED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+enum ConsentStatus {
+  GRANTED
+  REVOKED
+  EXPIRED
+}
