@@ -1,4 +1,4 @@
-import prisma from "../src/config/prisma";
+const prisma = require('../src/config/prisma');
 
 const roles = [
     {
@@ -22,7 +22,40 @@ const roles = [
         description: "Physician access",
     },
 ];
-
+const rolePermissionsMapping = {
+    OWNER: [
+        "circle:view", "circle:update", "circle:manage_members", "circle:revoke_member",
+        "patient:view", "patient:update",
+        "vitals:view", "vitals:create",
+        "medication:view", "medication:create", "medication:update",
+        "task:view", "task:create", "task:complete"
+    ],
+    CAREGIVER_FULL: [
+        "circle:view",
+        "patient:view", "patient:update",
+        "vitals:view", "vitals:create",
+        "medication:view", "medication:create", "medication:update",
+        "task:view", "task:create", "task:complete"
+    ],
+    CAREGIVER_VIEW: [
+        "circle:view",
+        "patient:view",
+        "vitals:view",
+        "medication:view",
+        "task:view"
+    ],
+     PROFESSIONAL: [
+    "circle:view",
+    "vitals:view", "vitals:create",
+    "task:view", "task:create", "task:complete"
+  ],
+  PHYSICIAN: [
+    "circle:view",
+    "vitals:view", "vitals:create",
+    "medication:view", "medication:create", "medication:update",
+    "task:view", "task:create", "task:complete"
+  ]
+}
 const permissions = [
     ["circle:view", "View care circle"],
     ["circle:update", "Update care circle"],
@@ -69,6 +102,38 @@ async function main() {
                 description,
             },
         });
+    }
+    for(const[roleName,permissionKeys]of Object.entries(rolePermissionsMapping)){
+        const role = await prisma.role.findUnique({
+            where:{name:roleName},
+        });
+        if(!role){
+            console.warn(`Warning: Role '${roleName}' not found in database.`);
+            continue;
+        }
+        for(const key of permissionKeys){
+            const permission = await prisma.permission.findUnique({
+                where:{key},
+            });
+            if(!permission){
+                console.warn(`Warning: Permission '${key}' not found in database.`);
+                continue;
+            }
+            await prisma.rolePermission.upsert({
+                where:{
+                    roleId_permissionId:{
+                        roleId:role.id,
+                        permissionId:permission.id,
+                    },
+                },
+                update:{},
+                create:{
+                    roleId:role.id,
+                    permissionId:permission.id,
+                },
+            });
+            console.log(`Assigned permission '${key}' to role '${roleName}'.`);
+        }
     }
 
     console.log("RBAC seed completed.");
