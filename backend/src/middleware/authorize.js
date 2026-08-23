@@ -136,8 +136,81 @@ const requireOwnerOrPermission = (permissionKey) => {
   };
 };
 
+const requireCircleAccess = (permissionKey) => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const circleId = req.params.id || req.body.circleId || req.query.circleId;
+      if (!circleId) {
+        return res.status(400).json({ message: "Circle id is required" });
+      }
+
+      const circle = await prisma.careCircle.findUnique({
+        where: { id: circleId },
+      });
+
+      if (!circle) {
+        return res.status(404).json({ message: "Care circle not found" });
+      }
+
+      // Dignity-first/Consent-first check: The patient always has access to see/revoke members
+      if (circle.patientId === req.user.id) {
+        return next();
+      }
+
+      // Check membership and permissions
+      const membership = await prisma.careCircleMember.findFirst({
+        where: {
+          circleId,
+          userId: req.user.id,
+          status: "ACTIVE",
+        },
+        include: {
+          role: {
+            include: {
+              rolePermissions: {
+                include: {
+                  permission: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!membership) {
+        return res.status(403).json({ message: "You are not a member of this care circle" });
+      }
+
+      if (permissionKey) {
+        const permissions = membership.role.rolePermissions.map(
+          (rp) => rp.permission.key
+        );
+
+        if (!permissions.includes(permissionKey)) {
+          return res.status(403).json({
+            message: `Access denied. Missing permission: ${permissionKey}`,
+          });
+        }
+      }
+
+      req.member = membership;
+      next();
+    } catch (error) {
+      return res.status(500).json({
+        message: "Authorization check failed",
+        error: error.message,
+      });
+    }
+  };
+};
+
 module.exports = {
   requireRole,
   requirePermission,
   requireOwnerOrPermission,
+  requireCircleAccess,
 };

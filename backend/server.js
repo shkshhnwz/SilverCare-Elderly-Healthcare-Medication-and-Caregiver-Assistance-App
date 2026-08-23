@@ -5,6 +5,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const CareCircleRoutes = require('./src/modules/care-circle/careCircle.routes');
+const AuthRoutes = require('./src/modules/auth/auth.routes');
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'SilverCare backend running' });
 });
 
+app.use('/api/auth', AuthRoutes);
 app.use('/api/care-circles', CareCircleRoutes);
 
 const PORT = process.env.PORT || 5000;
