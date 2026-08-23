@@ -32,6 +32,11 @@ model User {
 
   // Audit actions performed by this user
   auditLogs AuditLog[]
+
+  // Medication relationships
+  medicationsAsPatient Medication[]     @relation("MedicationPatient")
+  medicationsCreated   Medication[]     @relation("MedicationCreator")
+  medicationDoseEvents MedicationDose[] @relation("DoseAcknowledgedBy")
 }
 
 model CareCircle {
@@ -48,9 +53,60 @@ model CareCircle {
   invitations Invitation[]
   consents    Consent[]
   auditLogs   AuditLog[]
+  medications Medication[]
 
   @@index([patientId])
   @@index([ownerId])
+}
+
+model Medication {
+  id                String   @id @default(uuid()) @db.Uuid
+  patientId         String   @db.Uuid
+  createdById       String   @db.Uuid
+  careCircleId      String?  @db.Uuid
+  medicationName    String
+  dosage            String
+  route             String
+  frequencyRRule    String
+  prescribingDoctor String
+  refillQuantity    Int
+  refillThresholdDays Int    @default(5)
+  startsAt          DateTime @default(now())
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  patient   User       @relation("MedicationPatient", fields: [patientId], references: [id])
+  createdBy User       @relation("MedicationCreator", fields: [createdById], references: [id])
+  careCircle CareCircle? @relation(fields: [careCircleId], references: [id], onDelete: SetNull)
+  doses     MedicationDose[]
+
+  @@index([patientId])
+  @@index([createdById])
+  @@index([careCircleId])
+  @@index([active])
+}
+
+model MedicationDose {
+  id             String                   @id @default(uuid()) @db.Uuid
+  medicationId   String                   @db.Uuid
+  scheduledAt    DateTime
+  state          MedicationDoseState      @default(SCHEDULED)
+  escalationStep Int                      @default(0)
+  acknowledgedById String?                @db.Uuid
+  acknowledgedAt DateTime?
+  confirmationType MedicationConfirmationType?
+  evidenceUrl    String?
+  note           String?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  medication     Medication               @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  acknowledgedBy User?                    @relation("DoseAcknowledgedBy", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@index([medicationId])
+  @@index([scheduledAt])
+  @@index([state])
 }
 
 model CareCircleMember {
@@ -191,4 +247,19 @@ enum ConsentStatus {
   GRANTED
   REVOKED
   EXPIRED
+}
+
+enum MedicationDoseState {
+  SCHEDULED
+  NOTIFIED
+  CONFIRMED_TAKEN
+  CONFIRMED_SKIPPED
+  MISSED
+  ESCALATED
+}
+
+enum MedicationConfirmationType {
+  TAP
+  PHOTO
+  VOICE
 }
