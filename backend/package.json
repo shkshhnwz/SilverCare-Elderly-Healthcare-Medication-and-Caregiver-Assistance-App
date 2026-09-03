@@ -13,7 +13,8 @@
     "test:care-circle": "node test/careCircle.test.js",
     "test:geofence": "node test/geofence.test.js",
     "test:emergency": "node test/emergency.test.js",
-    "test:appointments": "node test/appointments.test.js"
+    "test:appointments": "node test/appointments.test.js",
+    "test:care-plan": "node test/carePlan.test.js"
   },
   "keywords": [],
   "author": "",
