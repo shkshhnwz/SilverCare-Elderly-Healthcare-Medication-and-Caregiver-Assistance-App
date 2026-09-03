@@ -54,6 +54,14 @@ model User {
   trackingSessionsInitiated TrackingSession[] @relation("TrackingSessionInitiator")
   locationAlerts            LocationAlert[]   @relation("LocationAlertPatient")
   locationAlertsResolved    LocationAlert[]   @relation("LocationAlertResolver")
+
+  // Emergency & SOS relationships
+  emergenciesAsPatient      EmergencyEvent[]            @relation("EmergencyPatient")
+  emergenciesAcknowledged   EmergencyEvent[]            @relation("EmergencyAcknowledger")
+  emergenciesResolved       EmergencyEvent[]            @relation("EmergencyResolver")
+  escalationPoliciesCreated EmergencyEscalationPolicy[] @relation("EscalationPolicyCreator")
+  escalationTierContacts    EscalationTier[]            @relation("EscalationTierContact")
+
   
 }
 
@@ -513,4 +521,118 @@ model LocationAlert {
   resolvedBy        User?                 @relation("LocationAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
 
   @@index([patientId, status])
+}
+
+enum EmergencyEventType {
+  ONE_TAP_SOS
+  FALL_DETECTED
+  MANUAL_PANIC
+}
+
+enum EmergencyStatus {
+  COUNTDOWN_ACTIVE         // 30s countdown window for fall detection
+  CANCELLED_FALSE_ALARM    // Cancelled by patient before countdown ended
+  ACTIVE_EMERGENCY         // Live active emergency triggering escalation
+  ACKNOWLEDGED             // Caregiver acknowledged; escalation paused
+  RESOLVED                 // Emergency safely handled
+}
+
+enum EscalationChannel {
+  PUSH_NOTIFICATION
+  SMS
+  VOICE_CALL
+}
+
+enum NotificationDeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  ACKNOWLEDGED
+  FAILED
+}
+
+model EmergencyEscalationPolicy {
+  id          String           @id @default(uuid()) @db.Uuid
+  patientId   String           @db.Uuid
+  name        String           @default("Default Family Escalation Policy")
+  isActive    Boolean          @default(true)
+  createdById String           @db.Uuid
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  createdBy   User             @relation("EscalationPolicyCreator", fields: [createdById], references: [id])
+  tiers       EscalationTier[]
+
+  @@index([patientId, isActive])
+}
+
+model EscalationTier {
+  id             String                    @id @default(uuid()) @db.Uuid
+  policyId       String                    @db.Uuid
+  tierOrder      Int                       // 1 = First line, 2 = Secondary, 3 = EMS/Professional
+  contactUserId  String?                   @db.Uuid
+  customName     String?                   // Fallback name if contact is external
+  customPhone    String?                   // Fallback phone number
+  channel        EscalationChannel         @default(PUSH_NOTIFICATION)
+  timeoutMinutes Int                       @default(3) // Timeout before escalating to next tier
+
+  policy         EmergencyEscalationPolicy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  contactUser    User?                     @relation("EscalationTierContact", fields: [contactUserId], references: [id], onDelete: SetNull)
+
+  @@unique([policyId, tierOrder])
+  @@index([policyId])
+}
+
+model EmergencyEvent {
+  id                   String                     @id @default(uuid()) @db.Uuid
+  patientId            String                     @db.Uuid
+  eventType            EmergencyEventType
+  status               EmergencyStatus            @default(ACTIVE_EMERGENCY)
+  currentTierIndex     Int                        @default(1)
+
+  // Live location coordinates during active event
+  latitude             Float?
+  longitude            Float?
+  accuracyMeters       Float?
+  mapUrl               String?                    // Direct Google Maps URL
+
+  // Countdown for fall detection heuristics
+  countdownSeconds     Int                        @default(0)
+  countdownExpiresAt   DateTime?
+
+  // Fall sensor heuristic telemetry (accelerometer impact vector)
+  accelerometerVector  Json?
+
+  acknowledgedById     String?                    @db.Uuid
+  acknowledgedAt       DateTime?
+  resolvedById         String?                    @db.Uuid
+  resolvedAt           DateTime?
+  resolutionNotes      String?
+
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+
+  patient              User                       @relation("EmergencyPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  acknowledgedBy       User?                      @relation("EmergencyAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  resolvedBy           User?                      @relation("EmergencyResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  notifications        EmergencyNotificationLog[]
+
+  @@index([patientId, status])
+  @@index([status, currentTierIndex])
+}
+
+model EmergencyNotificationLog {
+  id              String                     @id @default(uuid()) @db.Uuid
+  eventId         String                     @db.Uuid
+  tierOrder       Int
+  recipientName   String
+  recipientTarget String                     // Phone number, push token, or email
+  channel         EscalationChannel
+  deliveryStatus  NotificationDeliveryStatus @default(PENDING)
+  responsePayload Json?
+  dispatchedAt    DateTime                   @default(now())
+
+  event           EmergencyEvent             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
 }

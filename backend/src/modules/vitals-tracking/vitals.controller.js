@@ -4,7 +4,7 @@ const {
   getPatientThresholdsService,
   getVitalTrendsService,
   resolveAlertService,
-} = require("./vitals.service");
+} = require("./vitals.services");
 
 const recordVitalReading = async (req, res, next) => {
   try {
