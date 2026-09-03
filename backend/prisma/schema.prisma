@@ -45,6 +45,16 @@ model User {
   vitalThresholdsSet      VitalThreshold[] @relation("ThresholdSetBy")
   vitalAlerts             VitalAlert[]     @relation("AlertPatient")
   vitalAlertsAcknowledged VitalAlert[]     @relation("AlertAcknowledgedBy")
+
+   // Location & Geofencing relationships
+  safeZonesCreated          SafeZone[]        @relation("SafeZoneCreator")
+  safeZonesAsPatient        SafeZone[]        @relation("SafeZonePatient")
+  locationPings             LocationPing[]    @relation("LocationPingPatient")
+  trackingSessionsAsPatient TrackingSession[] @relation("TrackingSessionPatient")
+  trackingSessionsInitiated TrackingSession[] @relation("TrackingSessionInitiator")
+  locationAlerts            LocationAlert[]   @relation("LocationAlertPatient")
+  locationAlertsResolved    LocationAlert[]   @relation("LocationAlertResolver")
+  
 }
 
 
@@ -402,3 +412,105 @@ model VitalAlert {
   @@index([readingId])
 }
 
+enum GeofenceAlertSeverity {
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum GeofenceAlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+enum TrackingSessionTrigger {
+  EMERGENCY_BREACH
+  MANUAL_CAREGIVER_REQUEST
+  PATIENT_SOS
+}
+
+enum TrackingSessionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model SafeZone {
+  id           String    @id @default(uuid()) @db.Uuid
+  patientId    String    @db.Uuid
+  name         String    // e.g. "Home Sanctuary", "Morning Walk Route"
+  latitude     Float
+  longitude    Float
+  radiusMeters Float     // e.g. 100 (meters) for home, 500 for park walk
+  isActive     Boolean   @default(true)
+  createdById  String    @db.Uuid
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  patient      User      @relation("SafeZonePatient", fields: [patientId], references: [id], onDelete: Cascade)
+  createdBy    User      @relation("SafeZoneCreator", fields: [createdById], references: [id])
+
+  @@index([patientId, isActive])
+}
+
+model TrackingSession {
+  id             String                 @id @default(uuid()) @db.Uuid
+  patientId      String                 @db.Uuid
+  initiatedById  String?                @db.Uuid
+  triggerReason  TrackingSessionTrigger
+  status         TrackingSessionStatus  @default(ACTIVE)
+  startedAt      DateTime               @default(now())
+  expiresAt      DateTime               // Privacy protection: hard cutoff timestamp (e.g., +30 mins)
+  disclosureSent Boolean                @default(true) // Transparent disclosure notice delivered to patient
+  notes          String?
+
+  patient        User                   @relation("TrackingSessionPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  initiatedBy    User?                  @relation("TrackingSessionInitiator", fields: [initiatedById], references: [id], onDelete: SetNull)
+  pings          LocationPing[]
+  alerts         LocationAlert[]
+
+  @@index([patientId, status])
+}
+
+model LocationPing {
+  id                String           @id @default(uuid()) @db.Uuid
+  patientId         String           @db.Uuid
+  trackingSessionId String?          @db.Uuid
+  latitude          Float
+  longitude         Float
+  accuracyMeters    Float?
+  batteryLevel      Int?
+  isInsideSafeZone  Boolean          @default(true)
+  recordedAt        DateTime         @default(now())
+
+  patient           User             @relation("LocationPingPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  trackingSession   TrackingSession? @relation(fields: [trackingSessionId], references: [id], onDelete: SetNull)
+
+  @@index([patientId, recordedAt])
+  @@index([trackingSessionId])
+}
+
+model LocationAlert {
+  id                String                @id @default(uuid()) @db.Uuid
+  patientId         String                @db.Uuid
+  trackingSessionId String?               @db.Uuid
+  severity          GeofenceAlertSeverity @default(CRITICAL)
+  status            GeofenceAlertStatus   @default(ACTIVE)
+  lastKnownLat      Float
+  lastKnownLng      Float
+  mapUrl            String                // Direct Google Maps link for first responders / caregivers
+  driftDistanceM    Float                 // Meters drifted beyond the nearest safe zone border
+  message           String
+  resolvedById      String?               @db.Uuid
+  resolvedAt        DateTime?
+  resolutionNotes   String?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  patient           User                  @relation("LocationAlertPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  trackingSession   TrackingSession?      @relation(fields: [trackingSessionId], references: [id], onDelete: SetNull)
+  resolvedBy        User?                 @relation("LocationAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([patientId, status])
+}
