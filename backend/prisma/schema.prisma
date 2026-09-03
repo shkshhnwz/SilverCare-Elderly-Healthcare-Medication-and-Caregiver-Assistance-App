@@ -62,7 +62,12 @@ model User {
   escalationPoliciesCreated EmergencyEscalationPolicy[] @relation("EscalationPolicyCreator")
   escalationTierContacts    EscalationTier[]            @relation("EscalationTierContact")
 
-  
+    // Appointment relationships
+  appointmentsAsPatient       Appointment[]         @relation("AppointmentPatient")
+  appointmentsAccompanying    Appointment[]         @relation("AppointmentAccompanyingCaregiver")
+  appointmentsCreated         Appointment[]         @relation("AppointmentCreator")
+  postAppointmentNotesCreated PostAppointmentNote[] @relation("PostNoteCreator")
+
 }
 
 
@@ -635,4 +640,86 @@ model EmergencyNotificationLog {
   event           EmergencyEvent             @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum ReminderChannel {
+  PUSH
+  SMS
+  EMAIL
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  CANCELLED
+}
+
+model Appointment {
+  id                      String                @id @default(uuid()) @db.Uuid
+  patientId               String                @db.Uuid
+  accompanyingCaregiverId String?               @db.Uuid
+  title                   String                // e.g. "Cardiology Consultation & ECG"
+  doctorName              String                // e.g. "Dr. Gregory House"
+  specialty               String?               // e.g. "Cardiologist", "Neurologist", "General Physician"
+  clinicOrHospital        String                // e.g. "Mercy General Hospital - Suite 402"
+  locationAddress         String?               // Physical address or Telehealth URL
+  scheduledAt             DateTime
+  durationMinutes         Int                   @default(45)
+  status                  AppointmentStatus     @default(SCHEDULED)
+  notes                   String?
+  createdById             String                @db.Uuid
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+
+  patient                 User                  @relation("AppointmentPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  accompanyingCaregiver   User?                 @relation("AppointmentAccompanyingCaregiver", fields: [accompanyingCaregiverId], references: [id], onDelete: SetNull)
+  createdBy               User                  @relation("AppointmentCreator", fields: [createdById], references: [id])
+  reminders               AppointmentReminder[]
+  postAppointmentNote     PostAppointmentNote?
+
+  @@index([patientId, scheduledAt])
+  @@index([accompanyingCaregiverId])
+}
+
+model AppointmentReminder {
+  id             String          @id @default(uuid()) @db.Uuid
+  appointmentId  String          @db.Uuid
+  recipientRole  String          // "PATIENT" or "ACCOMPANYING_CAREGIVER"
+  recipientId    String?         @db.Uuid
+  remindAt       DateTime
+  channel        ReminderChannel @default(PUSH)
+  status         ReminderStatus  @default(PENDING)
+  sentAt         DateTime?
+  message        String
+  createdAt      DateTime        @default(now())
+
+  appointment    Appointment     @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([appointmentId, status])
+  @@index([remindAt, status])
+}
+
+model PostAppointmentNote {
+  id                   String      @id @default(uuid()) @db.Uuid
+  appointmentId        String      @unique @db.Uuid
+  doctorSummary        String      // Key findings, diagnosis, vitals observed
+  prescriptionChanges  String?     // New medications, dosage adjustments, stopped drugs
+  followUpInstructions String?     // Diet, exercise, wound care
+  nextFollowUpDate     DateTime?
+  attachedToCarePlan   Boolean     @default(true) // Automatically syncs to elderly care plan
+  createdById          String      @db.Uuid
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  appointment          Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  createdBy            User        @relation("PostNoteCreator", fields: [createdById], references: [id])
+
+  @@index([appointmentId])
 }
