@@ -5,7 +5,7 @@ const {
   initiateTrackingSessionService,
   getActiveTrackingStatusService,
   resolveLocationAlertService,
-} = require("./geolocasafe.service");
+} = require("./geolocasafe.services");
 
 const createSafeZone = async (req, res, next) => {
   try {
