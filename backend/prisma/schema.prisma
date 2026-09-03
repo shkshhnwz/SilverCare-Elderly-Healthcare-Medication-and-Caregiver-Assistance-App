@@ -68,6 +68,16 @@ model User {
   appointmentsCreated         Appointment[]         @relation("AppointmentCreator")
   postAppointmentNotesCreated PostAppointmentNote[] @relation("PostNoteCreator")
 
+    // Care Plan & Coordination relationships
+  carePlansAsPatient       CarePlan[]            @relation("CarePlanPatient")
+  carePlansCreated         CarePlan[]            @relation("CarePlanCreator")
+  carePlanAuditsMade       CarePlanAudit[]       @relation("CarePlanAuditor")
+  assignedTasks            CareTask[]            @relation("TaskAssignee")
+  completedTasks           CareTask[]            @relation("TaskCompleter")
+  shiftsAsCaregiver        CareShift[]           @relation("ShiftCaregiver")
+  shiftsAsPatient          CareShift[]           @relation("ShiftPatient")
+
+
 }
 
 
@@ -722,4 +732,117 @@ model PostAppointmentNote {
   createdBy            User        @relation("PostNoteCreator", fields: [createdById], references: [id])
 
   @@index([appointmentId])
+}
+
+enum TaskCategory {
+  VITALS_CHECK
+  MEDICATION
+  MEAL_PREP
+  MOBILITY_EXERCISE
+  HYGIENE
+  GENERAL
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  MISSED
+  CANCELLED
+}
+
+enum ShiftStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model CarePlan {
+  id                   String          @id @default(uuid()) @db.Uuid
+  patientId            String          @unique @db.Uuid
+  version              Int             @default(1)
+  dietaryNotes         String?         // Allergies, soft food, sodium limits
+  mobilityInstructions String?         // Walker, 2-person transfer, fall risk precautions
+  resuscitationStatus  String?         // DNR / Full Code notes
+  emergencySummary     String?         // Critical baseline summary
+  isActive             Boolean         @default(true)
+  createdById          String          @db.Uuid
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  patient              User            @relation("CarePlanPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  createdBy            User            @relation("CarePlanCreator", fields: [createdById], references: [id])
+  auditHistory         CarePlanAudit[]
+  tasks                CareTask[]
+
+  @@index([patientId])
+}
+
+model CarePlanAudit {
+  id            String   @id @default(uuid()) @db.Uuid
+  carePlanId    String   @db.Uuid
+  versionNumber Int
+  changedById   String   @db.Uuid
+  changeSummary String   // e.g. "Updated mobility from independent to walker required"
+  snapshotJson  Json     // Full snapshot of care plan at this revision for liability audit
+  createdAt     DateTime @default(now())
+
+  carePlan      CarePlan @relation(fields: [carePlanId], references: [id], onDelete: Cascade)
+  changedBy     User     @relation("CarePlanAuditor", fields: [changedById], references: [id])
+
+  @@index([carePlanId, versionNumber])
+}
+
+model CareTask {
+  id              String       @id @default(uuid()) @db.Uuid
+  carePlanId      String       @db.Uuid
+  patientId       String       @db.Uuid
+  title           String       // e.g. "Check fasting blood sugar before breakfast"
+  description     String?
+  category        TaskCategory @default(GENERAL)
+  assignedToId    String?      @db.Uuid
+  dueWindowStart  DateTime
+  dueWindowEnd    DateTime
+  recurringRRule  String?      // e.g. "FREQ=DAILY;INTERVAL=1"
+  status          TaskStatus   @default(PENDING)
+
+  completedById   String?      @db.Uuid
+  completedAt     DateTime?
+  completionNotes String?
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  carePlan        CarePlan     @relation(fields: [carePlanId], references: [id], onDelete: Cascade)
+  assignedTo      User?        @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  completedBy     User?        @relation("TaskCompleter", fields: [completedById], references: [id], onDelete: SetNull)
+
+  @@index([patientId, status])
+  @@index([assignedToId, dueWindowStart])
+}
+
+model CareShift {
+  id                   String      @id @default(uuid()) @db.Uuid
+  caregiverId          String      @db.Uuid
+  patientId            String      @db.Uuid
+  status               ShiftStatus @default(ACTIVE)
+  clockInAt            DateTime    @default(now())
+  clockOutAt           DateTime?
+  clockInLocation      String?     // e.g. GPS coordinates or facility name
+  clockOutLocation     String?
+
+  // Structured Shift Handoff Notes (Clinical Handoff)
+  moodAndMentalState   String?     // e.g. "Alert and cheerful, mild afternoon confusion"
+  mealsAndHydration    String?     // e.g. "Ate 100% of lunch, drank 800ml water"
+  incidentsOrConcerns  String?     // e.g. "Mild stumble at 14:00, no bruising"
+  handoffNotesNextShift String?    // e.g. "Needs physical therapy leg stretches before bedtime"
+
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  caregiver            User        @relation("ShiftCaregiver", fields: [caregiverId], references: [id])
+  patient              User        @relation("ShiftPatient", fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([caregiverId, status])
+  @@index([patientId, clockInAt])
 }
