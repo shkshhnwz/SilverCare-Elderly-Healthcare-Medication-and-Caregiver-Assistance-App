@@ -9,6 +9,7 @@ const AuthRoutes = require('./src/modules/auth/auth.routes');
 const MedicationManagementRoutes = require('./src/modules/medication-management/medicationManagement.routes');
 const VitalsRoutes = require('./src/modules/vitals-tracking/vitals.routes');
 const LocationSafetyRoutes = require('./src/modules/geofencing-location-safety/geolocasafe.routes');
+const EmergencyRoutes = require('./src/modules/emergency-detection-and-SOS/emergency-detection.routes');
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,8 @@ app.use('/api/care-circles', CareCircleRoutes);
 app.use('/api/medications', MedicationManagementRoutes);
 app.use('/api/vitals', VitalsRoutes);
 app.use('/api/location-safety', LocationSafetyRoutes);
+app.use('/api/emergency', EmergencyRoutes);
+
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 400;

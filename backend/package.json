@@ -11,7 +11,8 @@
     "start": "node server.js",
     "test:vitals": "node test/vitals.test.js",
     "test:care-circle": "node test/careCircle.test.js",
-    "test:geofence": "node test/geofence.test.js"
+    "test:geofence": "node test/geofence.test.js",
+    "test:emergency": "node test/emergency.test.js"
   },
   "keywords": [],
   "author": "",
