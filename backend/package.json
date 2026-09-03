@@ -12,7 +12,8 @@
     "test:vitals": "node test/vitals.test.js",
     "test:care-circle": "node test/careCircle.test.js",
     "test:geofence": "node test/geofence.test.js",
-    "test:emergency": "node test/emergency.test.js"
+    "test:emergency": "node test/emergency.test.js",
+    "test:appointments": "node test/appointments.test.js"
   },
   "keywords": [],
   "author": "",
