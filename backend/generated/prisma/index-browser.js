@@ -140,6 +140,39 @@ exports.Prisma.CareCircleScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.MedicationScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  createdById: 'createdById',
+  careCircleId: 'careCircleId',
+  medicationName: 'medicationName',
+  dosage: 'dosage',
+  route: 'route',
+  frequencyRRule: 'frequencyRRule',
+  prescribingDoctor: 'prescribingDoctor',
+  refillQuantity: 'refillQuantity',
+  refillThresholdDays: 'refillThresholdDays',
+  startsAt: 'startsAt',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MedicationDoseScalarFieldEnum = {
+  id: 'id',
+  medicationId: 'medicationId',
+  scheduledAt: 'scheduledAt',
+  state: 'state',
+  escalationStep: 'escalationStep',
+  acknowledgedById: 'acknowledgedById',
+  acknowledgedAt: 'acknowledgedAt',
+  confirmationType: 'confirmationType',
+  evidenceUrl: 'evidenceUrl',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CareCircleMemberScalarFieldEnum = {
   id: 'id',
   circleId: 'circleId',
@@ -208,6 +241,63 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.VitalReadingScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  vitalType: 'vitalType',
+  source: 'source',
+  systolic: 'systolic',
+  diastolic: 'diastolic',
+  value: 'value',
+  unit: 'unit',
+  context: 'context',
+  notes: 'notes',
+  deviceModel: 'deviceModel',
+  deviceMacAddress: 'deviceMacAddress',
+  rawBlePayload: 'rawBlePayload',
+  recordedAt: 'recordedAt',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.VitalThresholdScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  vitalType: 'vitalType',
+  minNormal: 'minNormal',
+  maxNormal: 'maxNormal',
+  systolicMin: 'systolicMin',
+  systolicMax: 'systolicMax',
+  diastolicMin: 'diastolicMin',
+  diastolicMax: 'diastolicMax',
+  criticalMin: 'criticalMin',
+  criticalMax: 'criticalMax',
+  consecutiveBreachLimit: 'consecutiveBreachLimit',
+  rollingBaselineDays: 'rollingBaselineDays',
+  baselineDeviationPercent: 'baselineDeviationPercent',
+  updatedById: 'updatedById',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VitalAlertScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  readingId: 'readingId',
+  vitalType: 'vitalType',
+  severity: 'severity',
+  anomalyType: 'anomalyType',
+  message: 'message',
+  status: 'status',
+  baselineSnapshot: 'baselineSnapshot',
+  acknowledgedById: 'acknowledgedById',
+  acknowledgedAt: 'acknowledgedAt',
+  resolutionNote: 'resolutionNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -237,6 +327,21 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.MedicationDoseState = exports.$Enums.MedicationDoseState = {
+  SCHEDULED: 'SCHEDULED',
+  NOTIFIED: 'NOTIFIED',
+  CONFIRMED_TAKEN: 'CONFIRMED_TAKEN',
+  CONFIRMED_SKIPPED: 'CONFIRMED_SKIPPED',
+  MISSED: 'MISSED',
+  ESCALATED: 'ESCALATED'
+};
+
+exports.MedicationConfirmationType = exports.$Enums.MedicationConfirmationType = {
+  TAP: 'TAP',
+  PHOTO: 'PHOTO',
+  VOICE: 'VOICE'
+};
+
 exports.MemberStatus = exports.$Enums.MemberStatus = {
   INVITED: 'INVITED',
   ACTIVE: 'ACTIVE',
@@ -265,16 +370,55 @@ exports.ConsentStatus = exports.$Enums.ConsentStatus = {
   EXPIRED: 'EXPIRED'
 };
 
+exports.VitalType = exports.$Enums.VitalType = {
+  BLOOD_PRESSURE: 'BLOOD_PRESSURE',
+  GLUCOSE: 'GLUCOSE',
+  WEIGHT: 'WEIGHT',
+  OXYGEN_SATURATION: 'OXYGEN_SATURATION',
+  TEMPERATURE: 'TEMPERATURE',
+  HEART_RATE: 'HEART_RATE'
+};
+
+exports.VitalSource = exports.$Enums.VitalSource = {
+  MANUAL: 'MANUAL',
+  BLE_DEVICE: 'BLE_DEVICE',
+  WEARABLE: 'WEARABLE'
+};
+
+exports.AlertSeverity = exports.$Enums.AlertSeverity = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
+exports.AnomalyType = exports.$Enums.AnomalyType = {
+  CRITICAL_SPIKE: 'CRITICAL_SPIKE',
+  CONSECUTIVE_BREACH: 'CONSECUTIVE_BREACH',
+  BASELINE_DEVIATION: 'BASELINE_DEVIATION'
+};
+
+exports.AlertStatus = exports.$Enums.AlertStatus = {
+  ACTIVE: 'ACTIVE',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   CareCircle: 'CareCircle',
+  Medication: 'Medication',
+  MedicationDose: 'MedicationDose',
   CareCircleMember: 'CareCircleMember',
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
   Invitation: 'Invitation',
   Consent: 'Consent',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  VitalReading: 'VitalReading',
+  VitalThreshold: 'VitalThreshold',
+  VitalAlert: 'VitalAlert'
 };
 
 /**

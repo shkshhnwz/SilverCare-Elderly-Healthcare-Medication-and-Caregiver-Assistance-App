@@ -24,6 +24,16 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type CareCircle = $Result.DefaultSelection<Prisma.$CareCirclePayload>
 /**
+ * Model Medication
+ * 
+ */
+export type Medication = $Result.DefaultSelection<Prisma.$MedicationPayload>
+/**
+ * Model MedicationDose
+ * 
+ */
+export type MedicationDose = $Result.DefaultSelection<Prisma.$MedicationDosePayload>
+/**
  * Model CareCircleMember
  * 
  */
@@ -58,6 +68,21 @@ export type Consent = $Result.DefaultSelection<Prisma.$ConsentPayload>
  * 
  */
 export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
+/**
+ * Model VitalReading
+ * 
+ */
+export type VitalReading = $Result.DefaultSelection<Prisma.$VitalReadingPayload>
+/**
+ * Model VitalThreshold
+ * 
+ */
+export type VitalThreshold = $Result.DefaultSelection<Prisma.$VitalThresholdPayload>
+/**
+ * Model VitalAlert
+ * 
+ */
+export type VitalAlert = $Result.DefaultSelection<Prisma.$VitalAlertPayload>
 
 /**
  * Enums
@@ -102,6 +127,76 @@ export const ConsentStatus: {
 
 export type ConsentStatus = (typeof ConsentStatus)[keyof typeof ConsentStatus]
 
+
+export const MedicationDoseState: {
+  SCHEDULED: 'SCHEDULED',
+  NOTIFIED: 'NOTIFIED',
+  CONFIRMED_TAKEN: 'CONFIRMED_TAKEN',
+  CONFIRMED_SKIPPED: 'CONFIRMED_SKIPPED',
+  MISSED: 'MISSED',
+  ESCALATED: 'ESCALATED'
+};
+
+export type MedicationDoseState = (typeof MedicationDoseState)[keyof typeof MedicationDoseState]
+
+
+export const MedicationConfirmationType: {
+  TAP: 'TAP',
+  PHOTO: 'PHOTO',
+  VOICE: 'VOICE'
+};
+
+export type MedicationConfirmationType = (typeof MedicationConfirmationType)[keyof typeof MedicationConfirmationType]
+
+
+export const VitalType: {
+  BLOOD_PRESSURE: 'BLOOD_PRESSURE',
+  GLUCOSE: 'GLUCOSE',
+  WEIGHT: 'WEIGHT',
+  OXYGEN_SATURATION: 'OXYGEN_SATURATION',
+  TEMPERATURE: 'TEMPERATURE',
+  HEART_RATE: 'HEART_RATE'
+};
+
+export type VitalType = (typeof VitalType)[keyof typeof VitalType]
+
+
+export const VitalSource: {
+  MANUAL: 'MANUAL',
+  BLE_DEVICE: 'BLE_DEVICE',
+  WEARABLE: 'WEARABLE'
+};
+
+export type VitalSource = (typeof VitalSource)[keyof typeof VitalSource]
+
+
+export const AlertSeverity: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
+export type AlertSeverity = (typeof AlertSeverity)[keyof typeof AlertSeverity]
+
+
+export const AnomalyType: {
+  CRITICAL_SPIKE: 'CRITICAL_SPIKE',
+  CONSECUTIVE_BREACH: 'CONSECUTIVE_BREACH',
+  BASELINE_DEVIATION: 'BASELINE_DEVIATION'
+};
+
+export type AnomalyType = (typeof AnomalyType)[keyof typeof AnomalyType]
+
+
+export const AlertStatus: {
+  ACTIVE: 'ACTIVE',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED'
+};
+
+export type AlertStatus = (typeof AlertStatus)[keyof typeof AlertStatus]
+
 }
 
 export type RoleName = $Enums.RoleName
@@ -119,6 +214,34 @@ export const InvitationStatus: typeof $Enums.InvitationStatus
 export type ConsentStatus = $Enums.ConsentStatus
 
 export const ConsentStatus: typeof $Enums.ConsentStatus
+
+export type MedicationDoseState = $Enums.MedicationDoseState
+
+export const MedicationDoseState: typeof $Enums.MedicationDoseState
+
+export type MedicationConfirmationType = $Enums.MedicationConfirmationType
+
+export const MedicationConfirmationType: typeof $Enums.MedicationConfirmationType
+
+export type VitalType = $Enums.VitalType
+
+export const VitalType: typeof $Enums.VitalType
+
+export type VitalSource = $Enums.VitalSource
+
+export const VitalSource: typeof $Enums.VitalSource
+
+export type AlertSeverity = $Enums.AlertSeverity
+
+export const AlertSeverity: typeof $Enums.AlertSeverity
+
+export type AnomalyType = $Enums.AnomalyType
+
+export const AnomalyType: typeof $Enums.AnomalyType
+
+export type AlertStatus = $Enums.AlertStatus
+
+export const AlertStatus: typeof $Enums.AlertStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -262,6 +385,26 @@ export class PrismaClient<
   get careCircle(): Prisma.CareCircleDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.medication`: Exposes CRUD operations for the **Medication** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Medications
+    * const medications = await prisma.medication.findMany()
+    * ```
+    */
+  get medication(): Prisma.MedicationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.medicationDose`: Exposes CRUD operations for the **MedicationDose** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MedicationDoses
+    * const medicationDoses = await prisma.medicationDose.findMany()
+    * ```
+    */
+  get medicationDose(): Prisma.MedicationDoseDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.careCircleMember`: Exposes CRUD operations for the **CareCircleMember** model.
     * Example usage:
     * ```ts
@@ -330,6 +473,36 @@ export class PrismaClient<
     * ```
     */
   get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.vitalReading`: Exposes CRUD operations for the **VitalReading** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VitalReadings
+    * const vitalReadings = await prisma.vitalReading.findMany()
+    * ```
+    */
+  get vitalReading(): Prisma.VitalReadingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.vitalThreshold`: Exposes CRUD operations for the **VitalThreshold** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VitalThresholds
+    * const vitalThresholds = await prisma.vitalThreshold.findMany()
+    * ```
+    */
+  get vitalThreshold(): Prisma.VitalThresholdDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.vitalAlert`: Exposes CRUD operations for the **VitalAlert** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VitalAlerts
+    * const vitalAlerts = await prisma.vitalAlert.findMany()
+    * ```
+    */
+  get vitalAlert(): Prisma.VitalAlertDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -779,13 +952,18 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     CareCircle: 'CareCircle',
+    Medication: 'Medication',
+    MedicationDose: 'MedicationDose',
     CareCircleMember: 'CareCircleMember',
     Role: 'Role',
     Permission: 'Permission',
     RolePermission: 'RolePermission',
     Invitation: 'Invitation',
     Consent: 'Consent',
-    AuditLog: 'AuditLog'
+    AuditLog: 'AuditLog',
+    VitalReading: 'VitalReading',
+    VitalThreshold: 'VitalThreshold',
+    VitalAlert: 'VitalAlert'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -801,7 +979,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "careCircle" | "careCircleMember" | "role" | "permission" | "rolePermission" | "invitation" | "consent" | "auditLog"
+      modelProps: "user" | "careCircle" | "medication" | "medicationDose" | "careCircleMember" | "role" | "permission" | "rolePermission" | "invitation" | "consent" | "auditLog" | "vitalReading" | "vitalThreshold" | "vitalAlert"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -950,6 +1128,154 @@ export namespace Prisma {
           count: {
             args: Prisma.CareCircleCountArgs<ExtArgs>
             result: $Utils.Optional<CareCircleCountAggregateOutputType> | number
+          }
+        }
+      }
+      Medication: {
+        payload: Prisma.$MedicationPayload<ExtArgs>
+        fields: Prisma.MedicationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MedicationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MedicationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>
+          }
+          findFirst: {
+            args: Prisma.MedicationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MedicationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>
+          }
+          findMany: {
+            args: Prisma.MedicationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>[]
+          }
+          create: {
+            args: Prisma.MedicationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>
+          }
+          createMany: {
+            args: Prisma.MedicationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MedicationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>[]
+          }
+          delete: {
+            args: Prisma.MedicationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>
+          }
+          update: {
+            args: Prisma.MedicationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>
+          }
+          deleteMany: {
+            args: Prisma.MedicationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MedicationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MedicationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>[]
+          }
+          upsert: {
+            args: Prisma.MedicationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationPayload>
+          }
+          aggregate: {
+            args: Prisma.MedicationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMedication>
+          }
+          groupBy: {
+            args: Prisma.MedicationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MedicationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MedicationCountArgs<ExtArgs>
+            result: $Utils.Optional<MedicationCountAggregateOutputType> | number
+          }
+        }
+      }
+      MedicationDose: {
+        payload: Prisma.$MedicationDosePayload<ExtArgs>
+        fields: Prisma.MedicationDoseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MedicationDoseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MedicationDoseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>
+          }
+          findFirst: {
+            args: Prisma.MedicationDoseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MedicationDoseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>
+          }
+          findMany: {
+            args: Prisma.MedicationDoseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>[]
+          }
+          create: {
+            args: Prisma.MedicationDoseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>
+          }
+          createMany: {
+            args: Prisma.MedicationDoseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MedicationDoseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>[]
+          }
+          delete: {
+            args: Prisma.MedicationDoseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>
+          }
+          update: {
+            args: Prisma.MedicationDoseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>
+          }
+          deleteMany: {
+            args: Prisma.MedicationDoseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MedicationDoseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MedicationDoseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>[]
+          }
+          upsert: {
+            args: Prisma.MedicationDoseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MedicationDosePayload>
+          }
+          aggregate: {
+            args: Prisma.MedicationDoseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMedicationDose>
+          }
+          groupBy: {
+            args: Prisma.MedicationDoseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MedicationDoseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MedicationDoseCountArgs<ExtArgs>
+            result: $Utils.Optional<MedicationDoseCountAggregateOutputType> | number
           }
         }
       }
@@ -1471,6 +1797,228 @@ export namespace Prisma {
           }
         }
       }
+      VitalReading: {
+        payload: Prisma.$VitalReadingPayload<ExtArgs>
+        fields: Prisma.VitalReadingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VitalReadingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VitalReadingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>
+          }
+          findFirst: {
+            args: Prisma.VitalReadingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VitalReadingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>
+          }
+          findMany: {
+            args: Prisma.VitalReadingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>[]
+          }
+          create: {
+            args: Prisma.VitalReadingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>
+          }
+          createMany: {
+            args: Prisma.VitalReadingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VitalReadingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>[]
+          }
+          delete: {
+            args: Prisma.VitalReadingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>
+          }
+          update: {
+            args: Prisma.VitalReadingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>
+          }
+          deleteMany: {
+            args: Prisma.VitalReadingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VitalReadingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VitalReadingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>[]
+          }
+          upsert: {
+            args: Prisma.VitalReadingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalReadingPayload>
+          }
+          aggregate: {
+            args: Prisma.VitalReadingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVitalReading>
+          }
+          groupBy: {
+            args: Prisma.VitalReadingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VitalReadingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VitalReadingCountArgs<ExtArgs>
+            result: $Utils.Optional<VitalReadingCountAggregateOutputType> | number
+          }
+        }
+      }
+      VitalThreshold: {
+        payload: Prisma.$VitalThresholdPayload<ExtArgs>
+        fields: Prisma.VitalThresholdFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VitalThresholdFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VitalThresholdFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>
+          }
+          findFirst: {
+            args: Prisma.VitalThresholdFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VitalThresholdFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>
+          }
+          findMany: {
+            args: Prisma.VitalThresholdFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>[]
+          }
+          create: {
+            args: Prisma.VitalThresholdCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>
+          }
+          createMany: {
+            args: Prisma.VitalThresholdCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VitalThresholdCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>[]
+          }
+          delete: {
+            args: Prisma.VitalThresholdDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>
+          }
+          update: {
+            args: Prisma.VitalThresholdUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>
+          }
+          deleteMany: {
+            args: Prisma.VitalThresholdDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VitalThresholdUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VitalThresholdUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>[]
+          }
+          upsert: {
+            args: Prisma.VitalThresholdUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalThresholdPayload>
+          }
+          aggregate: {
+            args: Prisma.VitalThresholdAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVitalThreshold>
+          }
+          groupBy: {
+            args: Prisma.VitalThresholdGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VitalThresholdGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VitalThresholdCountArgs<ExtArgs>
+            result: $Utils.Optional<VitalThresholdCountAggregateOutputType> | number
+          }
+        }
+      }
+      VitalAlert: {
+        payload: Prisma.$VitalAlertPayload<ExtArgs>
+        fields: Prisma.VitalAlertFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VitalAlertFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VitalAlertFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>
+          }
+          findFirst: {
+            args: Prisma.VitalAlertFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VitalAlertFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>
+          }
+          findMany: {
+            args: Prisma.VitalAlertFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>[]
+          }
+          create: {
+            args: Prisma.VitalAlertCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>
+          }
+          createMany: {
+            args: Prisma.VitalAlertCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VitalAlertCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>[]
+          }
+          delete: {
+            args: Prisma.VitalAlertDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>
+          }
+          update: {
+            args: Prisma.VitalAlertUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>
+          }
+          deleteMany: {
+            args: Prisma.VitalAlertDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VitalAlertUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VitalAlertUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>[]
+          }
+          upsert: {
+            args: Prisma.VitalAlertUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VitalAlertPayload>
+          }
+          aggregate: {
+            args: Prisma.VitalAlertAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVitalAlert>
+          }
+          groupBy: {
+            args: Prisma.VitalAlertGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VitalAlertGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VitalAlertCountArgs<ExtArgs>
+            result: $Utils.Optional<VitalAlertCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1596,6 +2144,8 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     careCircle?: CareCircleOmit
+    medication?: MedicationOmit
+    medicationDose?: MedicationDoseOmit
     careCircleMember?: CareCircleMemberOmit
     role?: RoleOmit
     permission?: PermissionOmit
@@ -1603,6 +2153,9 @@ export namespace Prisma {
     invitation?: InvitationOmit
     consent?: ConsentOmit
     auditLog?: AuditLogOmit
+    vitalReading?: VitalReadingOmit
+    vitalThreshold?: VitalThresholdOmit
+    vitalAlert?: VitalAlertOmit
   }
 
   /* Types for Logging */
@@ -1689,6 +2242,15 @@ export namespace Prisma {
     sentInvitations: number
     consentsGranted: number
     auditLogs: number
+    medicationsAsPatient: number
+    medicationsCreated: number
+    medicationDoseEvents: number
+    vitalReadingsRecorded: number
+    vitalReadingsAsPatient: number
+    vitalThresholds: number
+    vitalThresholdsSet: number
+    vitalAlerts: number
+    vitalAlertsAcknowledged: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1698,6 +2260,15 @@ export namespace Prisma {
     sentInvitations?: boolean | UserCountOutputTypeCountSentInvitationsArgs
     consentsGranted?: boolean | UserCountOutputTypeCountConsentsGrantedArgs
     auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+    medicationsAsPatient?: boolean | UserCountOutputTypeCountMedicationsAsPatientArgs
+    medicationsCreated?: boolean | UserCountOutputTypeCountMedicationsCreatedArgs
+    medicationDoseEvents?: boolean | UserCountOutputTypeCountMedicationDoseEventsArgs
+    vitalReadingsRecorded?: boolean | UserCountOutputTypeCountVitalReadingsRecordedArgs
+    vitalReadingsAsPatient?: boolean | UserCountOutputTypeCountVitalReadingsAsPatientArgs
+    vitalThresholds?: boolean | UserCountOutputTypeCountVitalThresholdsArgs
+    vitalThresholdsSet?: boolean | UserCountOutputTypeCountVitalThresholdsSetArgs
+    vitalAlerts?: boolean | UserCountOutputTypeCountVitalAlertsArgs
+    vitalAlertsAcknowledged?: boolean | UserCountOutputTypeCountVitalAlertsAcknowledgedArgs
   }
 
   // Custom InputTypes
@@ -1753,6 +2324,69 @@ export namespace Prisma {
     where?: AuditLogWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMedicationsAsPatientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMedicationsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMedicationDoseEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationDoseWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVitalReadingsRecordedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalReadingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVitalReadingsAsPatientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalReadingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVitalThresholdsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalThresholdWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVitalThresholdsSetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalThresholdWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVitalAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalAlertWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountVitalAlertsAcknowledgedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalAlertWhereInput
+  }
+
 
   /**
    * Count Type CareCircleCountOutputType
@@ -1763,6 +2397,7 @@ export namespace Prisma {
     invitations: number
     consents: number
     auditLogs: number
+    medications: number
   }
 
   export type CareCircleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1770,6 +2405,7 @@ export namespace Prisma {
     invitations?: boolean | CareCircleCountOutputTypeCountInvitationsArgs
     consents?: boolean | CareCircleCountOutputTypeCountConsentsArgs
     auditLogs?: boolean | CareCircleCountOutputTypeCountAuditLogsArgs
+    medications?: boolean | CareCircleCountOutputTypeCountMedicationsArgs
   }
 
   // Custom InputTypes
@@ -1809,6 +2445,44 @@ export namespace Prisma {
    */
   export type CareCircleCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AuditLogWhereInput
+  }
+
+  /**
+   * CareCircleCountOutputType without action
+   */
+  export type CareCircleCountOutputTypeCountMedicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationWhereInput
+  }
+
+
+  /**
+   * Count Type MedicationCountOutputType
+   */
+
+  export type MedicationCountOutputType = {
+    doses: number
+  }
+
+  export type MedicationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    doses?: boolean | MedicationCountOutputTypeCountDosesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MedicationCountOutputType without action
+   */
+  export type MedicationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationCountOutputType
+     */
+    select?: MedicationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MedicationCountOutputType without action
+   */
+  export type MedicationCountOutputTypeCountDosesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationDoseWhereInput
   }
 
 
@@ -1920,6 +2594,37 @@ export namespace Prisma {
    */
   export type PermissionCountOutputTypeCountRolePermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RolePermissionWhereInput
+  }
+
+
+  /**
+   * Count Type VitalReadingCountOutputType
+   */
+
+  export type VitalReadingCountOutputType = {
+    alerts: number
+  }
+
+  export type VitalReadingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    alerts?: boolean | VitalReadingCountOutputTypeCountAlertsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * VitalReadingCountOutputType without action
+   */
+  export type VitalReadingCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReadingCountOutputType
+     */
+    select?: VitalReadingCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * VitalReadingCountOutputType without action
+   */
+  export type VitalReadingCountOutputTypeCountAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalAlertWhereInput
   }
 
 
@@ -2121,6 +2826,15 @@ export namespace Prisma {
     sentInvitations?: boolean | User$sentInvitationsArgs<ExtArgs>
     consentsGranted?: boolean | User$consentsGrantedArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    medicationsAsPatient?: boolean | User$medicationsAsPatientArgs<ExtArgs>
+    medicationsCreated?: boolean | User$medicationsCreatedArgs<ExtArgs>
+    medicationDoseEvents?: boolean | User$medicationDoseEventsArgs<ExtArgs>
+    vitalReadingsRecorded?: boolean | User$vitalReadingsRecordedArgs<ExtArgs>
+    vitalReadingsAsPatient?: boolean | User$vitalReadingsAsPatientArgs<ExtArgs>
+    vitalThresholds?: boolean | User$vitalThresholdsArgs<ExtArgs>
+    vitalThresholdsSet?: boolean | User$vitalThresholdsSetArgs<ExtArgs>
+    vitalAlerts?: boolean | User$vitalAlertsArgs<ExtArgs>
+    vitalAlertsAcknowledged?: boolean | User$vitalAlertsAcknowledgedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2165,6 +2879,15 @@ export namespace Prisma {
     sentInvitations?: boolean | User$sentInvitationsArgs<ExtArgs>
     consentsGranted?: boolean | User$consentsGrantedArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    medicationsAsPatient?: boolean | User$medicationsAsPatientArgs<ExtArgs>
+    medicationsCreated?: boolean | User$medicationsCreatedArgs<ExtArgs>
+    medicationDoseEvents?: boolean | User$medicationDoseEventsArgs<ExtArgs>
+    vitalReadingsRecorded?: boolean | User$vitalReadingsRecordedArgs<ExtArgs>
+    vitalReadingsAsPatient?: boolean | User$vitalReadingsAsPatientArgs<ExtArgs>
+    vitalThresholds?: boolean | User$vitalThresholdsArgs<ExtArgs>
+    vitalThresholdsSet?: boolean | User$vitalThresholdsSetArgs<ExtArgs>
+    vitalAlerts?: boolean | User$vitalAlertsArgs<ExtArgs>
+    vitalAlertsAcknowledged?: boolean | User$vitalAlertsAcknowledgedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2179,6 +2902,15 @@ export namespace Prisma {
       sentInvitations: Prisma.$InvitationPayload<ExtArgs>[]
       consentsGranted: Prisma.$ConsentPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      medicationsAsPatient: Prisma.$MedicationPayload<ExtArgs>[]
+      medicationsCreated: Prisma.$MedicationPayload<ExtArgs>[]
+      medicationDoseEvents: Prisma.$MedicationDosePayload<ExtArgs>[]
+      vitalReadingsRecorded: Prisma.$VitalReadingPayload<ExtArgs>[]
+      vitalReadingsAsPatient: Prisma.$VitalReadingPayload<ExtArgs>[]
+      vitalThresholds: Prisma.$VitalThresholdPayload<ExtArgs>[]
+      vitalThresholdsSet: Prisma.$VitalThresholdPayload<ExtArgs>[]
+      vitalAlerts: Prisma.$VitalAlertPayload<ExtArgs>[]
+      vitalAlertsAcknowledged: Prisma.$VitalAlertPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2589,6 +3321,15 @@ export namespace Prisma {
     sentInvitations<T extends User$sentInvitationsArgs<ExtArgs> = {}>(args?: Subset<T, User$sentInvitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     consentsGranted<T extends User$consentsGrantedArgs<ExtArgs> = {}>(args?: Subset<T, User$consentsGrantedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    medicationsAsPatient<T extends User$medicationsAsPatientArgs<ExtArgs> = {}>(args?: Subset<T, User$medicationsAsPatientArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    medicationsCreated<T extends User$medicationsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$medicationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    medicationDoseEvents<T extends User$medicationDoseEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$medicationDoseEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vitalReadingsRecorded<T extends User$vitalReadingsRecordedArgs<ExtArgs> = {}>(args?: Subset<T, User$vitalReadingsRecordedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vitalReadingsAsPatient<T extends User$vitalReadingsAsPatientArgs<ExtArgs> = {}>(args?: Subset<T, User$vitalReadingsAsPatientArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vitalThresholds<T extends User$vitalThresholdsArgs<ExtArgs> = {}>(args?: Subset<T, User$vitalThresholdsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vitalThresholdsSet<T extends User$vitalThresholdsSetArgs<ExtArgs> = {}>(args?: Subset<T, User$vitalThresholdsSetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vitalAlerts<T extends User$vitalAlertsArgs<ExtArgs> = {}>(args?: Subset<T, User$vitalAlertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vitalAlertsAcknowledged<T extends User$vitalAlertsAcknowledgedArgs<ExtArgs> = {}>(args?: Subset<T, User$vitalAlertsAcknowledgedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3163,6 +3904,222 @@ export namespace Prisma {
   }
 
   /**
+   * User.medicationsAsPatient
+   */
+  export type User$medicationsAsPatientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    where?: MedicationWhereInput
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    cursor?: MedicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
+   * User.medicationsCreated
+   */
+  export type User$medicationsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    where?: MedicationWhereInput
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    cursor?: MedicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
+   * User.medicationDoseEvents
+   */
+  export type User$medicationDoseEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    where?: MedicationDoseWhereInput
+    orderBy?: MedicationDoseOrderByWithRelationInput | MedicationDoseOrderByWithRelationInput[]
+    cursor?: MedicationDoseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MedicationDoseScalarFieldEnum | MedicationDoseScalarFieldEnum[]
+  }
+
+  /**
+   * User.vitalReadingsRecorded
+   */
+  export type User$vitalReadingsRecordedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    where?: VitalReadingWhereInput
+    orderBy?: VitalReadingOrderByWithRelationInput | VitalReadingOrderByWithRelationInput[]
+    cursor?: VitalReadingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalReadingScalarFieldEnum | VitalReadingScalarFieldEnum[]
+  }
+
+  /**
+   * User.vitalReadingsAsPatient
+   */
+  export type User$vitalReadingsAsPatientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    where?: VitalReadingWhereInput
+    orderBy?: VitalReadingOrderByWithRelationInput | VitalReadingOrderByWithRelationInput[]
+    cursor?: VitalReadingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalReadingScalarFieldEnum | VitalReadingScalarFieldEnum[]
+  }
+
+  /**
+   * User.vitalThresholds
+   */
+  export type User$vitalThresholdsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    where?: VitalThresholdWhereInput
+    orderBy?: VitalThresholdOrderByWithRelationInput | VitalThresholdOrderByWithRelationInput[]
+    cursor?: VitalThresholdWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalThresholdScalarFieldEnum | VitalThresholdScalarFieldEnum[]
+  }
+
+  /**
+   * User.vitalThresholdsSet
+   */
+  export type User$vitalThresholdsSetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    where?: VitalThresholdWhereInput
+    orderBy?: VitalThresholdOrderByWithRelationInput | VitalThresholdOrderByWithRelationInput[]
+    cursor?: VitalThresholdWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalThresholdScalarFieldEnum | VitalThresholdScalarFieldEnum[]
+  }
+
+  /**
+   * User.vitalAlerts
+   */
+  export type User$vitalAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    where?: VitalAlertWhereInput
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    cursor?: VitalAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalAlertScalarFieldEnum | VitalAlertScalarFieldEnum[]
+  }
+
+  /**
+   * User.vitalAlertsAcknowledged
+   */
+  export type User$vitalAlertsAcknowledgedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    where?: VitalAlertWhereInput
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    cursor?: VitalAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalAlertScalarFieldEnum | VitalAlertScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3359,6 +4316,7 @@ export namespace Prisma {
     invitations?: boolean | CareCircle$invitationsArgs<ExtArgs>
     consents?: boolean | CareCircle$consentsArgs<ExtArgs>
     auditLogs?: boolean | CareCircle$auditLogsArgs<ExtArgs>
+    medications?: boolean | CareCircle$medicationsArgs<ExtArgs>
     _count?: boolean | CareCircleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["careCircle"]>
 
@@ -3401,6 +4359,7 @@ export namespace Prisma {
     invitations?: boolean | CareCircle$invitationsArgs<ExtArgs>
     consents?: boolean | CareCircle$consentsArgs<ExtArgs>
     auditLogs?: boolean | CareCircle$auditLogsArgs<ExtArgs>
+    medications?: boolean | CareCircle$medicationsArgs<ExtArgs>
     _count?: boolean | CareCircleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CareCircleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3421,6 +4380,7 @@ export namespace Prisma {
       invitations: Prisma.$InvitationPayload<ExtArgs>[]
       consents: Prisma.$ConsentPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      medications: Prisma.$MedicationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3829,6 +4789,7 @@ export namespace Prisma {
     invitations<T extends CareCircle$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, CareCircle$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     consents<T extends CareCircle$consentsArgs<ExtArgs> = {}>(args?: Subset<T, CareCircle$consentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends CareCircle$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, CareCircle$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    medications<T extends CareCircle$medicationsArgs<ExtArgs> = {}>(args?: Subset<T, CareCircle$medicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4361,6 +5322,30 @@ export namespace Prisma {
   }
 
   /**
+   * CareCircle.medications
+   */
+  export type CareCircle$medicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    where?: MedicationWhereInput
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    cursor?: MedicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
    * CareCircle without action
    */
   export type CareCircleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4376,6 +5361,2517 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CareCircleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Medication
+   */
+
+  export type AggregateMedication = {
+    _count: MedicationCountAggregateOutputType | null
+    _avg: MedicationAvgAggregateOutputType | null
+    _sum: MedicationSumAggregateOutputType | null
+    _min: MedicationMinAggregateOutputType | null
+    _max: MedicationMaxAggregateOutputType | null
+  }
+
+  export type MedicationAvgAggregateOutputType = {
+    refillQuantity: number | null
+    refillThresholdDays: number | null
+  }
+
+  export type MedicationSumAggregateOutputType = {
+    refillQuantity: number | null
+    refillThresholdDays: number | null
+  }
+
+  export type MedicationMinAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    createdById: string | null
+    careCircleId: string | null
+    medicationName: string | null
+    dosage: string | null
+    route: string | null
+    frequencyRRule: string | null
+    prescribingDoctor: string | null
+    refillQuantity: number | null
+    refillThresholdDays: number | null
+    startsAt: Date | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MedicationMaxAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    createdById: string | null
+    careCircleId: string | null
+    medicationName: string | null
+    dosage: string | null
+    route: string | null
+    frequencyRRule: string | null
+    prescribingDoctor: string | null
+    refillQuantity: number | null
+    refillThresholdDays: number | null
+    startsAt: Date | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MedicationCountAggregateOutputType = {
+    id: number
+    patientId: number
+    createdById: number
+    careCircleId: number
+    medicationName: number
+    dosage: number
+    route: number
+    frequencyRRule: number
+    prescribingDoctor: number
+    refillQuantity: number
+    refillThresholdDays: number
+    startsAt: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MedicationAvgAggregateInputType = {
+    refillQuantity?: true
+    refillThresholdDays?: true
+  }
+
+  export type MedicationSumAggregateInputType = {
+    refillQuantity?: true
+    refillThresholdDays?: true
+  }
+
+  export type MedicationMinAggregateInputType = {
+    id?: true
+    patientId?: true
+    createdById?: true
+    careCircleId?: true
+    medicationName?: true
+    dosage?: true
+    route?: true
+    frequencyRRule?: true
+    prescribingDoctor?: true
+    refillQuantity?: true
+    refillThresholdDays?: true
+    startsAt?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MedicationMaxAggregateInputType = {
+    id?: true
+    patientId?: true
+    createdById?: true
+    careCircleId?: true
+    medicationName?: true
+    dosage?: true
+    route?: true
+    frequencyRRule?: true
+    prescribingDoctor?: true
+    refillQuantity?: true
+    refillThresholdDays?: true
+    startsAt?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MedicationCountAggregateInputType = {
+    id?: true
+    patientId?: true
+    createdById?: true
+    careCircleId?: true
+    medicationName?: true
+    dosage?: true
+    route?: true
+    frequencyRRule?: true
+    prescribingDoctor?: true
+    refillQuantity?: true
+    refillThresholdDays?: true
+    startsAt?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MedicationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Medication to aggregate.
+     */
+    where?: MedicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Medications to fetch.
+     */
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MedicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Medications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Medications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Medications
+    **/
+    _count?: true | MedicationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MedicationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MedicationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MedicationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MedicationMaxAggregateInputType
+  }
+
+  export type GetMedicationAggregateType<T extends MedicationAggregateArgs> = {
+        [P in keyof T & keyof AggregateMedication]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMedication[P]>
+      : GetScalarType<T[P], AggregateMedication[P]>
+  }
+
+
+
+
+  export type MedicationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationWhereInput
+    orderBy?: MedicationOrderByWithAggregationInput | MedicationOrderByWithAggregationInput[]
+    by: MedicationScalarFieldEnum[] | MedicationScalarFieldEnum
+    having?: MedicationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MedicationCountAggregateInputType | true
+    _avg?: MedicationAvgAggregateInputType
+    _sum?: MedicationSumAggregateInputType
+    _min?: MedicationMinAggregateInputType
+    _max?: MedicationMaxAggregateInputType
+  }
+
+  export type MedicationGroupByOutputType = {
+    id: string
+    patientId: string
+    createdById: string
+    careCircleId: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays: number
+    startsAt: Date
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: MedicationCountAggregateOutputType | null
+    _avg: MedicationAvgAggregateOutputType | null
+    _sum: MedicationSumAggregateOutputType | null
+    _min: MedicationMinAggregateOutputType | null
+    _max: MedicationMaxAggregateOutputType | null
+  }
+
+  type GetMedicationGroupByPayload<T extends MedicationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MedicationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MedicationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MedicationGroupByOutputType[P]>
+            : GetScalarType<T[P], MedicationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MedicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    createdById?: boolean
+    careCircleId?: boolean
+    medicationName?: boolean
+    dosage?: boolean
+    route?: boolean
+    frequencyRRule?: boolean
+    prescribingDoctor?: boolean
+    refillQuantity?: boolean
+    refillThresholdDays?: boolean
+    startsAt?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    careCircle?: boolean | Medication$careCircleArgs<ExtArgs>
+    doses?: boolean | Medication$dosesArgs<ExtArgs>
+    _count?: boolean | MedicationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["medication"]>
+
+  export type MedicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    createdById?: boolean
+    careCircleId?: boolean
+    medicationName?: boolean
+    dosage?: boolean
+    route?: boolean
+    frequencyRRule?: boolean
+    prescribingDoctor?: boolean
+    refillQuantity?: boolean
+    refillThresholdDays?: boolean
+    startsAt?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    careCircle?: boolean | Medication$careCircleArgs<ExtArgs>
+  }, ExtArgs["result"]["medication"]>
+
+  export type MedicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    createdById?: boolean
+    careCircleId?: boolean
+    medicationName?: boolean
+    dosage?: boolean
+    route?: boolean
+    frequencyRRule?: boolean
+    prescribingDoctor?: boolean
+    refillQuantity?: boolean
+    refillThresholdDays?: boolean
+    startsAt?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    careCircle?: boolean | Medication$careCircleArgs<ExtArgs>
+  }, ExtArgs["result"]["medication"]>
+
+  export type MedicationSelectScalar = {
+    id?: boolean
+    patientId?: boolean
+    createdById?: boolean
+    careCircleId?: boolean
+    medicationName?: boolean
+    dosage?: boolean
+    route?: boolean
+    frequencyRRule?: boolean
+    prescribingDoctor?: boolean
+    refillQuantity?: boolean
+    refillThresholdDays?: boolean
+    startsAt?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MedicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "patientId" | "createdById" | "careCircleId" | "medicationName" | "dosage" | "route" | "frequencyRRule" | "prescribingDoctor" | "refillQuantity" | "refillThresholdDays" | "startsAt" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["medication"]>
+  export type MedicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    careCircle?: boolean | Medication$careCircleArgs<ExtArgs>
+    doses?: boolean | Medication$dosesArgs<ExtArgs>
+    _count?: boolean | MedicationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MedicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    careCircle?: boolean | Medication$careCircleArgs<ExtArgs>
+  }
+  export type MedicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    careCircle?: boolean | Medication$careCircleArgs<ExtArgs>
+  }
+
+  export type $MedicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Medication"
+    objects: {
+      patient: Prisma.$UserPayload<ExtArgs>
+      createdBy: Prisma.$UserPayload<ExtArgs>
+      careCircle: Prisma.$CareCirclePayload<ExtArgs> | null
+      doses: Prisma.$MedicationDosePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      patientId: string
+      createdById: string
+      careCircleId: string | null
+      medicationName: string
+      dosage: string
+      route: string
+      frequencyRRule: string
+      prescribingDoctor: string
+      refillQuantity: number
+      refillThresholdDays: number
+      startsAt: Date
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["medication"]>
+    composites: {}
+  }
+
+  type MedicationGetPayload<S extends boolean | null | undefined | MedicationDefaultArgs> = $Result.GetResult<Prisma.$MedicationPayload, S>
+
+  type MedicationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MedicationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MedicationCountAggregateInputType | true
+    }
+
+  export interface MedicationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Medication'], meta: { name: 'Medication' } }
+    /**
+     * Find zero or one Medication that matches the filter.
+     * @param {MedicationFindUniqueArgs} args - Arguments to find a Medication
+     * @example
+     * // Get one Medication
+     * const medication = await prisma.medication.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MedicationFindUniqueArgs>(args: SelectSubset<T, MedicationFindUniqueArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Medication that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MedicationFindUniqueOrThrowArgs} args - Arguments to find a Medication
+     * @example
+     * // Get one Medication
+     * const medication = await prisma.medication.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MedicationFindUniqueOrThrowArgs>(args: SelectSubset<T, MedicationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Medication that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationFindFirstArgs} args - Arguments to find a Medication
+     * @example
+     * // Get one Medication
+     * const medication = await prisma.medication.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MedicationFindFirstArgs>(args?: SelectSubset<T, MedicationFindFirstArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Medication that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationFindFirstOrThrowArgs} args - Arguments to find a Medication
+     * @example
+     * // Get one Medication
+     * const medication = await prisma.medication.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MedicationFindFirstOrThrowArgs>(args?: SelectSubset<T, MedicationFindFirstOrThrowArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Medications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Medications
+     * const medications = await prisma.medication.findMany()
+     * 
+     * // Get first 10 Medications
+     * const medications = await prisma.medication.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const medicationWithIdOnly = await prisma.medication.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MedicationFindManyArgs>(args?: SelectSubset<T, MedicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Medication.
+     * @param {MedicationCreateArgs} args - Arguments to create a Medication.
+     * @example
+     * // Create one Medication
+     * const Medication = await prisma.medication.create({
+     *   data: {
+     *     // ... data to create a Medication
+     *   }
+     * })
+     * 
+     */
+    create<T extends MedicationCreateArgs>(args: SelectSubset<T, MedicationCreateArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Medications.
+     * @param {MedicationCreateManyArgs} args - Arguments to create many Medications.
+     * @example
+     * // Create many Medications
+     * const medication = await prisma.medication.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MedicationCreateManyArgs>(args?: SelectSubset<T, MedicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Medications and returns the data saved in the database.
+     * @param {MedicationCreateManyAndReturnArgs} args - Arguments to create many Medications.
+     * @example
+     * // Create many Medications
+     * const medication = await prisma.medication.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Medications and only return the `id`
+     * const medicationWithIdOnly = await prisma.medication.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MedicationCreateManyAndReturnArgs>(args?: SelectSubset<T, MedicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Medication.
+     * @param {MedicationDeleteArgs} args - Arguments to delete one Medication.
+     * @example
+     * // Delete one Medication
+     * const Medication = await prisma.medication.delete({
+     *   where: {
+     *     // ... filter to delete one Medication
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MedicationDeleteArgs>(args: SelectSubset<T, MedicationDeleteArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Medication.
+     * @param {MedicationUpdateArgs} args - Arguments to update one Medication.
+     * @example
+     * // Update one Medication
+     * const medication = await prisma.medication.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MedicationUpdateArgs>(args: SelectSubset<T, MedicationUpdateArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Medications.
+     * @param {MedicationDeleteManyArgs} args - Arguments to filter Medications to delete.
+     * @example
+     * // Delete a few Medications
+     * const { count } = await prisma.medication.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MedicationDeleteManyArgs>(args?: SelectSubset<T, MedicationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Medications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Medications
+     * const medication = await prisma.medication.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MedicationUpdateManyArgs>(args: SelectSubset<T, MedicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Medications and returns the data updated in the database.
+     * @param {MedicationUpdateManyAndReturnArgs} args - Arguments to update many Medications.
+     * @example
+     * // Update many Medications
+     * const medication = await prisma.medication.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Medications and only return the `id`
+     * const medicationWithIdOnly = await prisma.medication.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MedicationUpdateManyAndReturnArgs>(args: SelectSubset<T, MedicationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Medication.
+     * @param {MedicationUpsertArgs} args - Arguments to update or create a Medication.
+     * @example
+     * // Update or create a Medication
+     * const medication = await prisma.medication.upsert({
+     *   create: {
+     *     // ... data to create a Medication
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Medication we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MedicationUpsertArgs>(args: SelectSubset<T, MedicationUpsertArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Medications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationCountArgs} args - Arguments to filter Medications to count.
+     * @example
+     * // Count the number of Medications
+     * const count = await prisma.medication.count({
+     *   where: {
+     *     // ... the filter for the Medications we want to count
+     *   }
+     * })
+    **/
+    count<T extends MedicationCountArgs>(
+      args?: Subset<T, MedicationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MedicationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Medication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MedicationAggregateArgs>(args: Subset<T, MedicationAggregateArgs>): Prisma.PrismaPromise<GetMedicationAggregateType<T>>
+
+    /**
+     * Group by Medication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MedicationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MedicationGroupByArgs['orderBy'] }
+        : { orderBy?: MedicationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MedicationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMedicationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Medication model
+   */
+  readonly fields: MedicationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Medication.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MedicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    patient<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    careCircle<T extends Medication$careCircleArgs<ExtArgs> = {}>(args?: Subset<T, Medication$careCircleArgs<ExtArgs>>): Prisma__CareCircleClient<$Result.GetResult<Prisma.$CareCirclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    doses<T extends Medication$dosesArgs<ExtArgs> = {}>(args?: Subset<T, Medication$dosesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Medication model
+   */
+  interface MedicationFieldRefs {
+    readonly id: FieldRef<"Medication", 'String'>
+    readonly patientId: FieldRef<"Medication", 'String'>
+    readonly createdById: FieldRef<"Medication", 'String'>
+    readonly careCircleId: FieldRef<"Medication", 'String'>
+    readonly medicationName: FieldRef<"Medication", 'String'>
+    readonly dosage: FieldRef<"Medication", 'String'>
+    readonly route: FieldRef<"Medication", 'String'>
+    readonly frequencyRRule: FieldRef<"Medication", 'String'>
+    readonly prescribingDoctor: FieldRef<"Medication", 'String'>
+    readonly refillQuantity: FieldRef<"Medication", 'Int'>
+    readonly refillThresholdDays: FieldRef<"Medication", 'Int'>
+    readonly startsAt: FieldRef<"Medication", 'DateTime'>
+    readonly active: FieldRef<"Medication", 'Boolean'>
+    readonly createdAt: FieldRef<"Medication", 'DateTime'>
+    readonly updatedAt: FieldRef<"Medication", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Medication findUnique
+   */
+  export type MedicationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Medication to fetch.
+     */
+    where: MedicationWhereUniqueInput
+  }
+
+  /**
+   * Medication findUniqueOrThrow
+   */
+  export type MedicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Medication to fetch.
+     */
+    where: MedicationWhereUniqueInput
+  }
+
+  /**
+   * Medication findFirst
+   */
+  export type MedicationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Medication to fetch.
+     */
+    where?: MedicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Medications to fetch.
+     */
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Medications.
+     */
+    cursor?: MedicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Medications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Medications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Medications.
+     */
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
+   * Medication findFirstOrThrow
+   */
+  export type MedicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Medication to fetch.
+     */
+    where?: MedicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Medications to fetch.
+     */
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Medications.
+     */
+    cursor?: MedicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Medications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Medications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Medications.
+     */
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
+   * Medication findMany
+   */
+  export type MedicationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Medications to fetch.
+     */
+    where?: MedicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Medications to fetch.
+     */
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Medications.
+     */
+    cursor?: MedicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Medications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Medications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Medications.
+     */
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
+   * Medication create
+   */
+  export type MedicationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Medication.
+     */
+    data: XOR<MedicationCreateInput, MedicationUncheckedCreateInput>
+  }
+
+  /**
+   * Medication createMany
+   */
+  export type MedicationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Medications.
+     */
+    data: MedicationCreateManyInput | MedicationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Medication createManyAndReturn
+   */
+  export type MedicationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Medications.
+     */
+    data: MedicationCreateManyInput | MedicationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Medication update
+   */
+  export type MedicationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Medication.
+     */
+    data: XOR<MedicationUpdateInput, MedicationUncheckedUpdateInput>
+    /**
+     * Choose, which Medication to update.
+     */
+    where: MedicationWhereUniqueInput
+  }
+
+  /**
+   * Medication updateMany
+   */
+  export type MedicationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Medications.
+     */
+    data: XOR<MedicationUpdateManyMutationInput, MedicationUncheckedUpdateManyInput>
+    /**
+     * Filter which Medications to update
+     */
+    where?: MedicationWhereInput
+    /**
+     * Limit how many Medications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Medication updateManyAndReturn
+   */
+  export type MedicationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * The data used to update Medications.
+     */
+    data: XOR<MedicationUpdateManyMutationInput, MedicationUncheckedUpdateManyInput>
+    /**
+     * Filter which Medications to update
+     */
+    where?: MedicationWhereInput
+    /**
+     * Limit how many Medications to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Medication upsert
+   */
+  export type MedicationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Medication to update in case it exists.
+     */
+    where: MedicationWhereUniqueInput
+    /**
+     * In case the Medication found by the `where` argument doesn't exist, create a new Medication with this data.
+     */
+    create: XOR<MedicationCreateInput, MedicationUncheckedCreateInput>
+    /**
+     * In case the Medication was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MedicationUpdateInput, MedicationUncheckedUpdateInput>
+  }
+
+  /**
+   * Medication delete
+   */
+  export type MedicationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    /**
+     * Filter which Medication to delete.
+     */
+    where: MedicationWhereUniqueInput
+  }
+
+  /**
+   * Medication deleteMany
+   */
+  export type MedicationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Medications to delete
+     */
+    where?: MedicationWhereInput
+    /**
+     * Limit how many Medications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Medication.careCircle
+   */
+  export type Medication$careCircleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CareCircle
+     */
+    select?: CareCircleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CareCircle
+     */
+    omit?: CareCircleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CareCircleInclude<ExtArgs> | null
+    where?: CareCircleWhereInput
+  }
+
+  /**
+   * Medication.doses
+   */
+  export type Medication$dosesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    where?: MedicationDoseWhereInput
+    orderBy?: MedicationDoseOrderByWithRelationInput | MedicationDoseOrderByWithRelationInput[]
+    cursor?: MedicationDoseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MedicationDoseScalarFieldEnum | MedicationDoseScalarFieldEnum[]
+  }
+
+  /**
+   * Medication without action
+   */
+  export type MedicationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MedicationDose
+   */
+
+  export type AggregateMedicationDose = {
+    _count: MedicationDoseCountAggregateOutputType | null
+    _avg: MedicationDoseAvgAggregateOutputType | null
+    _sum: MedicationDoseSumAggregateOutputType | null
+    _min: MedicationDoseMinAggregateOutputType | null
+    _max: MedicationDoseMaxAggregateOutputType | null
+  }
+
+  export type MedicationDoseAvgAggregateOutputType = {
+    escalationStep: number | null
+  }
+
+  export type MedicationDoseSumAggregateOutputType = {
+    escalationStep: number | null
+  }
+
+  export type MedicationDoseMinAggregateOutputType = {
+    id: string | null
+    medicationId: string | null
+    scheduledAt: Date | null
+    state: $Enums.MedicationDoseState | null
+    escalationStep: number | null
+    acknowledgedById: string | null
+    acknowledgedAt: Date | null
+    confirmationType: $Enums.MedicationConfirmationType | null
+    evidenceUrl: string | null
+    note: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MedicationDoseMaxAggregateOutputType = {
+    id: string | null
+    medicationId: string | null
+    scheduledAt: Date | null
+    state: $Enums.MedicationDoseState | null
+    escalationStep: number | null
+    acknowledgedById: string | null
+    acknowledgedAt: Date | null
+    confirmationType: $Enums.MedicationConfirmationType | null
+    evidenceUrl: string | null
+    note: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MedicationDoseCountAggregateOutputType = {
+    id: number
+    medicationId: number
+    scheduledAt: number
+    state: number
+    escalationStep: number
+    acknowledgedById: number
+    acknowledgedAt: number
+    confirmationType: number
+    evidenceUrl: number
+    note: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MedicationDoseAvgAggregateInputType = {
+    escalationStep?: true
+  }
+
+  export type MedicationDoseSumAggregateInputType = {
+    escalationStep?: true
+  }
+
+  export type MedicationDoseMinAggregateInputType = {
+    id?: true
+    medicationId?: true
+    scheduledAt?: true
+    state?: true
+    escalationStep?: true
+    acknowledgedById?: true
+    acknowledgedAt?: true
+    confirmationType?: true
+    evidenceUrl?: true
+    note?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MedicationDoseMaxAggregateInputType = {
+    id?: true
+    medicationId?: true
+    scheduledAt?: true
+    state?: true
+    escalationStep?: true
+    acknowledgedById?: true
+    acknowledgedAt?: true
+    confirmationType?: true
+    evidenceUrl?: true
+    note?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MedicationDoseCountAggregateInputType = {
+    id?: true
+    medicationId?: true
+    scheduledAt?: true
+    state?: true
+    escalationStep?: true
+    acknowledgedById?: true
+    acknowledgedAt?: true
+    confirmationType?: true
+    evidenceUrl?: true
+    note?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MedicationDoseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MedicationDose to aggregate.
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MedicationDoses to fetch.
+     */
+    orderBy?: MedicationDoseOrderByWithRelationInput | MedicationDoseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MedicationDoseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MedicationDoses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MedicationDoses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MedicationDoses
+    **/
+    _count?: true | MedicationDoseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MedicationDoseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MedicationDoseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MedicationDoseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MedicationDoseMaxAggregateInputType
+  }
+
+  export type GetMedicationDoseAggregateType<T extends MedicationDoseAggregateArgs> = {
+        [P in keyof T & keyof AggregateMedicationDose]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMedicationDose[P]>
+      : GetScalarType<T[P], AggregateMedicationDose[P]>
+  }
+
+
+
+
+  export type MedicationDoseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationDoseWhereInput
+    orderBy?: MedicationDoseOrderByWithAggregationInput | MedicationDoseOrderByWithAggregationInput[]
+    by: MedicationDoseScalarFieldEnum[] | MedicationDoseScalarFieldEnum
+    having?: MedicationDoseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MedicationDoseCountAggregateInputType | true
+    _avg?: MedicationDoseAvgAggregateInputType
+    _sum?: MedicationDoseSumAggregateInputType
+    _min?: MedicationDoseMinAggregateInputType
+    _max?: MedicationDoseMaxAggregateInputType
+  }
+
+  export type MedicationDoseGroupByOutputType = {
+    id: string
+    medicationId: string
+    scheduledAt: Date
+    state: $Enums.MedicationDoseState
+    escalationStep: number
+    acknowledgedById: string | null
+    acknowledgedAt: Date | null
+    confirmationType: $Enums.MedicationConfirmationType | null
+    evidenceUrl: string | null
+    note: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: MedicationDoseCountAggregateOutputType | null
+    _avg: MedicationDoseAvgAggregateOutputType | null
+    _sum: MedicationDoseSumAggregateOutputType | null
+    _min: MedicationDoseMinAggregateOutputType | null
+    _max: MedicationDoseMaxAggregateOutputType | null
+  }
+
+  type GetMedicationDoseGroupByPayload<T extends MedicationDoseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MedicationDoseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MedicationDoseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MedicationDoseGroupByOutputType[P]>
+            : GetScalarType<T[P], MedicationDoseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MedicationDoseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    medicationId?: boolean
+    scheduledAt?: boolean
+    state?: boolean
+    escalationStep?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    confirmationType?: boolean
+    evidenceUrl?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    medication?: boolean | MedicationDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | MedicationDose$acknowledgedByArgs<ExtArgs>
+  }, ExtArgs["result"]["medicationDose"]>
+
+  export type MedicationDoseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    medicationId?: boolean
+    scheduledAt?: boolean
+    state?: boolean
+    escalationStep?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    confirmationType?: boolean
+    evidenceUrl?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    medication?: boolean | MedicationDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | MedicationDose$acknowledgedByArgs<ExtArgs>
+  }, ExtArgs["result"]["medicationDose"]>
+
+  export type MedicationDoseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    medicationId?: boolean
+    scheduledAt?: boolean
+    state?: boolean
+    escalationStep?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    confirmationType?: boolean
+    evidenceUrl?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    medication?: boolean | MedicationDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | MedicationDose$acknowledgedByArgs<ExtArgs>
+  }, ExtArgs["result"]["medicationDose"]>
+
+  export type MedicationDoseSelectScalar = {
+    id?: boolean
+    medicationId?: boolean
+    scheduledAt?: boolean
+    state?: boolean
+    escalationStep?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    confirmationType?: boolean
+    evidenceUrl?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MedicationDoseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "medicationId" | "scheduledAt" | "state" | "escalationStep" | "acknowledgedById" | "acknowledgedAt" | "confirmationType" | "evidenceUrl" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["medicationDose"]>
+  export type MedicationDoseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    medication?: boolean | MedicationDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | MedicationDose$acknowledgedByArgs<ExtArgs>
+  }
+  export type MedicationDoseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    medication?: boolean | MedicationDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | MedicationDose$acknowledgedByArgs<ExtArgs>
+  }
+  export type MedicationDoseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    medication?: boolean | MedicationDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | MedicationDose$acknowledgedByArgs<ExtArgs>
+  }
+
+  export type $MedicationDosePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MedicationDose"
+    objects: {
+      medication: Prisma.$MedicationPayload<ExtArgs>
+      acknowledgedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      medicationId: string
+      scheduledAt: Date
+      state: $Enums.MedicationDoseState
+      escalationStep: number
+      acknowledgedById: string | null
+      acknowledgedAt: Date | null
+      confirmationType: $Enums.MedicationConfirmationType | null
+      evidenceUrl: string | null
+      note: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["medicationDose"]>
+    composites: {}
+  }
+
+  type MedicationDoseGetPayload<S extends boolean | null | undefined | MedicationDoseDefaultArgs> = $Result.GetResult<Prisma.$MedicationDosePayload, S>
+
+  type MedicationDoseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MedicationDoseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MedicationDoseCountAggregateInputType | true
+    }
+
+  export interface MedicationDoseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MedicationDose'], meta: { name: 'MedicationDose' } }
+    /**
+     * Find zero or one MedicationDose that matches the filter.
+     * @param {MedicationDoseFindUniqueArgs} args - Arguments to find a MedicationDose
+     * @example
+     * // Get one MedicationDose
+     * const medicationDose = await prisma.medicationDose.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MedicationDoseFindUniqueArgs>(args: SelectSubset<T, MedicationDoseFindUniqueArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MedicationDose that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MedicationDoseFindUniqueOrThrowArgs} args - Arguments to find a MedicationDose
+     * @example
+     * // Get one MedicationDose
+     * const medicationDose = await prisma.medicationDose.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MedicationDoseFindUniqueOrThrowArgs>(args: SelectSubset<T, MedicationDoseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MedicationDose that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseFindFirstArgs} args - Arguments to find a MedicationDose
+     * @example
+     * // Get one MedicationDose
+     * const medicationDose = await prisma.medicationDose.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MedicationDoseFindFirstArgs>(args?: SelectSubset<T, MedicationDoseFindFirstArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MedicationDose that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseFindFirstOrThrowArgs} args - Arguments to find a MedicationDose
+     * @example
+     * // Get one MedicationDose
+     * const medicationDose = await prisma.medicationDose.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MedicationDoseFindFirstOrThrowArgs>(args?: SelectSubset<T, MedicationDoseFindFirstOrThrowArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MedicationDoses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MedicationDoses
+     * const medicationDoses = await prisma.medicationDose.findMany()
+     * 
+     * // Get first 10 MedicationDoses
+     * const medicationDoses = await prisma.medicationDose.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const medicationDoseWithIdOnly = await prisma.medicationDose.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MedicationDoseFindManyArgs>(args?: SelectSubset<T, MedicationDoseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MedicationDose.
+     * @param {MedicationDoseCreateArgs} args - Arguments to create a MedicationDose.
+     * @example
+     * // Create one MedicationDose
+     * const MedicationDose = await prisma.medicationDose.create({
+     *   data: {
+     *     // ... data to create a MedicationDose
+     *   }
+     * })
+     * 
+     */
+    create<T extends MedicationDoseCreateArgs>(args: SelectSubset<T, MedicationDoseCreateArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MedicationDoses.
+     * @param {MedicationDoseCreateManyArgs} args - Arguments to create many MedicationDoses.
+     * @example
+     * // Create many MedicationDoses
+     * const medicationDose = await prisma.medicationDose.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MedicationDoseCreateManyArgs>(args?: SelectSubset<T, MedicationDoseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MedicationDoses and returns the data saved in the database.
+     * @param {MedicationDoseCreateManyAndReturnArgs} args - Arguments to create many MedicationDoses.
+     * @example
+     * // Create many MedicationDoses
+     * const medicationDose = await prisma.medicationDose.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MedicationDoses and only return the `id`
+     * const medicationDoseWithIdOnly = await prisma.medicationDose.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MedicationDoseCreateManyAndReturnArgs>(args?: SelectSubset<T, MedicationDoseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MedicationDose.
+     * @param {MedicationDoseDeleteArgs} args - Arguments to delete one MedicationDose.
+     * @example
+     * // Delete one MedicationDose
+     * const MedicationDose = await prisma.medicationDose.delete({
+     *   where: {
+     *     // ... filter to delete one MedicationDose
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MedicationDoseDeleteArgs>(args: SelectSubset<T, MedicationDoseDeleteArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MedicationDose.
+     * @param {MedicationDoseUpdateArgs} args - Arguments to update one MedicationDose.
+     * @example
+     * // Update one MedicationDose
+     * const medicationDose = await prisma.medicationDose.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MedicationDoseUpdateArgs>(args: SelectSubset<T, MedicationDoseUpdateArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MedicationDoses.
+     * @param {MedicationDoseDeleteManyArgs} args - Arguments to filter MedicationDoses to delete.
+     * @example
+     * // Delete a few MedicationDoses
+     * const { count } = await prisma.medicationDose.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MedicationDoseDeleteManyArgs>(args?: SelectSubset<T, MedicationDoseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MedicationDoses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MedicationDoses
+     * const medicationDose = await prisma.medicationDose.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MedicationDoseUpdateManyArgs>(args: SelectSubset<T, MedicationDoseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MedicationDoses and returns the data updated in the database.
+     * @param {MedicationDoseUpdateManyAndReturnArgs} args - Arguments to update many MedicationDoses.
+     * @example
+     * // Update many MedicationDoses
+     * const medicationDose = await prisma.medicationDose.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MedicationDoses and only return the `id`
+     * const medicationDoseWithIdOnly = await prisma.medicationDose.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MedicationDoseUpdateManyAndReturnArgs>(args: SelectSubset<T, MedicationDoseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MedicationDose.
+     * @param {MedicationDoseUpsertArgs} args - Arguments to update or create a MedicationDose.
+     * @example
+     * // Update or create a MedicationDose
+     * const medicationDose = await prisma.medicationDose.upsert({
+     *   create: {
+     *     // ... data to create a MedicationDose
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MedicationDose we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MedicationDoseUpsertArgs>(args: SelectSubset<T, MedicationDoseUpsertArgs<ExtArgs>>): Prisma__MedicationDoseClient<$Result.GetResult<Prisma.$MedicationDosePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MedicationDoses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseCountArgs} args - Arguments to filter MedicationDoses to count.
+     * @example
+     * // Count the number of MedicationDoses
+     * const count = await prisma.medicationDose.count({
+     *   where: {
+     *     // ... the filter for the MedicationDoses we want to count
+     *   }
+     * })
+    **/
+    count<T extends MedicationDoseCountArgs>(
+      args?: Subset<T, MedicationDoseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MedicationDoseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MedicationDose.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MedicationDoseAggregateArgs>(args: Subset<T, MedicationDoseAggregateArgs>): Prisma.PrismaPromise<GetMedicationDoseAggregateType<T>>
+
+    /**
+     * Group by MedicationDose.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MedicationDoseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MedicationDoseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MedicationDoseGroupByArgs['orderBy'] }
+        : { orderBy?: MedicationDoseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MedicationDoseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMedicationDoseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MedicationDose model
+   */
+  readonly fields: MedicationDoseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MedicationDose.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MedicationDoseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    medication<T extends MedicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MedicationDefaultArgs<ExtArgs>>): Prisma__MedicationClient<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    acknowledgedBy<T extends MedicationDose$acknowledgedByArgs<ExtArgs> = {}>(args?: Subset<T, MedicationDose$acknowledgedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MedicationDose model
+   */
+  interface MedicationDoseFieldRefs {
+    readonly id: FieldRef<"MedicationDose", 'String'>
+    readonly medicationId: FieldRef<"MedicationDose", 'String'>
+    readonly scheduledAt: FieldRef<"MedicationDose", 'DateTime'>
+    readonly state: FieldRef<"MedicationDose", 'MedicationDoseState'>
+    readonly escalationStep: FieldRef<"MedicationDose", 'Int'>
+    readonly acknowledgedById: FieldRef<"MedicationDose", 'String'>
+    readonly acknowledgedAt: FieldRef<"MedicationDose", 'DateTime'>
+    readonly confirmationType: FieldRef<"MedicationDose", 'MedicationConfirmationType'>
+    readonly evidenceUrl: FieldRef<"MedicationDose", 'String'>
+    readonly note: FieldRef<"MedicationDose", 'String'>
+    readonly createdAt: FieldRef<"MedicationDose", 'DateTime'>
+    readonly updatedAt: FieldRef<"MedicationDose", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MedicationDose findUnique
+   */
+  export type MedicationDoseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * Filter, which MedicationDose to fetch.
+     */
+    where: MedicationDoseWhereUniqueInput
+  }
+
+  /**
+   * MedicationDose findUniqueOrThrow
+   */
+  export type MedicationDoseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * Filter, which MedicationDose to fetch.
+     */
+    where: MedicationDoseWhereUniqueInput
+  }
+
+  /**
+   * MedicationDose findFirst
+   */
+  export type MedicationDoseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * Filter, which MedicationDose to fetch.
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MedicationDoses to fetch.
+     */
+    orderBy?: MedicationDoseOrderByWithRelationInput | MedicationDoseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MedicationDoses.
+     */
+    cursor?: MedicationDoseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MedicationDoses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MedicationDoses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MedicationDoses.
+     */
+    distinct?: MedicationDoseScalarFieldEnum | MedicationDoseScalarFieldEnum[]
+  }
+
+  /**
+   * MedicationDose findFirstOrThrow
+   */
+  export type MedicationDoseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * Filter, which MedicationDose to fetch.
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MedicationDoses to fetch.
+     */
+    orderBy?: MedicationDoseOrderByWithRelationInput | MedicationDoseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MedicationDoses.
+     */
+    cursor?: MedicationDoseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MedicationDoses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MedicationDoses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MedicationDoses.
+     */
+    distinct?: MedicationDoseScalarFieldEnum | MedicationDoseScalarFieldEnum[]
+  }
+
+  /**
+   * MedicationDose findMany
+   */
+  export type MedicationDoseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * Filter, which MedicationDoses to fetch.
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MedicationDoses to fetch.
+     */
+    orderBy?: MedicationDoseOrderByWithRelationInput | MedicationDoseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MedicationDoses.
+     */
+    cursor?: MedicationDoseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MedicationDoses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MedicationDoses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MedicationDoses.
+     */
+    distinct?: MedicationDoseScalarFieldEnum | MedicationDoseScalarFieldEnum[]
+  }
+
+  /**
+   * MedicationDose create
+   */
+  export type MedicationDoseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MedicationDose.
+     */
+    data: XOR<MedicationDoseCreateInput, MedicationDoseUncheckedCreateInput>
+  }
+
+  /**
+   * MedicationDose createMany
+   */
+  export type MedicationDoseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MedicationDoses.
+     */
+    data: MedicationDoseCreateManyInput | MedicationDoseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MedicationDose createManyAndReturn
+   */
+  export type MedicationDoseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * The data used to create many MedicationDoses.
+     */
+    data: MedicationDoseCreateManyInput | MedicationDoseCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MedicationDose update
+   */
+  export type MedicationDoseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MedicationDose.
+     */
+    data: XOR<MedicationDoseUpdateInput, MedicationDoseUncheckedUpdateInput>
+    /**
+     * Choose, which MedicationDose to update.
+     */
+    where: MedicationDoseWhereUniqueInput
+  }
+
+  /**
+   * MedicationDose updateMany
+   */
+  export type MedicationDoseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MedicationDoses.
+     */
+    data: XOR<MedicationDoseUpdateManyMutationInput, MedicationDoseUncheckedUpdateManyInput>
+    /**
+     * Filter which MedicationDoses to update
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * Limit how many MedicationDoses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MedicationDose updateManyAndReturn
+   */
+  export type MedicationDoseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * The data used to update MedicationDoses.
+     */
+    data: XOR<MedicationDoseUpdateManyMutationInput, MedicationDoseUncheckedUpdateManyInput>
+    /**
+     * Filter which MedicationDoses to update
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * Limit how many MedicationDoses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MedicationDose upsert
+   */
+  export type MedicationDoseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MedicationDose to update in case it exists.
+     */
+    where: MedicationDoseWhereUniqueInput
+    /**
+     * In case the MedicationDose found by the `where` argument doesn't exist, create a new MedicationDose with this data.
+     */
+    create: XOR<MedicationDoseCreateInput, MedicationDoseUncheckedCreateInput>
+    /**
+     * In case the MedicationDose was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MedicationDoseUpdateInput, MedicationDoseUncheckedUpdateInput>
+  }
+
+  /**
+   * MedicationDose delete
+   */
+  export type MedicationDoseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
+    /**
+     * Filter which MedicationDose to delete.
+     */
+    where: MedicationDoseWhereUniqueInput
+  }
+
+  /**
+   * MedicationDose deleteMany
+   */
+  export type MedicationDoseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MedicationDoses to delete
+     */
+    where?: MedicationDoseWhereInput
+    /**
+     * Limit how many MedicationDoses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MedicationDose.acknowledgedBy
+   */
+  export type MedicationDose$acknowledgedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * MedicationDose without action
+   */
+  export type MedicationDoseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MedicationDose
+     */
+    select?: MedicationDoseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MedicationDose
+     */
+    omit?: MedicationDoseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationDoseInclude<ExtArgs> | null
   }
 
 
@@ -12162,6 +15658,3813 @@ export namespace Prisma {
 
 
   /**
+   * Model VitalReading
+   */
+
+  export type AggregateVitalReading = {
+    _count: VitalReadingCountAggregateOutputType | null
+    _avg: VitalReadingAvgAggregateOutputType | null
+    _sum: VitalReadingSumAggregateOutputType | null
+    _min: VitalReadingMinAggregateOutputType | null
+    _max: VitalReadingMaxAggregateOutputType | null
+  }
+
+  export type VitalReadingAvgAggregateOutputType = {
+    systolic: number | null
+    diastolic: number | null
+    value: number | null
+  }
+
+  export type VitalReadingSumAggregateOutputType = {
+    systolic: number | null
+    diastolic: number | null
+    value: number | null
+  }
+
+  export type VitalReadingMinAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    vitalType: $Enums.VitalType | null
+    source: $Enums.VitalSource | null
+    systolic: number | null
+    diastolic: number | null
+    value: number | null
+    unit: string | null
+    context: string | null
+    notes: string | null
+    deviceModel: string | null
+    deviceMacAddress: string | null
+    recordedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type VitalReadingMaxAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    vitalType: $Enums.VitalType | null
+    source: $Enums.VitalSource | null
+    systolic: number | null
+    diastolic: number | null
+    value: number | null
+    unit: string | null
+    context: string | null
+    notes: string | null
+    deviceModel: string | null
+    deviceMacAddress: string | null
+    recordedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type VitalReadingCountAggregateOutputType = {
+    id: number
+    patientId: number
+    vitalType: number
+    source: number
+    systolic: number
+    diastolic: number
+    value: number
+    unit: number
+    context: number
+    notes: number
+    deviceModel: number
+    deviceMacAddress: number
+    rawBlePayload: number
+    recordedAt: number
+    createdById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type VitalReadingAvgAggregateInputType = {
+    systolic?: true
+    diastolic?: true
+    value?: true
+  }
+
+  export type VitalReadingSumAggregateInputType = {
+    systolic?: true
+    diastolic?: true
+    value?: true
+  }
+
+  export type VitalReadingMinAggregateInputType = {
+    id?: true
+    patientId?: true
+    vitalType?: true
+    source?: true
+    systolic?: true
+    diastolic?: true
+    value?: true
+    unit?: true
+    context?: true
+    notes?: true
+    deviceModel?: true
+    deviceMacAddress?: true
+    recordedAt?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type VitalReadingMaxAggregateInputType = {
+    id?: true
+    patientId?: true
+    vitalType?: true
+    source?: true
+    systolic?: true
+    diastolic?: true
+    value?: true
+    unit?: true
+    context?: true
+    notes?: true
+    deviceModel?: true
+    deviceMacAddress?: true
+    recordedAt?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type VitalReadingCountAggregateInputType = {
+    id?: true
+    patientId?: true
+    vitalType?: true
+    source?: true
+    systolic?: true
+    diastolic?: true
+    value?: true
+    unit?: true
+    context?: true
+    notes?: true
+    deviceModel?: true
+    deviceMacAddress?: true
+    rawBlePayload?: true
+    recordedAt?: true
+    createdById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type VitalReadingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VitalReading to aggregate.
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalReadings to fetch.
+     */
+    orderBy?: VitalReadingOrderByWithRelationInput | VitalReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VitalReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalReadings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalReadings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VitalReadings
+    **/
+    _count?: true | VitalReadingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VitalReadingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VitalReadingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VitalReadingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VitalReadingMaxAggregateInputType
+  }
+
+  export type GetVitalReadingAggregateType<T extends VitalReadingAggregateArgs> = {
+        [P in keyof T & keyof AggregateVitalReading]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVitalReading[P]>
+      : GetScalarType<T[P], AggregateVitalReading[P]>
+  }
+
+
+
+
+  export type VitalReadingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalReadingWhereInput
+    orderBy?: VitalReadingOrderByWithAggregationInput | VitalReadingOrderByWithAggregationInput[]
+    by: VitalReadingScalarFieldEnum[] | VitalReadingScalarFieldEnum
+    having?: VitalReadingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VitalReadingCountAggregateInputType | true
+    _avg?: VitalReadingAvgAggregateInputType
+    _sum?: VitalReadingSumAggregateInputType
+    _min?: VitalReadingMinAggregateInputType
+    _max?: VitalReadingMaxAggregateInputType
+  }
+
+  export type VitalReadingGroupByOutputType = {
+    id: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    source: $Enums.VitalSource
+    systolic: number | null
+    diastolic: number | null
+    value: number | null
+    unit: string
+    context: string | null
+    notes: string | null
+    deviceModel: string | null
+    deviceMacAddress: string | null
+    rawBlePayload: JsonValue | null
+    recordedAt: Date
+    createdById: string
+    createdAt: Date
+    _count: VitalReadingCountAggregateOutputType | null
+    _avg: VitalReadingAvgAggregateOutputType | null
+    _sum: VitalReadingSumAggregateOutputType | null
+    _min: VitalReadingMinAggregateOutputType | null
+    _max: VitalReadingMaxAggregateOutputType | null
+  }
+
+  type GetVitalReadingGroupByPayload<T extends VitalReadingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VitalReadingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VitalReadingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VitalReadingGroupByOutputType[P]>
+            : GetScalarType<T[P], VitalReadingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VitalReadingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    source?: boolean
+    systolic?: boolean
+    diastolic?: boolean
+    value?: boolean
+    unit?: boolean
+    context?: boolean
+    notes?: boolean
+    deviceModel?: boolean
+    deviceMacAddress?: boolean
+    rawBlePayload?: boolean
+    recordedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    alerts?: boolean | VitalReading$alertsArgs<ExtArgs>
+    _count?: boolean | VitalReadingCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalReading"]>
+
+  export type VitalReadingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    source?: boolean
+    systolic?: boolean
+    diastolic?: boolean
+    value?: boolean
+    unit?: boolean
+    context?: boolean
+    notes?: boolean
+    deviceModel?: boolean
+    deviceMacAddress?: boolean
+    rawBlePayload?: boolean
+    recordedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalReading"]>
+
+  export type VitalReadingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    source?: boolean
+    systolic?: boolean
+    diastolic?: boolean
+    value?: boolean
+    unit?: boolean
+    context?: boolean
+    notes?: boolean
+    deviceModel?: boolean
+    deviceMacAddress?: boolean
+    rawBlePayload?: boolean
+    recordedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalReading"]>
+
+  export type VitalReadingSelectScalar = {
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    source?: boolean
+    systolic?: boolean
+    diastolic?: boolean
+    value?: boolean
+    unit?: boolean
+    context?: boolean
+    notes?: boolean
+    deviceModel?: boolean
+    deviceMacAddress?: boolean
+    rawBlePayload?: boolean
+    recordedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+  }
+
+  export type VitalReadingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "patientId" | "vitalType" | "source" | "systolic" | "diastolic" | "value" | "unit" | "context" | "notes" | "deviceModel" | "deviceMacAddress" | "rawBlePayload" | "recordedAt" | "createdById" | "createdAt", ExtArgs["result"]["vitalReading"]>
+  export type VitalReadingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    alerts?: boolean | VitalReading$alertsArgs<ExtArgs>
+    _count?: boolean | VitalReadingCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type VitalReadingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type VitalReadingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $VitalReadingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VitalReading"
+    objects: {
+      patient: Prisma.$UserPayload<ExtArgs>
+      createdBy: Prisma.$UserPayload<ExtArgs>
+      alerts: Prisma.$VitalAlertPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      patientId: string
+      vitalType: $Enums.VitalType
+      source: $Enums.VitalSource
+      systolic: number | null
+      diastolic: number | null
+      value: number | null
+      unit: string
+      context: string | null
+      notes: string | null
+      deviceModel: string | null
+      deviceMacAddress: string | null
+      rawBlePayload: Prisma.JsonValue | null
+      recordedAt: Date
+      createdById: string
+      createdAt: Date
+    }, ExtArgs["result"]["vitalReading"]>
+    composites: {}
+  }
+
+  type VitalReadingGetPayload<S extends boolean | null | undefined | VitalReadingDefaultArgs> = $Result.GetResult<Prisma.$VitalReadingPayload, S>
+
+  type VitalReadingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VitalReadingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VitalReadingCountAggregateInputType | true
+    }
+
+  export interface VitalReadingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VitalReading'], meta: { name: 'VitalReading' } }
+    /**
+     * Find zero or one VitalReading that matches the filter.
+     * @param {VitalReadingFindUniqueArgs} args - Arguments to find a VitalReading
+     * @example
+     * // Get one VitalReading
+     * const vitalReading = await prisma.vitalReading.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VitalReadingFindUniqueArgs>(args: SelectSubset<T, VitalReadingFindUniqueArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VitalReading that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VitalReadingFindUniqueOrThrowArgs} args - Arguments to find a VitalReading
+     * @example
+     * // Get one VitalReading
+     * const vitalReading = await prisma.vitalReading.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VitalReadingFindUniqueOrThrowArgs>(args: SelectSubset<T, VitalReadingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VitalReading that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingFindFirstArgs} args - Arguments to find a VitalReading
+     * @example
+     * // Get one VitalReading
+     * const vitalReading = await prisma.vitalReading.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VitalReadingFindFirstArgs>(args?: SelectSubset<T, VitalReadingFindFirstArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VitalReading that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingFindFirstOrThrowArgs} args - Arguments to find a VitalReading
+     * @example
+     * // Get one VitalReading
+     * const vitalReading = await prisma.vitalReading.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VitalReadingFindFirstOrThrowArgs>(args?: SelectSubset<T, VitalReadingFindFirstOrThrowArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VitalReadings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VitalReadings
+     * const vitalReadings = await prisma.vitalReading.findMany()
+     * 
+     * // Get first 10 VitalReadings
+     * const vitalReadings = await prisma.vitalReading.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const vitalReadingWithIdOnly = await prisma.vitalReading.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VitalReadingFindManyArgs>(args?: SelectSubset<T, VitalReadingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VitalReading.
+     * @param {VitalReadingCreateArgs} args - Arguments to create a VitalReading.
+     * @example
+     * // Create one VitalReading
+     * const VitalReading = await prisma.vitalReading.create({
+     *   data: {
+     *     // ... data to create a VitalReading
+     *   }
+     * })
+     * 
+     */
+    create<T extends VitalReadingCreateArgs>(args: SelectSubset<T, VitalReadingCreateArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VitalReadings.
+     * @param {VitalReadingCreateManyArgs} args - Arguments to create many VitalReadings.
+     * @example
+     * // Create many VitalReadings
+     * const vitalReading = await prisma.vitalReading.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VitalReadingCreateManyArgs>(args?: SelectSubset<T, VitalReadingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VitalReadings and returns the data saved in the database.
+     * @param {VitalReadingCreateManyAndReturnArgs} args - Arguments to create many VitalReadings.
+     * @example
+     * // Create many VitalReadings
+     * const vitalReading = await prisma.vitalReading.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VitalReadings and only return the `id`
+     * const vitalReadingWithIdOnly = await prisma.vitalReading.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VitalReadingCreateManyAndReturnArgs>(args?: SelectSubset<T, VitalReadingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VitalReading.
+     * @param {VitalReadingDeleteArgs} args - Arguments to delete one VitalReading.
+     * @example
+     * // Delete one VitalReading
+     * const VitalReading = await prisma.vitalReading.delete({
+     *   where: {
+     *     // ... filter to delete one VitalReading
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VitalReadingDeleteArgs>(args: SelectSubset<T, VitalReadingDeleteArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VitalReading.
+     * @param {VitalReadingUpdateArgs} args - Arguments to update one VitalReading.
+     * @example
+     * // Update one VitalReading
+     * const vitalReading = await prisma.vitalReading.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VitalReadingUpdateArgs>(args: SelectSubset<T, VitalReadingUpdateArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VitalReadings.
+     * @param {VitalReadingDeleteManyArgs} args - Arguments to filter VitalReadings to delete.
+     * @example
+     * // Delete a few VitalReadings
+     * const { count } = await prisma.vitalReading.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VitalReadingDeleteManyArgs>(args?: SelectSubset<T, VitalReadingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VitalReadings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VitalReadings
+     * const vitalReading = await prisma.vitalReading.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VitalReadingUpdateManyArgs>(args: SelectSubset<T, VitalReadingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VitalReadings and returns the data updated in the database.
+     * @param {VitalReadingUpdateManyAndReturnArgs} args - Arguments to update many VitalReadings.
+     * @example
+     * // Update many VitalReadings
+     * const vitalReading = await prisma.vitalReading.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VitalReadings and only return the `id`
+     * const vitalReadingWithIdOnly = await prisma.vitalReading.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VitalReadingUpdateManyAndReturnArgs>(args: SelectSubset<T, VitalReadingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VitalReading.
+     * @param {VitalReadingUpsertArgs} args - Arguments to update or create a VitalReading.
+     * @example
+     * // Update or create a VitalReading
+     * const vitalReading = await prisma.vitalReading.upsert({
+     *   create: {
+     *     // ... data to create a VitalReading
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VitalReading we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VitalReadingUpsertArgs>(args: SelectSubset<T, VitalReadingUpsertArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VitalReadings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingCountArgs} args - Arguments to filter VitalReadings to count.
+     * @example
+     * // Count the number of VitalReadings
+     * const count = await prisma.vitalReading.count({
+     *   where: {
+     *     // ... the filter for the VitalReadings we want to count
+     *   }
+     * })
+    **/
+    count<T extends VitalReadingCountArgs>(
+      args?: Subset<T, VitalReadingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VitalReadingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VitalReading.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VitalReadingAggregateArgs>(args: Subset<T, VitalReadingAggregateArgs>): Prisma.PrismaPromise<GetVitalReadingAggregateType<T>>
+
+    /**
+     * Group by VitalReading.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalReadingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VitalReadingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VitalReadingGroupByArgs['orderBy'] }
+        : { orderBy?: VitalReadingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VitalReadingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVitalReadingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VitalReading model
+   */
+  readonly fields: VitalReadingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VitalReading.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VitalReadingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    patient<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    alerts<T extends VitalReading$alertsArgs<ExtArgs> = {}>(args?: Subset<T, VitalReading$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VitalReading model
+   */
+  interface VitalReadingFieldRefs {
+    readonly id: FieldRef<"VitalReading", 'String'>
+    readonly patientId: FieldRef<"VitalReading", 'String'>
+    readonly vitalType: FieldRef<"VitalReading", 'VitalType'>
+    readonly source: FieldRef<"VitalReading", 'VitalSource'>
+    readonly systolic: FieldRef<"VitalReading", 'Float'>
+    readonly diastolic: FieldRef<"VitalReading", 'Float'>
+    readonly value: FieldRef<"VitalReading", 'Float'>
+    readonly unit: FieldRef<"VitalReading", 'String'>
+    readonly context: FieldRef<"VitalReading", 'String'>
+    readonly notes: FieldRef<"VitalReading", 'String'>
+    readonly deviceModel: FieldRef<"VitalReading", 'String'>
+    readonly deviceMacAddress: FieldRef<"VitalReading", 'String'>
+    readonly rawBlePayload: FieldRef<"VitalReading", 'Json'>
+    readonly recordedAt: FieldRef<"VitalReading", 'DateTime'>
+    readonly createdById: FieldRef<"VitalReading", 'String'>
+    readonly createdAt: FieldRef<"VitalReading", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VitalReading findUnique
+   */
+  export type VitalReadingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalReading to fetch.
+     */
+    where: VitalReadingWhereUniqueInput
+  }
+
+  /**
+   * VitalReading findUniqueOrThrow
+   */
+  export type VitalReadingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalReading to fetch.
+     */
+    where: VitalReadingWhereUniqueInput
+  }
+
+  /**
+   * VitalReading findFirst
+   */
+  export type VitalReadingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalReading to fetch.
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalReadings to fetch.
+     */
+    orderBy?: VitalReadingOrderByWithRelationInput | VitalReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VitalReadings.
+     */
+    cursor?: VitalReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalReadings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalReadings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalReadings.
+     */
+    distinct?: VitalReadingScalarFieldEnum | VitalReadingScalarFieldEnum[]
+  }
+
+  /**
+   * VitalReading findFirstOrThrow
+   */
+  export type VitalReadingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalReading to fetch.
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalReadings to fetch.
+     */
+    orderBy?: VitalReadingOrderByWithRelationInput | VitalReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VitalReadings.
+     */
+    cursor?: VitalReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalReadings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalReadings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalReadings.
+     */
+    distinct?: VitalReadingScalarFieldEnum | VitalReadingScalarFieldEnum[]
+  }
+
+  /**
+   * VitalReading findMany
+   */
+  export type VitalReadingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalReadings to fetch.
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalReadings to fetch.
+     */
+    orderBy?: VitalReadingOrderByWithRelationInput | VitalReadingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VitalReadings.
+     */
+    cursor?: VitalReadingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalReadings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalReadings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalReadings.
+     */
+    distinct?: VitalReadingScalarFieldEnum | VitalReadingScalarFieldEnum[]
+  }
+
+  /**
+   * VitalReading create
+   */
+  export type VitalReadingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VitalReading.
+     */
+    data: XOR<VitalReadingCreateInput, VitalReadingUncheckedCreateInput>
+  }
+
+  /**
+   * VitalReading createMany
+   */
+  export type VitalReadingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VitalReadings.
+     */
+    data: VitalReadingCreateManyInput | VitalReadingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VitalReading createManyAndReturn
+   */
+  export type VitalReadingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * The data used to create many VitalReadings.
+     */
+    data: VitalReadingCreateManyInput | VitalReadingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VitalReading update
+   */
+  export type VitalReadingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VitalReading.
+     */
+    data: XOR<VitalReadingUpdateInput, VitalReadingUncheckedUpdateInput>
+    /**
+     * Choose, which VitalReading to update.
+     */
+    where: VitalReadingWhereUniqueInput
+  }
+
+  /**
+   * VitalReading updateMany
+   */
+  export type VitalReadingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VitalReadings.
+     */
+    data: XOR<VitalReadingUpdateManyMutationInput, VitalReadingUncheckedUpdateManyInput>
+    /**
+     * Filter which VitalReadings to update
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * Limit how many VitalReadings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VitalReading updateManyAndReturn
+   */
+  export type VitalReadingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * The data used to update VitalReadings.
+     */
+    data: XOR<VitalReadingUpdateManyMutationInput, VitalReadingUncheckedUpdateManyInput>
+    /**
+     * Filter which VitalReadings to update
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * Limit how many VitalReadings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VitalReading upsert
+   */
+  export type VitalReadingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VitalReading to update in case it exists.
+     */
+    where: VitalReadingWhereUniqueInput
+    /**
+     * In case the VitalReading found by the `where` argument doesn't exist, create a new VitalReading with this data.
+     */
+    create: XOR<VitalReadingCreateInput, VitalReadingUncheckedCreateInput>
+    /**
+     * In case the VitalReading was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VitalReadingUpdateInput, VitalReadingUncheckedUpdateInput>
+  }
+
+  /**
+   * VitalReading delete
+   */
+  export type VitalReadingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+    /**
+     * Filter which VitalReading to delete.
+     */
+    where: VitalReadingWhereUniqueInput
+  }
+
+  /**
+   * VitalReading deleteMany
+   */
+  export type VitalReadingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VitalReadings to delete
+     */
+    where?: VitalReadingWhereInput
+    /**
+     * Limit how many VitalReadings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VitalReading.alerts
+   */
+  export type VitalReading$alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    where?: VitalAlertWhereInput
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    cursor?: VitalAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VitalAlertScalarFieldEnum | VitalAlertScalarFieldEnum[]
+  }
+
+  /**
+   * VitalReading without action
+   */
+  export type VitalReadingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalReading
+     */
+    select?: VitalReadingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalReading
+     */
+    omit?: VitalReadingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalReadingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model VitalThreshold
+   */
+
+  export type AggregateVitalThreshold = {
+    _count: VitalThresholdCountAggregateOutputType | null
+    _avg: VitalThresholdAvgAggregateOutputType | null
+    _sum: VitalThresholdSumAggregateOutputType | null
+    _min: VitalThresholdMinAggregateOutputType | null
+    _max: VitalThresholdMaxAggregateOutputType | null
+  }
+
+  export type VitalThresholdAvgAggregateOutputType = {
+    minNormal: number | null
+    maxNormal: number | null
+    systolicMin: number | null
+    systolicMax: number | null
+    diastolicMin: number | null
+    diastolicMax: number | null
+    criticalMin: number | null
+    criticalMax: number | null
+    consecutiveBreachLimit: number | null
+    rollingBaselineDays: number | null
+    baselineDeviationPercent: number | null
+  }
+
+  export type VitalThresholdSumAggregateOutputType = {
+    minNormal: number | null
+    maxNormal: number | null
+    systolicMin: number | null
+    systolicMax: number | null
+    diastolicMin: number | null
+    diastolicMax: number | null
+    criticalMin: number | null
+    criticalMax: number | null
+    consecutiveBreachLimit: number | null
+    rollingBaselineDays: number | null
+    baselineDeviationPercent: number | null
+  }
+
+  export type VitalThresholdMinAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    vitalType: $Enums.VitalType | null
+    minNormal: number | null
+    maxNormal: number | null
+    systolicMin: number | null
+    systolicMax: number | null
+    diastolicMin: number | null
+    diastolicMax: number | null
+    criticalMin: number | null
+    criticalMax: number | null
+    consecutiveBreachLimit: number | null
+    rollingBaselineDays: number | null
+    baselineDeviationPercent: number | null
+    updatedById: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type VitalThresholdMaxAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    vitalType: $Enums.VitalType | null
+    minNormal: number | null
+    maxNormal: number | null
+    systolicMin: number | null
+    systolicMax: number | null
+    diastolicMin: number | null
+    diastolicMax: number | null
+    criticalMin: number | null
+    criticalMax: number | null
+    consecutiveBreachLimit: number | null
+    rollingBaselineDays: number | null
+    baselineDeviationPercent: number | null
+    updatedById: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type VitalThresholdCountAggregateOutputType = {
+    id: number
+    patientId: number
+    vitalType: number
+    minNormal: number
+    maxNormal: number
+    systolicMin: number
+    systolicMax: number
+    diastolicMin: number
+    diastolicMax: number
+    criticalMin: number
+    criticalMax: number
+    consecutiveBreachLimit: number
+    rollingBaselineDays: number
+    baselineDeviationPercent: number
+    updatedById: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type VitalThresholdAvgAggregateInputType = {
+    minNormal?: true
+    maxNormal?: true
+    systolicMin?: true
+    systolicMax?: true
+    diastolicMin?: true
+    diastolicMax?: true
+    criticalMin?: true
+    criticalMax?: true
+    consecutiveBreachLimit?: true
+    rollingBaselineDays?: true
+    baselineDeviationPercent?: true
+  }
+
+  export type VitalThresholdSumAggregateInputType = {
+    minNormal?: true
+    maxNormal?: true
+    systolicMin?: true
+    systolicMax?: true
+    diastolicMin?: true
+    diastolicMax?: true
+    criticalMin?: true
+    criticalMax?: true
+    consecutiveBreachLimit?: true
+    rollingBaselineDays?: true
+    baselineDeviationPercent?: true
+  }
+
+  export type VitalThresholdMinAggregateInputType = {
+    id?: true
+    patientId?: true
+    vitalType?: true
+    minNormal?: true
+    maxNormal?: true
+    systolicMin?: true
+    systolicMax?: true
+    diastolicMin?: true
+    diastolicMax?: true
+    criticalMin?: true
+    criticalMax?: true
+    consecutiveBreachLimit?: true
+    rollingBaselineDays?: true
+    baselineDeviationPercent?: true
+    updatedById?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type VitalThresholdMaxAggregateInputType = {
+    id?: true
+    patientId?: true
+    vitalType?: true
+    minNormal?: true
+    maxNormal?: true
+    systolicMin?: true
+    systolicMax?: true
+    diastolicMin?: true
+    diastolicMax?: true
+    criticalMin?: true
+    criticalMax?: true
+    consecutiveBreachLimit?: true
+    rollingBaselineDays?: true
+    baselineDeviationPercent?: true
+    updatedById?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type VitalThresholdCountAggregateInputType = {
+    id?: true
+    patientId?: true
+    vitalType?: true
+    minNormal?: true
+    maxNormal?: true
+    systolicMin?: true
+    systolicMax?: true
+    diastolicMin?: true
+    diastolicMax?: true
+    criticalMin?: true
+    criticalMax?: true
+    consecutiveBreachLimit?: true
+    rollingBaselineDays?: true
+    baselineDeviationPercent?: true
+    updatedById?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type VitalThresholdAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VitalThreshold to aggregate.
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalThresholds to fetch.
+     */
+    orderBy?: VitalThresholdOrderByWithRelationInput | VitalThresholdOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VitalThresholdWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalThresholds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalThresholds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VitalThresholds
+    **/
+    _count?: true | VitalThresholdCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VitalThresholdAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VitalThresholdSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VitalThresholdMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VitalThresholdMaxAggregateInputType
+  }
+
+  export type GetVitalThresholdAggregateType<T extends VitalThresholdAggregateArgs> = {
+        [P in keyof T & keyof AggregateVitalThreshold]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVitalThreshold[P]>
+      : GetScalarType<T[P], AggregateVitalThreshold[P]>
+  }
+
+
+
+
+  export type VitalThresholdGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalThresholdWhereInput
+    orderBy?: VitalThresholdOrderByWithAggregationInput | VitalThresholdOrderByWithAggregationInput[]
+    by: VitalThresholdScalarFieldEnum[] | VitalThresholdScalarFieldEnum
+    having?: VitalThresholdScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VitalThresholdCountAggregateInputType | true
+    _avg?: VitalThresholdAvgAggregateInputType
+    _sum?: VitalThresholdSumAggregateInputType
+    _min?: VitalThresholdMinAggregateInputType
+    _max?: VitalThresholdMaxAggregateInputType
+  }
+
+  export type VitalThresholdGroupByOutputType = {
+    id: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    minNormal: number | null
+    maxNormal: number | null
+    systolicMin: number | null
+    systolicMax: number | null
+    diastolicMin: number | null
+    diastolicMax: number | null
+    criticalMin: number | null
+    criticalMax: number | null
+    consecutiveBreachLimit: number
+    rollingBaselineDays: number
+    baselineDeviationPercent: number
+    updatedById: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: VitalThresholdCountAggregateOutputType | null
+    _avg: VitalThresholdAvgAggregateOutputType | null
+    _sum: VitalThresholdSumAggregateOutputType | null
+    _min: VitalThresholdMinAggregateOutputType | null
+    _max: VitalThresholdMaxAggregateOutputType | null
+  }
+
+  type GetVitalThresholdGroupByPayload<T extends VitalThresholdGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VitalThresholdGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VitalThresholdGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VitalThresholdGroupByOutputType[P]>
+            : GetScalarType<T[P], VitalThresholdGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VitalThresholdSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    minNormal?: boolean
+    maxNormal?: boolean
+    systolicMin?: boolean
+    systolicMax?: boolean
+    diastolicMin?: boolean
+    diastolicMax?: boolean
+    criticalMin?: boolean
+    criticalMax?: boolean
+    consecutiveBreachLimit?: boolean
+    rollingBaselineDays?: boolean
+    baselineDeviationPercent?: boolean
+    updatedById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    updatedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalThreshold"]>
+
+  export type VitalThresholdSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    minNormal?: boolean
+    maxNormal?: boolean
+    systolicMin?: boolean
+    systolicMax?: boolean
+    diastolicMin?: boolean
+    diastolicMax?: boolean
+    criticalMin?: boolean
+    criticalMax?: boolean
+    consecutiveBreachLimit?: boolean
+    rollingBaselineDays?: boolean
+    baselineDeviationPercent?: boolean
+    updatedById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    updatedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalThreshold"]>
+
+  export type VitalThresholdSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    minNormal?: boolean
+    maxNormal?: boolean
+    systolicMin?: boolean
+    systolicMax?: boolean
+    diastolicMin?: boolean
+    diastolicMax?: boolean
+    criticalMin?: boolean
+    criticalMax?: boolean
+    consecutiveBreachLimit?: boolean
+    rollingBaselineDays?: boolean
+    baselineDeviationPercent?: boolean
+    updatedById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    updatedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalThreshold"]>
+
+  export type VitalThresholdSelectScalar = {
+    id?: boolean
+    patientId?: boolean
+    vitalType?: boolean
+    minNormal?: boolean
+    maxNormal?: boolean
+    systolicMin?: boolean
+    systolicMax?: boolean
+    diastolicMin?: boolean
+    diastolicMax?: boolean
+    criticalMin?: boolean
+    criticalMax?: boolean
+    consecutiveBreachLimit?: boolean
+    rollingBaselineDays?: boolean
+    baselineDeviationPercent?: boolean
+    updatedById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type VitalThresholdOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "patientId" | "vitalType" | "minNormal" | "maxNormal" | "systolicMin" | "systolicMax" | "diastolicMin" | "diastolicMax" | "criticalMin" | "criticalMax" | "consecutiveBreachLimit" | "rollingBaselineDays" | "baselineDeviationPercent" | "updatedById" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["vitalThreshold"]>
+  export type VitalThresholdInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    updatedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type VitalThresholdIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    updatedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type VitalThresholdIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    updatedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $VitalThresholdPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VitalThreshold"
+    objects: {
+      patient: Prisma.$UserPayload<ExtArgs>
+      updatedBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      patientId: string
+      vitalType: $Enums.VitalType
+      minNormal: number | null
+      maxNormal: number | null
+      systolicMin: number | null
+      systolicMax: number | null
+      diastolicMin: number | null
+      diastolicMax: number | null
+      criticalMin: number | null
+      criticalMax: number | null
+      consecutiveBreachLimit: number
+      rollingBaselineDays: number
+      baselineDeviationPercent: number
+      updatedById: string
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["vitalThreshold"]>
+    composites: {}
+  }
+
+  type VitalThresholdGetPayload<S extends boolean | null | undefined | VitalThresholdDefaultArgs> = $Result.GetResult<Prisma.$VitalThresholdPayload, S>
+
+  type VitalThresholdCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VitalThresholdFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VitalThresholdCountAggregateInputType | true
+    }
+
+  export interface VitalThresholdDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VitalThreshold'], meta: { name: 'VitalThreshold' } }
+    /**
+     * Find zero or one VitalThreshold that matches the filter.
+     * @param {VitalThresholdFindUniqueArgs} args - Arguments to find a VitalThreshold
+     * @example
+     * // Get one VitalThreshold
+     * const vitalThreshold = await prisma.vitalThreshold.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VitalThresholdFindUniqueArgs>(args: SelectSubset<T, VitalThresholdFindUniqueArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VitalThreshold that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VitalThresholdFindUniqueOrThrowArgs} args - Arguments to find a VitalThreshold
+     * @example
+     * // Get one VitalThreshold
+     * const vitalThreshold = await prisma.vitalThreshold.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VitalThresholdFindUniqueOrThrowArgs>(args: SelectSubset<T, VitalThresholdFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VitalThreshold that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdFindFirstArgs} args - Arguments to find a VitalThreshold
+     * @example
+     * // Get one VitalThreshold
+     * const vitalThreshold = await prisma.vitalThreshold.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VitalThresholdFindFirstArgs>(args?: SelectSubset<T, VitalThresholdFindFirstArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VitalThreshold that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdFindFirstOrThrowArgs} args - Arguments to find a VitalThreshold
+     * @example
+     * // Get one VitalThreshold
+     * const vitalThreshold = await prisma.vitalThreshold.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VitalThresholdFindFirstOrThrowArgs>(args?: SelectSubset<T, VitalThresholdFindFirstOrThrowArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VitalThresholds that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VitalThresholds
+     * const vitalThresholds = await prisma.vitalThreshold.findMany()
+     * 
+     * // Get first 10 VitalThresholds
+     * const vitalThresholds = await prisma.vitalThreshold.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const vitalThresholdWithIdOnly = await prisma.vitalThreshold.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VitalThresholdFindManyArgs>(args?: SelectSubset<T, VitalThresholdFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VitalThreshold.
+     * @param {VitalThresholdCreateArgs} args - Arguments to create a VitalThreshold.
+     * @example
+     * // Create one VitalThreshold
+     * const VitalThreshold = await prisma.vitalThreshold.create({
+     *   data: {
+     *     // ... data to create a VitalThreshold
+     *   }
+     * })
+     * 
+     */
+    create<T extends VitalThresholdCreateArgs>(args: SelectSubset<T, VitalThresholdCreateArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VitalThresholds.
+     * @param {VitalThresholdCreateManyArgs} args - Arguments to create many VitalThresholds.
+     * @example
+     * // Create many VitalThresholds
+     * const vitalThreshold = await prisma.vitalThreshold.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VitalThresholdCreateManyArgs>(args?: SelectSubset<T, VitalThresholdCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VitalThresholds and returns the data saved in the database.
+     * @param {VitalThresholdCreateManyAndReturnArgs} args - Arguments to create many VitalThresholds.
+     * @example
+     * // Create many VitalThresholds
+     * const vitalThreshold = await prisma.vitalThreshold.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VitalThresholds and only return the `id`
+     * const vitalThresholdWithIdOnly = await prisma.vitalThreshold.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VitalThresholdCreateManyAndReturnArgs>(args?: SelectSubset<T, VitalThresholdCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VitalThreshold.
+     * @param {VitalThresholdDeleteArgs} args - Arguments to delete one VitalThreshold.
+     * @example
+     * // Delete one VitalThreshold
+     * const VitalThreshold = await prisma.vitalThreshold.delete({
+     *   where: {
+     *     // ... filter to delete one VitalThreshold
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VitalThresholdDeleteArgs>(args: SelectSubset<T, VitalThresholdDeleteArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VitalThreshold.
+     * @param {VitalThresholdUpdateArgs} args - Arguments to update one VitalThreshold.
+     * @example
+     * // Update one VitalThreshold
+     * const vitalThreshold = await prisma.vitalThreshold.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VitalThresholdUpdateArgs>(args: SelectSubset<T, VitalThresholdUpdateArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VitalThresholds.
+     * @param {VitalThresholdDeleteManyArgs} args - Arguments to filter VitalThresholds to delete.
+     * @example
+     * // Delete a few VitalThresholds
+     * const { count } = await prisma.vitalThreshold.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VitalThresholdDeleteManyArgs>(args?: SelectSubset<T, VitalThresholdDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VitalThresholds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VitalThresholds
+     * const vitalThreshold = await prisma.vitalThreshold.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VitalThresholdUpdateManyArgs>(args: SelectSubset<T, VitalThresholdUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VitalThresholds and returns the data updated in the database.
+     * @param {VitalThresholdUpdateManyAndReturnArgs} args - Arguments to update many VitalThresholds.
+     * @example
+     * // Update many VitalThresholds
+     * const vitalThreshold = await prisma.vitalThreshold.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VitalThresholds and only return the `id`
+     * const vitalThresholdWithIdOnly = await prisma.vitalThreshold.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VitalThresholdUpdateManyAndReturnArgs>(args: SelectSubset<T, VitalThresholdUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VitalThreshold.
+     * @param {VitalThresholdUpsertArgs} args - Arguments to update or create a VitalThreshold.
+     * @example
+     * // Update or create a VitalThreshold
+     * const vitalThreshold = await prisma.vitalThreshold.upsert({
+     *   create: {
+     *     // ... data to create a VitalThreshold
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VitalThreshold we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VitalThresholdUpsertArgs>(args: SelectSubset<T, VitalThresholdUpsertArgs<ExtArgs>>): Prisma__VitalThresholdClient<$Result.GetResult<Prisma.$VitalThresholdPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VitalThresholds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdCountArgs} args - Arguments to filter VitalThresholds to count.
+     * @example
+     * // Count the number of VitalThresholds
+     * const count = await prisma.vitalThreshold.count({
+     *   where: {
+     *     // ... the filter for the VitalThresholds we want to count
+     *   }
+     * })
+    **/
+    count<T extends VitalThresholdCountArgs>(
+      args?: Subset<T, VitalThresholdCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VitalThresholdCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VitalThreshold.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VitalThresholdAggregateArgs>(args: Subset<T, VitalThresholdAggregateArgs>): Prisma.PrismaPromise<GetVitalThresholdAggregateType<T>>
+
+    /**
+     * Group by VitalThreshold.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalThresholdGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VitalThresholdGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VitalThresholdGroupByArgs['orderBy'] }
+        : { orderBy?: VitalThresholdGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VitalThresholdGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVitalThresholdGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VitalThreshold model
+   */
+  readonly fields: VitalThresholdFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VitalThreshold.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VitalThresholdClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    patient<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    updatedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VitalThreshold model
+   */
+  interface VitalThresholdFieldRefs {
+    readonly id: FieldRef<"VitalThreshold", 'String'>
+    readonly patientId: FieldRef<"VitalThreshold", 'String'>
+    readonly vitalType: FieldRef<"VitalThreshold", 'VitalType'>
+    readonly minNormal: FieldRef<"VitalThreshold", 'Float'>
+    readonly maxNormal: FieldRef<"VitalThreshold", 'Float'>
+    readonly systolicMin: FieldRef<"VitalThreshold", 'Float'>
+    readonly systolicMax: FieldRef<"VitalThreshold", 'Float'>
+    readonly diastolicMin: FieldRef<"VitalThreshold", 'Float'>
+    readonly diastolicMax: FieldRef<"VitalThreshold", 'Float'>
+    readonly criticalMin: FieldRef<"VitalThreshold", 'Float'>
+    readonly criticalMax: FieldRef<"VitalThreshold", 'Float'>
+    readonly consecutiveBreachLimit: FieldRef<"VitalThreshold", 'Int'>
+    readonly rollingBaselineDays: FieldRef<"VitalThreshold", 'Int'>
+    readonly baselineDeviationPercent: FieldRef<"VitalThreshold", 'Float'>
+    readonly updatedById: FieldRef<"VitalThreshold", 'String'>
+    readonly isActive: FieldRef<"VitalThreshold", 'Boolean'>
+    readonly createdAt: FieldRef<"VitalThreshold", 'DateTime'>
+    readonly updatedAt: FieldRef<"VitalThreshold", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VitalThreshold findUnique
+   */
+  export type VitalThresholdFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalThreshold to fetch.
+     */
+    where: VitalThresholdWhereUniqueInput
+  }
+
+  /**
+   * VitalThreshold findUniqueOrThrow
+   */
+  export type VitalThresholdFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalThreshold to fetch.
+     */
+    where: VitalThresholdWhereUniqueInput
+  }
+
+  /**
+   * VitalThreshold findFirst
+   */
+  export type VitalThresholdFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalThreshold to fetch.
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalThresholds to fetch.
+     */
+    orderBy?: VitalThresholdOrderByWithRelationInput | VitalThresholdOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VitalThresholds.
+     */
+    cursor?: VitalThresholdWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalThresholds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalThresholds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalThresholds.
+     */
+    distinct?: VitalThresholdScalarFieldEnum | VitalThresholdScalarFieldEnum[]
+  }
+
+  /**
+   * VitalThreshold findFirstOrThrow
+   */
+  export type VitalThresholdFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalThreshold to fetch.
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalThresholds to fetch.
+     */
+    orderBy?: VitalThresholdOrderByWithRelationInput | VitalThresholdOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VitalThresholds.
+     */
+    cursor?: VitalThresholdWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalThresholds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalThresholds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalThresholds.
+     */
+    distinct?: VitalThresholdScalarFieldEnum | VitalThresholdScalarFieldEnum[]
+  }
+
+  /**
+   * VitalThreshold findMany
+   */
+  export type VitalThresholdFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalThresholds to fetch.
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalThresholds to fetch.
+     */
+    orderBy?: VitalThresholdOrderByWithRelationInput | VitalThresholdOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VitalThresholds.
+     */
+    cursor?: VitalThresholdWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalThresholds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalThresholds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalThresholds.
+     */
+    distinct?: VitalThresholdScalarFieldEnum | VitalThresholdScalarFieldEnum[]
+  }
+
+  /**
+   * VitalThreshold create
+   */
+  export type VitalThresholdCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VitalThreshold.
+     */
+    data: XOR<VitalThresholdCreateInput, VitalThresholdUncheckedCreateInput>
+  }
+
+  /**
+   * VitalThreshold createMany
+   */
+  export type VitalThresholdCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VitalThresholds.
+     */
+    data: VitalThresholdCreateManyInput | VitalThresholdCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VitalThreshold createManyAndReturn
+   */
+  export type VitalThresholdCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * The data used to create many VitalThresholds.
+     */
+    data: VitalThresholdCreateManyInput | VitalThresholdCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VitalThreshold update
+   */
+  export type VitalThresholdUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VitalThreshold.
+     */
+    data: XOR<VitalThresholdUpdateInput, VitalThresholdUncheckedUpdateInput>
+    /**
+     * Choose, which VitalThreshold to update.
+     */
+    where: VitalThresholdWhereUniqueInput
+  }
+
+  /**
+   * VitalThreshold updateMany
+   */
+  export type VitalThresholdUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VitalThresholds.
+     */
+    data: XOR<VitalThresholdUpdateManyMutationInput, VitalThresholdUncheckedUpdateManyInput>
+    /**
+     * Filter which VitalThresholds to update
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * Limit how many VitalThresholds to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VitalThreshold updateManyAndReturn
+   */
+  export type VitalThresholdUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * The data used to update VitalThresholds.
+     */
+    data: XOR<VitalThresholdUpdateManyMutationInput, VitalThresholdUncheckedUpdateManyInput>
+    /**
+     * Filter which VitalThresholds to update
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * Limit how many VitalThresholds to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VitalThreshold upsert
+   */
+  export type VitalThresholdUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VitalThreshold to update in case it exists.
+     */
+    where: VitalThresholdWhereUniqueInput
+    /**
+     * In case the VitalThreshold found by the `where` argument doesn't exist, create a new VitalThreshold with this data.
+     */
+    create: XOR<VitalThresholdCreateInput, VitalThresholdUncheckedCreateInput>
+    /**
+     * In case the VitalThreshold was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VitalThresholdUpdateInput, VitalThresholdUncheckedUpdateInput>
+  }
+
+  /**
+   * VitalThreshold delete
+   */
+  export type VitalThresholdDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+    /**
+     * Filter which VitalThreshold to delete.
+     */
+    where: VitalThresholdWhereUniqueInput
+  }
+
+  /**
+   * VitalThreshold deleteMany
+   */
+  export type VitalThresholdDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VitalThresholds to delete
+     */
+    where?: VitalThresholdWhereInput
+    /**
+     * Limit how many VitalThresholds to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VitalThreshold without action
+   */
+  export type VitalThresholdDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalThreshold
+     */
+    select?: VitalThresholdSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalThreshold
+     */
+    omit?: VitalThresholdOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalThresholdInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model VitalAlert
+   */
+
+  export type AggregateVitalAlert = {
+    _count: VitalAlertCountAggregateOutputType | null
+    _min: VitalAlertMinAggregateOutputType | null
+    _max: VitalAlertMaxAggregateOutputType | null
+  }
+
+  export type VitalAlertMinAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    readingId: string | null
+    vitalType: $Enums.VitalType | null
+    severity: $Enums.AlertSeverity | null
+    anomalyType: $Enums.AnomalyType | null
+    message: string | null
+    status: $Enums.AlertStatus | null
+    acknowledgedById: string | null
+    acknowledgedAt: Date | null
+    resolutionNote: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type VitalAlertMaxAggregateOutputType = {
+    id: string | null
+    patientId: string | null
+    readingId: string | null
+    vitalType: $Enums.VitalType | null
+    severity: $Enums.AlertSeverity | null
+    anomalyType: $Enums.AnomalyType | null
+    message: string | null
+    status: $Enums.AlertStatus | null
+    acknowledgedById: string | null
+    acknowledgedAt: Date | null
+    resolutionNote: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type VitalAlertCountAggregateOutputType = {
+    id: number
+    patientId: number
+    readingId: number
+    vitalType: number
+    severity: number
+    anomalyType: number
+    message: number
+    status: number
+    baselineSnapshot: number
+    acknowledgedById: number
+    acknowledgedAt: number
+    resolutionNote: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type VitalAlertMinAggregateInputType = {
+    id?: true
+    patientId?: true
+    readingId?: true
+    vitalType?: true
+    severity?: true
+    anomalyType?: true
+    message?: true
+    status?: true
+    acknowledgedById?: true
+    acknowledgedAt?: true
+    resolutionNote?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type VitalAlertMaxAggregateInputType = {
+    id?: true
+    patientId?: true
+    readingId?: true
+    vitalType?: true
+    severity?: true
+    anomalyType?: true
+    message?: true
+    status?: true
+    acknowledgedById?: true
+    acknowledgedAt?: true
+    resolutionNote?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type VitalAlertCountAggregateInputType = {
+    id?: true
+    patientId?: true
+    readingId?: true
+    vitalType?: true
+    severity?: true
+    anomalyType?: true
+    message?: true
+    status?: true
+    baselineSnapshot?: true
+    acknowledgedById?: true
+    acknowledgedAt?: true
+    resolutionNote?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type VitalAlertAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VitalAlert to aggregate.
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalAlerts to fetch.
+     */
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VitalAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VitalAlerts
+    **/
+    _count?: true | VitalAlertCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VitalAlertMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VitalAlertMaxAggregateInputType
+  }
+
+  export type GetVitalAlertAggregateType<T extends VitalAlertAggregateArgs> = {
+        [P in keyof T & keyof AggregateVitalAlert]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVitalAlert[P]>
+      : GetScalarType<T[P], AggregateVitalAlert[P]>
+  }
+
+
+
+
+  export type VitalAlertGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VitalAlertWhereInput
+    orderBy?: VitalAlertOrderByWithAggregationInput | VitalAlertOrderByWithAggregationInput[]
+    by: VitalAlertScalarFieldEnum[] | VitalAlertScalarFieldEnum
+    having?: VitalAlertScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VitalAlertCountAggregateInputType | true
+    _min?: VitalAlertMinAggregateInputType
+    _max?: VitalAlertMaxAggregateInputType
+  }
+
+  export type VitalAlertGroupByOutputType = {
+    id: string
+    patientId: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status: $Enums.AlertStatus
+    baselineSnapshot: JsonValue | null
+    acknowledgedById: string | null
+    acknowledgedAt: Date | null
+    resolutionNote: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: VitalAlertCountAggregateOutputType | null
+    _min: VitalAlertMinAggregateOutputType | null
+    _max: VitalAlertMaxAggregateOutputType | null
+  }
+
+  type GetVitalAlertGroupByPayload<T extends VitalAlertGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VitalAlertGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VitalAlertGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VitalAlertGroupByOutputType[P]>
+            : GetScalarType<T[P], VitalAlertGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VitalAlertSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    readingId?: boolean
+    vitalType?: boolean
+    severity?: boolean
+    anomalyType?: boolean
+    message?: boolean
+    status?: boolean
+    baselineSnapshot?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    resolutionNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    reading?: boolean | VitalReadingDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | VitalAlert$acknowledgedByArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalAlert"]>
+
+  export type VitalAlertSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    readingId?: boolean
+    vitalType?: boolean
+    severity?: boolean
+    anomalyType?: boolean
+    message?: boolean
+    status?: boolean
+    baselineSnapshot?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    resolutionNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    reading?: boolean | VitalReadingDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | VitalAlert$acknowledgedByArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalAlert"]>
+
+  export type VitalAlertSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    patientId?: boolean
+    readingId?: boolean
+    vitalType?: boolean
+    severity?: boolean
+    anomalyType?: boolean
+    message?: boolean
+    status?: boolean
+    baselineSnapshot?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    resolutionNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    reading?: boolean | VitalReadingDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | VitalAlert$acknowledgedByArgs<ExtArgs>
+  }, ExtArgs["result"]["vitalAlert"]>
+
+  export type VitalAlertSelectScalar = {
+    id?: boolean
+    patientId?: boolean
+    readingId?: boolean
+    vitalType?: boolean
+    severity?: boolean
+    anomalyType?: boolean
+    message?: boolean
+    status?: boolean
+    baselineSnapshot?: boolean
+    acknowledgedById?: boolean
+    acknowledgedAt?: boolean
+    resolutionNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type VitalAlertOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "patientId" | "readingId" | "vitalType" | "severity" | "anomalyType" | "message" | "status" | "baselineSnapshot" | "acknowledgedById" | "acknowledgedAt" | "resolutionNote" | "createdAt" | "updatedAt", ExtArgs["result"]["vitalAlert"]>
+  export type VitalAlertInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    reading?: boolean | VitalReadingDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | VitalAlert$acknowledgedByArgs<ExtArgs>
+  }
+  export type VitalAlertIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    reading?: boolean | VitalReadingDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | VitalAlert$acknowledgedByArgs<ExtArgs>
+  }
+  export type VitalAlertIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    patient?: boolean | UserDefaultArgs<ExtArgs>
+    reading?: boolean | VitalReadingDefaultArgs<ExtArgs>
+    acknowledgedBy?: boolean | VitalAlert$acknowledgedByArgs<ExtArgs>
+  }
+
+  export type $VitalAlertPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VitalAlert"
+    objects: {
+      patient: Prisma.$UserPayload<ExtArgs>
+      reading: Prisma.$VitalReadingPayload<ExtArgs>
+      acknowledgedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      patientId: string
+      readingId: string
+      vitalType: $Enums.VitalType
+      severity: $Enums.AlertSeverity
+      anomalyType: $Enums.AnomalyType
+      message: string
+      status: $Enums.AlertStatus
+      baselineSnapshot: Prisma.JsonValue | null
+      acknowledgedById: string | null
+      acknowledgedAt: Date | null
+      resolutionNote: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["vitalAlert"]>
+    composites: {}
+  }
+
+  type VitalAlertGetPayload<S extends boolean | null | undefined | VitalAlertDefaultArgs> = $Result.GetResult<Prisma.$VitalAlertPayload, S>
+
+  type VitalAlertCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VitalAlertFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VitalAlertCountAggregateInputType | true
+    }
+
+  export interface VitalAlertDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VitalAlert'], meta: { name: 'VitalAlert' } }
+    /**
+     * Find zero or one VitalAlert that matches the filter.
+     * @param {VitalAlertFindUniqueArgs} args - Arguments to find a VitalAlert
+     * @example
+     * // Get one VitalAlert
+     * const vitalAlert = await prisma.vitalAlert.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VitalAlertFindUniqueArgs>(args: SelectSubset<T, VitalAlertFindUniqueArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VitalAlert that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VitalAlertFindUniqueOrThrowArgs} args - Arguments to find a VitalAlert
+     * @example
+     * // Get one VitalAlert
+     * const vitalAlert = await prisma.vitalAlert.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VitalAlertFindUniqueOrThrowArgs>(args: SelectSubset<T, VitalAlertFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VitalAlert that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertFindFirstArgs} args - Arguments to find a VitalAlert
+     * @example
+     * // Get one VitalAlert
+     * const vitalAlert = await prisma.vitalAlert.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VitalAlertFindFirstArgs>(args?: SelectSubset<T, VitalAlertFindFirstArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VitalAlert that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertFindFirstOrThrowArgs} args - Arguments to find a VitalAlert
+     * @example
+     * // Get one VitalAlert
+     * const vitalAlert = await prisma.vitalAlert.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VitalAlertFindFirstOrThrowArgs>(args?: SelectSubset<T, VitalAlertFindFirstOrThrowArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VitalAlerts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VitalAlerts
+     * const vitalAlerts = await prisma.vitalAlert.findMany()
+     * 
+     * // Get first 10 VitalAlerts
+     * const vitalAlerts = await prisma.vitalAlert.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const vitalAlertWithIdOnly = await prisma.vitalAlert.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VitalAlertFindManyArgs>(args?: SelectSubset<T, VitalAlertFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VitalAlert.
+     * @param {VitalAlertCreateArgs} args - Arguments to create a VitalAlert.
+     * @example
+     * // Create one VitalAlert
+     * const VitalAlert = await prisma.vitalAlert.create({
+     *   data: {
+     *     // ... data to create a VitalAlert
+     *   }
+     * })
+     * 
+     */
+    create<T extends VitalAlertCreateArgs>(args: SelectSubset<T, VitalAlertCreateArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VitalAlerts.
+     * @param {VitalAlertCreateManyArgs} args - Arguments to create many VitalAlerts.
+     * @example
+     * // Create many VitalAlerts
+     * const vitalAlert = await prisma.vitalAlert.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VitalAlertCreateManyArgs>(args?: SelectSubset<T, VitalAlertCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VitalAlerts and returns the data saved in the database.
+     * @param {VitalAlertCreateManyAndReturnArgs} args - Arguments to create many VitalAlerts.
+     * @example
+     * // Create many VitalAlerts
+     * const vitalAlert = await prisma.vitalAlert.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VitalAlerts and only return the `id`
+     * const vitalAlertWithIdOnly = await prisma.vitalAlert.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VitalAlertCreateManyAndReturnArgs>(args?: SelectSubset<T, VitalAlertCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VitalAlert.
+     * @param {VitalAlertDeleteArgs} args - Arguments to delete one VitalAlert.
+     * @example
+     * // Delete one VitalAlert
+     * const VitalAlert = await prisma.vitalAlert.delete({
+     *   where: {
+     *     // ... filter to delete one VitalAlert
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VitalAlertDeleteArgs>(args: SelectSubset<T, VitalAlertDeleteArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VitalAlert.
+     * @param {VitalAlertUpdateArgs} args - Arguments to update one VitalAlert.
+     * @example
+     * // Update one VitalAlert
+     * const vitalAlert = await prisma.vitalAlert.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VitalAlertUpdateArgs>(args: SelectSubset<T, VitalAlertUpdateArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VitalAlerts.
+     * @param {VitalAlertDeleteManyArgs} args - Arguments to filter VitalAlerts to delete.
+     * @example
+     * // Delete a few VitalAlerts
+     * const { count } = await prisma.vitalAlert.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VitalAlertDeleteManyArgs>(args?: SelectSubset<T, VitalAlertDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VitalAlerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VitalAlerts
+     * const vitalAlert = await prisma.vitalAlert.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VitalAlertUpdateManyArgs>(args: SelectSubset<T, VitalAlertUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VitalAlerts and returns the data updated in the database.
+     * @param {VitalAlertUpdateManyAndReturnArgs} args - Arguments to update many VitalAlerts.
+     * @example
+     * // Update many VitalAlerts
+     * const vitalAlert = await prisma.vitalAlert.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VitalAlerts and only return the `id`
+     * const vitalAlertWithIdOnly = await prisma.vitalAlert.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VitalAlertUpdateManyAndReturnArgs>(args: SelectSubset<T, VitalAlertUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VitalAlert.
+     * @param {VitalAlertUpsertArgs} args - Arguments to update or create a VitalAlert.
+     * @example
+     * // Update or create a VitalAlert
+     * const vitalAlert = await prisma.vitalAlert.upsert({
+     *   create: {
+     *     // ... data to create a VitalAlert
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VitalAlert we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VitalAlertUpsertArgs>(args: SelectSubset<T, VitalAlertUpsertArgs<ExtArgs>>): Prisma__VitalAlertClient<$Result.GetResult<Prisma.$VitalAlertPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VitalAlerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertCountArgs} args - Arguments to filter VitalAlerts to count.
+     * @example
+     * // Count the number of VitalAlerts
+     * const count = await prisma.vitalAlert.count({
+     *   where: {
+     *     // ... the filter for the VitalAlerts we want to count
+     *   }
+     * })
+    **/
+    count<T extends VitalAlertCountArgs>(
+      args?: Subset<T, VitalAlertCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VitalAlertCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VitalAlert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VitalAlertAggregateArgs>(args: Subset<T, VitalAlertAggregateArgs>): Prisma.PrismaPromise<GetVitalAlertAggregateType<T>>
+
+    /**
+     * Group by VitalAlert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VitalAlertGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VitalAlertGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VitalAlertGroupByArgs['orderBy'] }
+        : { orderBy?: VitalAlertGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VitalAlertGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVitalAlertGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VitalAlert model
+   */
+  readonly fields: VitalAlertFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VitalAlert.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VitalAlertClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    patient<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reading<T extends VitalReadingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VitalReadingDefaultArgs<ExtArgs>>): Prisma__VitalReadingClient<$Result.GetResult<Prisma.$VitalReadingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    acknowledgedBy<T extends VitalAlert$acknowledgedByArgs<ExtArgs> = {}>(args?: Subset<T, VitalAlert$acknowledgedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VitalAlert model
+   */
+  interface VitalAlertFieldRefs {
+    readonly id: FieldRef<"VitalAlert", 'String'>
+    readonly patientId: FieldRef<"VitalAlert", 'String'>
+    readonly readingId: FieldRef<"VitalAlert", 'String'>
+    readonly vitalType: FieldRef<"VitalAlert", 'VitalType'>
+    readonly severity: FieldRef<"VitalAlert", 'AlertSeverity'>
+    readonly anomalyType: FieldRef<"VitalAlert", 'AnomalyType'>
+    readonly message: FieldRef<"VitalAlert", 'String'>
+    readonly status: FieldRef<"VitalAlert", 'AlertStatus'>
+    readonly baselineSnapshot: FieldRef<"VitalAlert", 'Json'>
+    readonly acknowledgedById: FieldRef<"VitalAlert", 'String'>
+    readonly acknowledgedAt: FieldRef<"VitalAlert", 'DateTime'>
+    readonly resolutionNote: FieldRef<"VitalAlert", 'String'>
+    readonly createdAt: FieldRef<"VitalAlert", 'DateTime'>
+    readonly updatedAt: FieldRef<"VitalAlert", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VitalAlert findUnique
+   */
+  export type VitalAlertFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalAlert to fetch.
+     */
+    where: VitalAlertWhereUniqueInput
+  }
+
+  /**
+   * VitalAlert findUniqueOrThrow
+   */
+  export type VitalAlertFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalAlert to fetch.
+     */
+    where: VitalAlertWhereUniqueInput
+  }
+
+  /**
+   * VitalAlert findFirst
+   */
+  export type VitalAlertFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalAlert to fetch.
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalAlerts to fetch.
+     */
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VitalAlerts.
+     */
+    cursor?: VitalAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalAlerts.
+     */
+    distinct?: VitalAlertScalarFieldEnum | VitalAlertScalarFieldEnum[]
+  }
+
+  /**
+   * VitalAlert findFirstOrThrow
+   */
+  export type VitalAlertFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalAlert to fetch.
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalAlerts to fetch.
+     */
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VitalAlerts.
+     */
+    cursor?: VitalAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalAlerts.
+     */
+    distinct?: VitalAlertScalarFieldEnum | VitalAlertScalarFieldEnum[]
+  }
+
+  /**
+   * VitalAlert findMany
+   */
+  export type VitalAlertFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which VitalAlerts to fetch.
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VitalAlerts to fetch.
+     */
+    orderBy?: VitalAlertOrderByWithRelationInput | VitalAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VitalAlerts.
+     */
+    cursor?: VitalAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VitalAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VitalAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VitalAlerts.
+     */
+    distinct?: VitalAlertScalarFieldEnum | VitalAlertScalarFieldEnum[]
+  }
+
+  /**
+   * VitalAlert create
+   */
+  export type VitalAlertCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VitalAlert.
+     */
+    data: XOR<VitalAlertCreateInput, VitalAlertUncheckedCreateInput>
+  }
+
+  /**
+   * VitalAlert createMany
+   */
+  export type VitalAlertCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VitalAlerts.
+     */
+    data: VitalAlertCreateManyInput | VitalAlertCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VitalAlert createManyAndReturn
+   */
+  export type VitalAlertCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * The data used to create many VitalAlerts.
+     */
+    data: VitalAlertCreateManyInput | VitalAlertCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VitalAlert update
+   */
+  export type VitalAlertUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VitalAlert.
+     */
+    data: XOR<VitalAlertUpdateInput, VitalAlertUncheckedUpdateInput>
+    /**
+     * Choose, which VitalAlert to update.
+     */
+    where: VitalAlertWhereUniqueInput
+  }
+
+  /**
+   * VitalAlert updateMany
+   */
+  export type VitalAlertUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VitalAlerts.
+     */
+    data: XOR<VitalAlertUpdateManyMutationInput, VitalAlertUncheckedUpdateManyInput>
+    /**
+     * Filter which VitalAlerts to update
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * Limit how many VitalAlerts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VitalAlert updateManyAndReturn
+   */
+  export type VitalAlertUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * The data used to update VitalAlerts.
+     */
+    data: XOR<VitalAlertUpdateManyMutationInput, VitalAlertUncheckedUpdateManyInput>
+    /**
+     * Filter which VitalAlerts to update
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * Limit how many VitalAlerts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VitalAlert upsert
+   */
+  export type VitalAlertUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VitalAlert to update in case it exists.
+     */
+    where: VitalAlertWhereUniqueInput
+    /**
+     * In case the VitalAlert found by the `where` argument doesn't exist, create a new VitalAlert with this data.
+     */
+    create: XOR<VitalAlertCreateInput, VitalAlertUncheckedCreateInput>
+    /**
+     * In case the VitalAlert was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VitalAlertUpdateInput, VitalAlertUncheckedUpdateInput>
+  }
+
+  /**
+   * VitalAlert delete
+   */
+  export type VitalAlertDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+    /**
+     * Filter which VitalAlert to delete.
+     */
+    where: VitalAlertWhereUniqueInput
+  }
+
+  /**
+   * VitalAlert deleteMany
+   */
+  export type VitalAlertDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VitalAlerts to delete
+     */
+    where?: VitalAlertWhereInput
+    /**
+     * Limit how many VitalAlerts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VitalAlert.acknowledgedBy
+   */
+  export type VitalAlert$acknowledgedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * VitalAlert without action
+   */
+  export type VitalAlertDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VitalAlert
+     */
+    select?: VitalAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VitalAlert
+     */
+    omit?: VitalAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VitalAlertInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12199,6 +19502,45 @@ export namespace Prisma {
   };
 
   export type CareCircleScalarFieldEnum = (typeof CareCircleScalarFieldEnum)[keyof typeof CareCircleScalarFieldEnum]
+
+
+  export const MedicationScalarFieldEnum: {
+    id: 'id',
+    patientId: 'patientId',
+    createdById: 'createdById',
+    careCircleId: 'careCircleId',
+    medicationName: 'medicationName',
+    dosage: 'dosage',
+    route: 'route',
+    frequencyRRule: 'frequencyRRule',
+    prescribingDoctor: 'prescribingDoctor',
+    refillQuantity: 'refillQuantity',
+    refillThresholdDays: 'refillThresholdDays',
+    startsAt: 'startsAt',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MedicationScalarFieldEnum = (typeof MedicationScalarFieldEnum)[keyof typeof MedicationScalarFieldEnum]
+
+
+  export const MedicationDoseScalarFieldEnum: {
+    id: 'id',
+    medicationId: 'medicationId',
+    scheduledAt: 'scheduledAt',
+    state: 'state',
+    escalationStep: 'escalationStep',
+    acknowledgedById: 'acknowledgedById',
+    acknowledgedAt: 'acknowledgedAt',
+    confirmationType: 'confirmationType',
+    evidenceUrl: 'evidenceUrl',
+    note: 'note',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MedicationDoseScalarFieldEnum = (typeof MedicationDoseScalarFieldEnum)[keyof typeof MedicationDoseScalarFieldEnum]
 
 
   export const CareCircleMemberScalarFieldEnum: {
@@ -12290,6 +19632,72 @@ export namespace Prisma {
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+  export const VitalReadingScalarFieldEnum: {
+    id: 'id',
+    patientId: 'patientId',
+    vitalType: 'vitalType',
+    source: 'source',
+    systolic: 'systolic',
+    diastolic: 'diastolic',
+    value: 'value',
+    unit: 'unit',
+    context: 'context',
+    notes: 'notes',
+    deviceModel: 'deviceModel',
+    deviceMacAddress: 'deviceMacAddress',
+    rawBlePayload: 'rawBlePayload',
+    recordedAt: 'recordedAt',
+    createdById: 'createdById',
+    createdAt: 'createdAt'
+  };
+
+  export type VitalReadingScalarFieldEnum = (typeof VitalReadingScalarFieldEnum)[keyof typeof VitalReadingScalarFieldEnum]
+
+
+  export const VitalThresholdScalarFieldEnum: {
+    id: 'id',
+    patientId: 'patientId',
+    vitalType: 'vitalType',
+    minNormal: 'minNormal',
+    maxNormal: 'maxNormal',
+    systolicMin: 'systolicMin',
+    systolicMax: 'systolicMax',
+    diastolicMin: 'diastolicMin',
+    diastolicMax: 'diastolicMax',
+    criticalMin: 'criticalMin',
+    criticalMax: 'criticalMax',
+    consecutiveBreachLimit: 'consecutiveBreachLimit',
+    rollingBaselineDays: 'rollingBaselineDays',
+    baselineDeviationPercent: 'baselineDeviationPercent',
+    updatedById: 'updatedById',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type VitalThresholdScalarFieldEnum = (typeof VitalThresholdScalarFieldEnum)[keyof typeof VitalThresholdScalarFieldEnum]
+
+
+  export const VitalAlertScalarFieldEnum: {
+    id: 'id',
+    patientId: 'patientId',
+    readingId: 'readingId',
+    vitalType: 'vitalType',
+    severity: 'severity',
+    anomalyType: 'anomalyType',
+    message: 'message',
+    status: 'status',
+    baselineSnapshot: 'baselineSnapshot',
+    acknowledgedById: 'acknowledgedById',
+    acknowledgedAt: 'acknowledgedAt',
+    resolutionNote: 'resolutionNote',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type VitalAlertScalarFieldEnum = (typeof VitalAlertScalarFieldEnum)[keyof typeof VitalAlertScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -12379,6 +19787,48 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MedicationDoseState'
+   */
+  export type EnumMedicationDoseStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MedicationDoseState'>
+    
+
+
+  /**
+   * Reference to a field of type 'MedicationDoseState[]'
+   */
+  export type ListEnumMedicationDoseStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MedicationDoseState[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MedicationConfirmationType'
+   */
+  export type EnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MedicationConfirmationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MedicationConfirmationType[]'
+   */
+  export type ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MedicationConfirmationType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'MemberStatus'
    */
   export type EnumMemberStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberStatus'>
@@ -12449,16 +19899,86 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
+   * Reference to a field of type 'VitalType'
    */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+  export type EnumVitalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VitalType'>
     
 
 
   /**
-   * Reference to a field of type 'Int[]'
+   * Reference to a field of type 'VitalType[]'
    */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+  export type ListEnumVitalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VitalType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'VitalSource'
+   */
+  export type EnumVitalSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VitalSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'VitalSource[]'
+   */
+  export type ListEnumVitalSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VitalSource[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AlertSeverity'
+   */
+  export type EnumAlertSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertSeverity'>
+    
+
+
+  /**
+   * Reference to a field of type 'AlertSeverity[]'
+   */
+  export type ListEnumAlertSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertSeverity[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AnomalyType'
+   */
+  export type EnumAnomalyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnomalyType'>
+    
+
+
+  /**
+   * Reference to a field of type 'AnomalyType[]'
+   */
+  export type ListEnumAnomalyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnomalyType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AlertStatus'
+   */
+  export type EnumAlertStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AlertStatus[]'
+   */
+  export type ListEnumAlertStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AlertStatus[]'>
     
   /**
    * Deep Input Types
@@ -12483,6 +20003,15 @@ export namespace Prisma {
     sentInvitations?: InvitationListRelationFilter
     consentsGranted?: ConsentListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    medicationsAsPatient?: MedicationListRelationFilter
+    medicationsCreated?: MedicationListRelationFilter
+    medicationDoseEvents?: MedicationDoseListRelationFilter
+    vitalReadingsRecorded?: VitalReadingListRelationFilter
+    vitalReadingsAsPatient?: VitalReadingListRelationFilter
+    vitalThresholds?: VitalThresholdListRelationFilter
+    vitalThresholdsSet?: VitalThresholdListRelationFilter
+    vitalAlerts?: VitalAlertListRelationFilter
+    vitalAlertsAcknowledged?: VitalAlertListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -12500,6 +20029,15 @@ export namespace Prisma {
     sentInvitations?: InvitationOrderByRelationAggregateInput
     consentsGranted?: ConsentOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
+    medicationsAsPatient?: MedicationOrderByRelationAggregateInput
+    medicationsCreated?: MedicationOrderByRelationAggregateInput
+    medicationDoseEvents?: MedicationDoseOrderByRelationAggregateInput
+    vitalReadingsRecorded?: VitalReadingOrderByRelationAggregateInput
+    vitalReadingsAsPatient?: VitalReadingOrderByRelationAggregateInput
+    vitalThresholds?: VitalThresholdOrderByRelationAggregateInput
+    vitalThresholdsSet?: VitalThresholdOrderByRelationAggregateInput
+    vitalAlerts?: VitalAlertOrderByRelationAggregateInput
+    vitalAlertsAcknowledged?: VitalAlertOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -12520,6 +20058,15 @@ export namespace Prisma {
     sentInvitations?: InvitationListRelationFilter
     consentsGranted?: ConsentListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    medicationsAsPatient?: MedicationListRelationFilter
+    medicationsCreated?: MedicationListRelationFilter
+    medicationDoseEvents?: MedicationDoseListRelationFilter
+    vitalReadingsRecorded?: VitalReadingListRelationFilter
+    vitalReadingsAsPatient?: VitalReadingListRelationFilter
+    vitalThresholds?: VitalThresholdListRelationFilter
+    vitalThresholdsSet?: VitalThresholdListRelationFilter
+    vitalAlerts?: VitalAlertListRelationFilter
+    vitalAlertsAcknowledged?: VitalAlertListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -12566,6 +20113,7 @@ export namespace Prisma {
     invitations?: InvitationListRelationFilter
     consents?: ConsentListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    medications?: MedicationListRelationFilter
   }
 
   export type CareCircleOrderByWithRelationInput = {
@@ -12581,6 +20129,7 @@ export namespace Prisma {
     invitations?: InvitationOrderByRelationAggregateInput
     consents?: ConsentOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
+    medications?: MedicationOrderByRelationAggregateInput
   }
 
   export type CareCircleWhereUniqueInput = Prisma.AtLeast<{
@@ -12599,6 +20148,7 @@ export namespace Prisma {
     invitations?: InvitationListRelationFilter
     consents?: ConsentListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    medications?: MedicationListRelationFilter
   }, "id">
 
   export type CareCircleOrderByWithAggregationInput = {
@@ -12623,6 +20173,217 @@ export namespace Prisma {
     ownerId?: UuidWithAggregatesFilter<"CareCircle"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CareCircle"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CareCircle"> | Date | string
+  }
+
+  export type MedicationWhereInput = {
+    AND?: MedicationWhereInput | MedicationWhereInput[]
+    OR?: MedicationWhereInput[]
+    NOT?: MedicationWhereInput | MedicationWhereInput[]
+    id?: UuidFilter<"Medication"> | string
+    patientId?: UuidFilter<"Medication"> | string
+    createdById?: UuidFilter<"Medication"> | string
+    careCircleId?: UuidNullableFilter<"Medication"> | string | null
+    medicationName?: StringFilter<"Medication"> | string
+    dosage?: StringFilter<"Medication"> | string
+    route?: StringFilter<"Medication"> | string
+    frequencyRRule?: StringFilter<"Medication"> | string
+    prescribingDoctor?: StringFilter<"Medication"> | string
+    refillQuantity?: IntFilter<"Medication"> | number
+    refillThresholdDays?: IntFilter<"Medication"> | number
+    startsAt?: DateTimeFilter<"Medication"> | Date | string
+    active?: BoolFilter<"Medication"> | boolean
+    createdAt?: DateTimeFilter<"Medication"> | Date | string
+    updatedAt?: DateTimeFilter<"Medication"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    careCircle?: XOR<CareCircleNullableScalarRelationFilter, CareCircleWhereInput> | null
+    doses?: MedicationDoseListRelationFilter
+  }
+
+  export type MedicationOrderByWithRelationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    createdById?: SortOrder
+    careCircleId?: SortOrderInput | SortOrder
+    medicationName?: SortOrder
+    dosage?: SortOrder
+    route?: SortOrder
+    frequencyRRule?: SortOrder
+    prescribingDoctor?: SortOrder
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+    startsAt?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    patient?: UserOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+    careCircle?: CareCircleOrderByWithRelationInput
+    doses?: MedicationDoseOrderByRelationAggregateInput
+  }
+
+  export type MedicationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MedicationWhereInput | MedicationWhereInput[]
+    OR?: MedicationWhereInput[]
+    NOT?: MedicationWhereInput | MedicationWhereInput[]
+    patientId?: UuidFilter<"Medication"> | string
+    createdById?: UuidFilter<"Medication"> | string
+    careCircleId?: UuidNullableFilter<"Medication"> | string | null
+    medicationName?: StringFilter<"Medication"> | string
+    dosage?: StringFilter<"Medication"> | string
+    route?: StringFilter<"Medication"> | string
+    frequencyRRule?: StringFilter<"Medication"> | string
+    prescribingDoctor?: StringFilter<"Medication"> | string
+    refillQuantity?: IntFilter<"Medication"> | number
+    refillThresholdDays?: IntFilter<"Medication"> | number
+    startsAt?: DateTimeFilter<"Medication"> | Date | string
+    active?: BoolFilter<"Medication"> | boolean
+    createdAt?: DateTimeFilter<"Medication"> | Date | string
+    updatedAt?: DateTimeFilter<"Medication"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    careCircle?: XOR<CareCircleNullableScalarRelationFilter, CareCircleWhereInput> | null
+    doses?: MedicationDoseListRelationFilter
+  }, "id">
+
+  export type MedicationOrderByWithAggregationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    createdById?: SortOrder
+    careCircleId?: SortOrderInput | SortOrder
+    medicationName?: SortOrder
+    dosage?: SortOrder
+    route?: SortOrder
+    frequencyRRule?: SortOrder
+    prescribingDoctor?: SortOrder
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+    startsAt?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MedicationCountOrderByAggregateInput
+    _avg?: MedicationAvgOrderByAggregateInput
+    _max?: MedicationMaxOrderByAggregateInput
+    _min?: MedicationMinOrderByAggregateInput
+    _sum?: MedicationSumOrderByAggregateInput
+  }
+
+  export type MedicationScalarWhereWithAggregatesInput = {
+    AND?: MedicationScalarWhereWithAggregatesInput | MedicationScalarWhereWithAggregatesInput[]
+    OR?: MedicationScalarWhereWithAggregatesInput[]
+    NOT?: MedicationScalarWhereWithAggregatesInput | MedicationScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Medication"> | string
+    patientId?: UuidWithAggregatesFilter<"Medication"> | string
+    createdById?: UuidWithAggregatesFilter<"Medication"> | string
+    careCircleId?: UuidNullableWithAggregatesFilter<"Medication"> | string | null
+    medicationName?: StringWithAggregatesFilter<"Medication"> | string
+    dosage?: StringWithAggregatesFilter<"Medication"> | string
+    route?: StringWithAggregatesFilter<"Medication"> | string
+    frequencyRRule?: StringWithAggregatesFilter<"Medication"> | string
+    prescribingDoctor?: StringWithAggregatesFilter<"Medication"> | string
+    refillQuantity?: IntWithAggregatesFilter<"Medication"> | number
+    refillThresholdDays?: IntWithAggregatesFilter<"Medication"> | number
+    startsAt?: DateTimeWithAggregatesFilter<"Medication"> | Date | string
+    active?: BoolWithAggregatesFilter<"Medication"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Medication"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Medication"> | Date | string
+  }
+
+  export type MedicationDoseWhereInput = {
+    AND?: MedicationDoseWhereInput | MedicationDoseWhereInput[]
+    OR?: MedicationDoseWhereInput[]
+    NOT?: MedicationDoseWhereInput | MedicationDoseWhereInput[]
+    id?: UuidFilter<"MedicationDose"> | string
+    medicationId?: UuidFilter<"MedicationDose"> | string
+    scheduledAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    state?: EnumMedicationDoseStateFilter<"MedicationDose"> | $Enums.MedicationDoseState
+    escalationStep?: IntFilter<"MedicationDose"> | number
+    acknowledgedById?: UuidNullableFilter<"MedicationDose"> | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"MedicationDose"> | Date | string | null
+    confirmationType?: EnumMedicationConfirmationTypeNullableFilter<"MedicationDose"> | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: StringNullableFilter<"MedicationDose"> | string | null
+    note?: StringNullableFilter<"MedicationDose"> | string | null
+    createdAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    updatedAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    medication?: XOR<MedicationScalarRelationFilter, MedicationWhereInput>
+    acknowledgedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type MedicationDoseOrderByWithRelationInput = {
+    id?: SortOrder
+    medicationId?: SortOrder
+    scheduledAt?: SortOrder
+    state?: SortOrder
+    escalationStep?: SortOrder
+    acknowledgedById?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    confirmationType?: SortOrderInput | SortOrder
+    evidenceUrl?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    medication?: MedicationOrderByWithRelationInput
+    acknowledgedBy?: UserOrderByWithRelationInput
+  }
+
+  export type MedicationDoseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MedicationDoseWhereInput | MedicationDoseWhereInput[]
+    OR?: MedicationDoseWhereInput[]
+    NOT?: MedicationDoseWhereInput | MedicationDoseWhereInput[]
+    medicationId?: UuidFilter<"MedicationDose"> | string
+    scheduledAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    state?: EnumMedicationDoseStateFilter<"MedicationDose"> | $Enums.MedicationDoseState
+    escalationStep?: IntFilter<"MedicationDose"> | number
+    acknowledgedById?: UuidNullableFilter<"MedicationDose"> | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"MedicationDose"> | Date | string | null
+    confirmationType?: EnumMedicationConfirmationTypeNullableFilter<"MedicationDose"> | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: StringNullableFilter<"MedicationDose"> | string | null
+    note?: StringNullableFilter<"MedicationDose"> | string | null
+    createdAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    updatedAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    medication?: XOR<MedicationScalarRelationFilter, MedicationWhereInput>
+    acknowledgedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type MedicationDoseOrderByWithAggregationInput = {
+    id?: SortOrder
+    medicationId?: SortOrder
+    scheduledAt?: SortOrder
+    state?: SortOrder
+    escalationStep?: SortOrder
+    acknowledgedById?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    confirmationType?: SortOrderInput | SortOrder
+    evidenceUrl?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MedicationDoseCountOrderByAggregateInput
+    _avg?: MedicationDoseAvgOrderByAggregateInput
+    _max?: MedicationDoseMaxOrderByAggregateInput
+    _min?: MedicationDoseMinOrderByAggregateInput
+    _sum?: MedicationDoseSumOrderByAggregateInput
+  }
+
+  export type MedicationDoseScalarWhereWithAggregatesInput = {
+    AND?: MedicationDoseScalarWhereWithAggregatesInput | MedicationDoseScalarWhereWithAggregatesInput[]
+    OR?: MedicationDoseScalarWhereWithAggregatesInput[]
+    NOT?: MedicationDoseScalarWhereWithAggregatesInput | MedicationDoseScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"MedicationDose"> | string
+    medicationId?: UuidWithAggregatesFilter<"MedicationDose"> | string
+    scheduledAt?: DateTimeWithAggregatesFilter<"MedicationDose"> | Date | string
+    state?: EnumMedicationDoseStateWithAggregatesFilter<"MedicationDose"> | $Enums.MedicationDoseState
+    escalationStep?: IntWithAggregatesFilter<"MedicationDose"> | number
+    acknowledgedById?: UuidNullableWithAggregatesFilter<"MedicationDose"> | string | null
+    acknowledgedAt?: DateTimeNullableWithAggregatesFilter<"MedicationDose"> | Date | string | null
+    confirmationType?: EnumMedicationConfirmationTypeNullableWithAggregatesFilter<"MedicationDose"> | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: StringNullableWithAggregatesFilter<"MedicationDose"> | string | null
+    note?: StringNullableWithAggregatesFilter<"MedicationDose"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MedicationDose"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MedicationDose"> | Date | string
   }
 
   export type CareCircleMemberWhereInput = {
@@ -13105,6 +20866,356 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
   }
 
+  export type VitalReadingWhereInput = {
+    AND?: VitalReadingWhereInput | VitalReadingWhereInput[]
+    OR?: VitalReadingWhereInput[]
+    NOT?: VitalReadingWhereInput | VitalReadingWhereInput[]
+    id?: UuidFilter<"VitalReading"> | string
+    patientId?: UuidFilter<"VitalReading"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalReading"> | $Enums.VitalType
+    source?: EnumVitalSourceFilter<"VitalReading"> | $Enums.VitalSource
+    systolic?: FloatNullableFilter<"VitalReading"> | number | null
+    diastolic?: FloatNullableFilter<"VitalReading"> | number | null
+    value?: FloatNullableFilter<"VitalReading"> | number | null
+    unit?: StringFilter<"VitalReading"> | string
+    context?: StringNullableFilter<"VitalReading"> | string | null
+    notes?: StringNullableFilter<"VitalReading"> | string | null
+    deviceModel?: StringNullableFilter<"VitalReading"> | string | null
+    deviceMacAddress?: StringNullableFilter<"VitalReading"> | string | null
+    rawBlePayload?: JsonNullableFilter<"VitalReading">
+    recordedAt?: DateTimeFilter<"VitalReading"> | Date | string
+    createdById?: UuidFilter<"VitalReading"> | string
+    createdAt?: DateTimeFilter<"VitalReading"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    alerts?: VitalAlertListRelationFilter
+  }
+
+  export type VitalReadingOrderByWithRelationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    source?: SortOrder
+    systolic?: SortOrderInput | SortOrder
+    diastolic?: SortOrderInput | SortOrder
+    value?: SortOrderInput | SortOrder
+    unit?: SortOrder
+    context?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    deviceModel?: SortOrderInput | SortOrder
+    deviceMacAddress?: SortOrderInput | SortOrder
+    rawBlePayload?: SortOrderInput | SortOrder
+    recordedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    patient?: UserOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+    alerts?: VitalAlertOrderByRelationAggregateInput
+  }
+
+  export type VitalReadingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: VitalReadingWhereInput | VitalReadingWhereInput[]
+    OR?: VitalReadingWhereInput[]
+    NOT?: VitalReadingWhereInput | VitalReadingWhereInput[]
+    patientId?: UuidFilter<"VitalReading"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalReading"> | $Enums.VitalType
+    source?: EnumVitalSourceFilter<"VitalReading"> | $Enums.VitalSource
+    systolic?: FloatNullableFilter<"VitalReading"> | number | null
+    diastolic?: FloatNullableFilter<"VitalReading"> | number | null
+    value?: FloatNullableFilter<"VitalReading"> | number | null
+    unit?: StringFilter<"VitalReading"> | string
+    context?: StringNullableFilter<"VitalReading"> | string | null
+    notes?: StringNullableFilter<"VitalReading"> | string | null
+    deviceModel?: StringNullableFilter<"VitalReading"> | string | null
+    deviceMacAddress?: StringNullableFilter<"VitalReading"> | string | null
+    rawBlePayload?: JsonNullableFilter<"VitalReading">
+    recordedAt?: DateTimeFilter<"VitalReading"> | Date | string
+    createdById?: UuidFilter<"VitalReading"> | string
+    createdAt?: DateTimeFilter<"VitalReading"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    alerts?: VitalAlertListRelationFilter
+  }, "id">
+
+  export type VitalReadingOrderByWithAggregationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    source?: SortOrder
+    systolic?: SortOrderInput | SortOrder
+    diastolic?: SortOrderInput | SortOrder
+    value?: SortOrderInput | SortOrder
+    unit?: SortOrder
+    context?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    deviceModel?: SortOrderInput | SortOrder
+    deviceMacAddress?: SortOrderInput | SortOrder
+    rawBlePayload?: SortOrderInput | SortOrder
+    recordedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    _count?: VitalReadingCountOrderByAggregateInput
+    _avg?: VitalReadingAvgOrderByAggregateInput
+    _max?: VitalReadingMaxOrderByAggregateInput
+    _min?: VitalReadingMinOrderByAggregateInput
+    _sum?: VitalReadingSumOrderByAggregateInput
+  }
+
+  export type VitalReadingScalarWhereWithAggregatesInput = {
+    AND?: VitalReadingScalarWhereWithAggregatesInput | VitalReadingScalarWhereWithAggregatesInput[]
+    OR?: VitalReadingScalarWhereWithAggregatesInput[]
+    NOT?: VitalReadingScalarWhereWithAggregatesInput | VitalReadingScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"VitalReading"> | string
+    patientId?: UuidWithAggregatesFilter<"VitalReading"> | string
+    vitalType?: EnumVitalTypeWithAggregatesFilter<"VitalReading"> | $Enums.VitalType
+    source?: EnumVitalSourceWithAggregatesFilter<"VitalReading"> | $Enums.VitalSource
+    systolic?: FloatNullableWithAggregatesFilter<"VitalReading"> | number | null
+    diastolic?: FloatNullableWithAggregatesFilter<"VitalReading"> | number | null
+    value?: FloatNullableWithAggregatesFilter<"VitalReading"> | number | null
+    unit?: StringWithAggregatesFilter<"VitalReading"> | string
+    context?: StringNullableWithAggregatesFilter<"VitalReading"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"VitalReading"> | string | null
+    deviceModel?: StringNullableWithAggregatesFilter<"VitalReading"> | string | null
+    deviceMacAddress?: StringNullableWithAggregatesFilter<"VitalReading"> | string | null
+    rawBlePayload?: JsonNullableWithAggregatesFilter<"VitalReading">
+    recordedAt?: DateTimeWithAggregatesFilter<"VitalReading"> | Date | string
+    createdById?: UuidWithAggregatesFilter<"VitalReading"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"VitalReading"> | Date | string
+  }
+
+  export type VitalThresholdWhereInput = {
+    AND?: VitalThresholdWhereInput | VitalThresholdWhereInput[]
+    OR?: VitalThresholdWhereInput[]
+    NOT?: VitalThresholdWhereInput | VitalThresholdWhereInput[]
+    id?: UuidFilter<"VitalThreshold"> | string
+    patientId?: UuidFilter<"VitalThreshold"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalThreshold"> | $Enums.VitalType
+    minNormal?: FloatNullableFilter<"VitalThreshold"> | number | null
+    maxNormal?: FloatNullableFilter<"VitalThreshold"> | number | null
+    systolicMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    systolicMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    diastolicMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    diastolicMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    criticalMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    criticalMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    consecutiveBreachLimit?: IntFilter<"VitalThreshold"> | number
+    rollingBaselineDays?: IntFilter<"VitalThreshold"> | number
+    baselineDeviationPercent?: FloatFilter<"VitalThreshold"> | number
+    updatedById?: UuidFilter<"VitalThreshold"> | string
+    isActive?: BoolFilter<"VitalThreshold"> | boolean
+    createdAt?: DateTimeFilter<"VitalThreshold"> | Date | string
+    updatedAt?: DateTimeFilter<"VitalThreshold"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    updatedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type VitalThresholdOrderByWithRelationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    minNormal?: SortOrderInput | SortOrder
+    maxNormal?: SortOrderInput | SortOrder
+    systolicMin?: SortOrderInput | SortOrder
+    systolicMax?: SortOrderInput | SortOrder
+    diastolicMin?: SortOrderInput | SortOrder
+    diastolicMax?: SortOrderInput | SortOrder
+    criticalMin?: SortOrderInput | SortOrder
+    criticalMax?: SortOrderInput | SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+    updatedById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    patient?: UserOrderByWithRelationInput
+    updatedBy?: UserOrderByWithRelationInput
+  }
+
+  export type VitalThresholdWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    patientId_vitalType?: VitalThresholdPatientIdVitalTypeCompoundUniqueInput
+    AND?: VitalThresholdWhereInput | VitalThresholdWhereInput[]
+    OR?: VitalThresholdWhereInput[]
+    NOT?: VitalThresholdWhereInput | VitalThresholdWhereInput[]
+    patientId?: UuidFilter<"VitalThreshold"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalThreshold"> | $Enums.VitalType
+    minNormal?: FloatNullableFilter<"VitalThreshold"> | number | null
+    maxNormal?: FloatNullableFilter<"VitalThreshold"> | number | null
+    systolicMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    systolicMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    diastolicMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    diastolicMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    criticalMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    criticalMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    consecutiveBreachLimit?: IntFilter<"VitalThreshold"> | number
+    rollingBaselineDays?: IntFilter<"VitalThreshold"> | number
+    baselineDeviationPercent?: FloatFilter<"VitalThreshold"> | number
+    updatedById?: UuidFilter<"VitalThreshold"> | string
+    isActive?: BoolFilter<"VitalThreshold"> | boolean
+    createdAt?: DateTimeFilter<"VitalThreshold"> | Date | string
+    updatedAt?: DateTimeFilter<"VitalThreshold"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    updatedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "patientId_vitalType">
+
+  export type VitalThresholdOrderByWithAggregationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    minNormal?: SortOrderInput | SortOrder
+    maxNormal?: SortOrderInput | SortOrder
+    systolicMin?: SortOrderInput | SortOrder
+    systolicMax?: SortOrderInput | SortOrder
+    diastolicMin?: SortOrderInput | SortOrder
+    diastolicMax?: SortOrderInput | SortOrder
+    criticalMin?: SortOrderInput | SortOrder
+    criticalMax?: SortOrderInput | SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+    updatedById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: VitalThresholdCountOrderByAggregateInput
+    _avg?: VitalThresholdAvgOrderByAggregateInput
+    _max?: VitalThresholdMaxOrderByAggregateInput
+    _min?: VitalThresholdMinOrderByAggregateInput
+    _sum?: VitalThresholdSumOrderByAggregateInput
+  }
+
+  export type VitalThresholdScalarWhereWithAggregatesInput = {
+    AND?: VitalThresholdScalarWhereWithAggregatesInput | VitalThresholdScalarWhereWithAggregatesInput[]
+    OR?: VitalThresholdScalarWhereWithAggregatesInput[]
+    NOT?: VitalThresholdScalarWhereWithAggregatesInput | VitalThresholdScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"VitalThreshold"> | string
+    patientId?: UuidWithAggregatesFilter<"VitalThreshold"> | string
+    vitalType?: EnumVitalTypeWithAggregatesFilter<"VitalThreshold"> | $Enums.VitalType
+    minNormal?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    maxNormal?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    systolicMin?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    systolicMax?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    diastolicMin?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    diastolicMax?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    criticalMin?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    criticalMax?: FloatNullableWithAggregatesFilter<"VitalThreshold"> | number | null
+    consecutiveBreachLimit?: IntWithAggregatesFilter<"VitalThreshold"> | number
+    rollingBaselineDays?: IntWithAggregatesFilter<"VitalThreshold"> | number
+    baselineDeviationPercent?: FloatWithAggregatesFilter<"VitalThreshold"> | number
+    updatedById?: UuidWithAggregatesFilter<"VitalThreshold"> | string
+    isActive?: BoolWithAggregatesFilter<"VitalThreshold"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"VitalThreshold"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"VitalThreshold"> | Date | string
+  }
+
+  export type VitalAlertWhereInput = {
+    AND?: VitalAlertWhereInput | VitalAlertWhereInput[]
+    OR?: VitalAlertWhereInput[]
+    NOT?: VitalAlertWhereInput | VitalAlertWhereInput[]
+    id?: UuidFilter<"VitalAlert"> | string
+    patientId?: UuidFilter<"VitalAlert"> | string
+    readingId?: UuidFilter<"VitalAlert"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalAlert"> | $Enums.VitalType
+    severity?: EnumAlertSeverityFilter<"VitalAlert"> | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFilter<"VitalAlert"> | $Enums.AnomalyType
+    message?: StringFilter<"VitalAlert"> | string
+    status?: EnumAlertStatusFilter<"VitalAlert"> | $Enums.AlertStatus
+    baselineSnapshot?: JsonNullableFilter<"VitalAlert">
+    acknowledgedById?: UuidNullableFilter<"VitalAlert"> | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"VitalAlert"> | Date | string | null
+    resolutionNote?: StringNullableFilter<"VitalAlert"> | string | null
+    createdAt?: DateTimeFilter<"VitalAlert"> | Date | string
+    updatedAt?: DateTimeFilter<"VitalAlert"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reading?: XOR<VitalReadingScalarRelationFilter, VitalReadingWhereInput>
+    acknowledgedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type VitalAlertOrderByWithRelationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    readingId?: SortOrder
+    vitalType?: SortOrder
+    severity?: SortOrder
+    anomalyType?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    baselineSnapshot?: SortOrderInput | SortOrder
+    acknowledgedById?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    resolutionNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    patient?: UserOrderByWithRelationInput
+    reading?: VitalReadingOrderByWithRelationInput
+    acknowledgedBy?: UserOrderByWithRelationInput
+  }
+
+  export type VitalAlertWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: VitalAlertWhereInput | VitalAlertWhereInput[]
+    OR?: VitalAlertWhereInput[]
+    NOT?: VitalAlertWhereInput | VitalAlertWhereInput[]
+    patientId?: UuidFilter<"VitalAlert"> | string
+    readingId?: UuidFilter<"VitalAlert"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalAlert"> | $Enums.VitalType
+    severity?: EnumAlertSeverityFilter<"VitalAlert"> | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFilter<"VitalAlert"> | $Enums.AnomalyType
+    message?: StringFilter<"VitalAlert"> | string
+    status?: EnumAlertStatusFilter<"VitalAlert"> | $Enums.AlertStatus
+    baselineSnapshot?: JsonNullableFilter<"VitalAlert">
+    acknowledgedById?: UuidNullableFilter<"VitalAlert"> | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"VitalAlert"> | Date | string | null
+    resolutionNote?: StringNullableFilter<"VitalAlert"> | string | null
+    createdAt?: DateTimeFilter<"VitalAlert"> | Date | string
+    updatedAt?: DateTimeFilter<"VitalAlert"> | Date | string
+    patient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reading?: XOR<VitalReadingScalarRelationFilter, VitalReadingWhereInput>
+    acknowledgedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type VitalAlertOrderByWithAggregationInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    readingId?: SortOrder
+    vitalType?: SortOrder
+    severity?: SortOrder
+    anomalyType?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    baselineSnapshot?: SortOrderInput | SortOrder
+    acknowledgedById?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    resolutionNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: VitalAlertCountOrderByAggregateInput
+    _max?: VitalAlertMaxOrderByAggregateInput
+    _min?: VitalAlertMinOrderByAggregateInput
+  }
+
+  export type VitalAlertScalarWhereWithAggregatesInput = {
+    AND?: VitalAlertScalarWhereWithAggregatesInput | VitalAlertScalarWhereWithAggregatesInput[]
+    OR?: VitalAlertScalarWhereWithAggregatesInput[]
+    NOT?: VitalAlertScalarWhereWithAggregatesInput | VitalAlertScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"VitalAlert"> | string
+    patientId?: UuidWithAggregatesFilter<"VitalAlert"> | string
+    readingId?: UuidWithAggregatesFilter<"VitalAlert"> | string
+    vitalType?: EnumVitalTypeWithAggregatesFilter<"VitalAlert"> | $Enums.VitalType
+    severity?: EnumAlertSeverityWithAggregatesFilter<"VitalAlert"> | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeWithAggregatesFilter<"VitalAlert"> | $Enums.AnomalyType
+    message?: StringWithAggregatesFilter<"VitalAlert"> | string
+    status?: EnumAlertStatusWithAggregatesFilter<"VitalAlert"> | $Enums.AlertStatus
+    baselineSnapshot?: JsonNullableWithAggregatesFilter<"VitalAlert">
+    acknowledgedById?: UuidNullableWithAggregatesFilter<"VitalAlert"> | string | null
+    acknowledgedAt?: DateTimeNullableWithAggregatesFilter<"VitalAlert"> | Date | string | null
+    resolutionNote?: StringNullableWithAggregatesFilter<"VitalAlert"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"VitalAlert"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"VitalAlert"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     firstName: string
@@ -13120,6 +21231,15 @@ export namespace Prisma {
     sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -13137,6 +21257,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUpdateInput = {
@@ -13154,6 +21283,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -13171,6 +21309,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -13217,6 +21364,7 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutCircleInput
     consents?: ConsentCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateInput = {
@@ -13230,6 +21378,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
     consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUpdateInput = {
@@ -13243,6 +21392,7 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutCircleNestedInput
     consents?: ConsentUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateInput = {
@@ -13256,6 +21406,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
     consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleCreateManyInput = {
@@ -13279,6 +21430,236 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     patientId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationCreateInput = {
+    id?: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutMedicationsAsPatientInput
+    createdBy: UserCreateNestedOneWithoutMedicationsCreatedInput
+    careCircle?: CareCircleCreateNestedOneWithoutMedicationsInput
+    doses?: MedicationDoseCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationUncheckedCreateInput = {
+    id?: string
+    patientId: string
+    createdById: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    doses?: MedicationDoseUncheckedCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutMedicationsAsPatientNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutMedicationsCreatedNestedInput
+    careCircle?: CareCircleUpdateOneWithoutMedicationsNestedInput
+    doses?: MedicationDoseUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    doses?: MedicationDoseUncheckedUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationCreateManyInput = {
+    id?: string
+    patientId: string
+    createdById: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseCreateInput = {
+    id?: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    medication: MedicationCreateNestedOneWithoutDosesInput
+    acknowledgedBy?: UserCreateNestedOneWithoutMedicationDoseEventsInput
+  }
+
+  export type MedicationDoseUncheckedCreateInput = {
+    id?: string
+    medicationId: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationDoseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    medication?: MedicationUpdateOneRequiredWithoutDosesNestedInput
+    acknowledgedBy?: UserUpdateOneWithoutMedicationDoseEventsNestedInput
+  }
+
+  export type MedicationDoseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseCreateManyInput = {
+    id?: string
+    medicationId: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationDoseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13767,6 +22148,402 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VitalReadingCreateInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalReadingsAsPatientInput
+    createdBy: UserCreateNestedOneWithoutVitalReadingsRecordedInput
+    alerts?: VitalAlertCreateNestedManyWithoutReadingInput
+  }
+
+  export type VitalReadingUncheckedCreateInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdById: string
+    createdAt?: Date | string
+    alerts?: VitalAlertUncheckedCreateNestedManyWithoutReadingInput
+  }
+
+  export type VitalReadingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalReadingsAsPatientNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutVitalReadingsRecordedNestedInput
+    alerts?: VitalAlertUpdateManyWithoutReadingNestedInput
+  }
+
+  export type VitalReadingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    alerts?: VitalAlertUncheckedUpdateManyWithoutReadingNestedInput
+  }
+
+  export type VitalReadingCreateManyInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdById: string
+    createdAt?: Date | string
+  }
+
+  export type VitalReadingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalReadingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdCreateInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalThresholdsInput
+    updatedBy: UserCreateNestedOneWithoutVitalThresholdsSetInput
+  }
+
+  export type VitalThresholdUncheckedCreateInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    updatedById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalThresholdUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalThresholdsNestedInput
+    updatedBy?: UserUpdateOneRequiredWithoutVitalThresholdsSetNestedInput
+  }
+
+  export type VitalThresholdUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    updatedById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdCreateManyInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    updatedById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalThresholdUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    updatedById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertCreateInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalAlertsInput
+    reading: VitalReadingCreateNestedOneWithoutAlertsInput
+    acknowledgedBy?: UserCreateNestedOneWithoutVitalAlertsAcknowledgedInput
+  }
+
+  export type VitalAlertUncheckedCreateInput = {
+    id?: string
+    patientId: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalAlertsNestedInput
+    reading?: VitalReadingUpdateOneRequiredWithoutAlertsNestedInput
+    acknowledgedBy?: UserUpdateOneWithoutVitalAlertsAcknowledgedNestedInput
+  }
+
+  export type VitalAlertUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    readingId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertCreateManyInput = {
+    id?: string
+    patientId: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    readingId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -13855,6 +22632,36 @@ export namespace Prisma {
     none?: AuditLogWhereInput
   }
 
+  export type MedicationListRelationFilter = {
+    every?: MedicationWhereInput
+    some?: MedicationWhereInput
+    none?: MedicationWhereInput
+  }
+
+  export type MedicationDoseListRelationFilter = {
+    every?: MedicationDoseWhereInput
+    some?: MedicationDoseWhereInput
+    none?: MedicationDoseWhereInput
+  }
+
+  export type VitalReadingListRelationFilter = {
+    every?: VitalReadingWhereInput
+    some?: VitalReadingWhereInput
+    none?: VitalReadingWhereInput
+  }
+
+  export type VitalThresholdListRelationFilter = {
+    every?: VitalThresholdWhereInput
+    some?: VitalThresholdWhereInput
+    none?: VitalThresholdWhereInput
+  }
+
+  export type VitalAlertListRelationFilter = {
+    every?: VitalAlertWhereInput
+    some?: VitalAlertWhereInput
+    none?: VitalAlertWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -13877,6 +22684,26 @@ export namespace Prisma {
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MedicationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MedicationDoseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VitalReadingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VitalThresholdOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VitalAlertOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14018,11 +22845,134 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type EnumMemberStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.MemberStatus | EnumMemberStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumMemberStatusFilter<$PrismaModel> | $Enums.MemberStatus
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type CareCircleNullableScalarRelationFilter = {
+    is?: CareCircleWhereInput | null
+    isNot?: CareCircleWhereInput | null
+  }
+
+  export type MedicationCountOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    createdById?: SortOrder
+    careCircleId?: SortOrder
+    medicationName?: SortOrder
+    dosage?: SortOrder
+    route?: SortOrder
+    frequencyRRule?: SortOrder
+    prescribingDoctor?: SortOrder
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+    startsAt?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MedicationAvgOrderByAggregateInput = {
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+  }
+
+  export type MedicationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    createdById?: SortOrder
+    careCircleId?: SortOrder
+    medicationName?: SortOrder
+    dosage?: SortOrder
+    route?: SortOrder
+    frequencyRRule?: SortOrder
+    prescribingDoctor?: SortOrder
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+    startsAt?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MedicationMinOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    createdById?: SortOrder
+    careCircleId?: SortOrder
+    medicationName?: SortOrder
+    dosage?: SortOrder
+    route?: SortOrder
+    frequencyRRule?: SortOrder
+    prescribingDoctor?: SortOrder
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+    startsAt?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MedicationSumOrderByAggregateInput = {
+    refillQuantity?: SortOrder
+    refillThresholdDays?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumMedicationDoseStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationDoseState | EnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    in?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumMedicationDoseStateFilter<$PrismaModel> | $Enums.MedicationDoseState
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -14034,6 +22984,117 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type EnumMedicationConfirmationTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationConfirmationType | EnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel> | $Enums.MedicationConfirmationType | null
+  }
+
+  export type MedicationScalarRelationFilter = {
+    is?: MedicationWhereInput
+    isNot?: MedicationWhereInput
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type MedicationDoseCountOrderByAggregateInput = {
+    id?: SortOrder
+    medicationId?: SortOrder
+    scheduledAt?: SortOrder
+    state?: SortOrder
+    escalationStep?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedAt?: SortOrder
+    confirmationType?: SortOrder
+    evidenceUrl?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MedicationDoseAvgOrderByAggregateInput = {
+    escalationStep?: SortOrder
+  }
+
+  export type MedicationDoseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    medicationId?: SortOrder
+    scheduledAt?: SortOrder
+    state?: SortOrder
+    escalationStep?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedAt?: SortOrder
+    confirmationType?: SortOrder
+    evidenceUrl?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MedicationDoseMinOrderByAggregateInput = {
+    id?: SortOrder
+    medicationId?: SortOrder
+    scheduledAt?: SortOrder
+    state?: SortOrder
+    escalationStep?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedAt?: SortOrder
+    confirmationType?: SortOrder
+    evidenceUrl?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MedicationDoseSumOrderByAggregateInput = {
+    escalationStep?: SortOrder
+  }
+
+  export type EnumMedicationDoseStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationDoseState | EnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    in?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumMedicationDoseStateWithAggregatesFilter<$PrismaModel> | $Enums.MedicationDoseState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMedicationDoseStateFilter<$PrismaModel>
+    _max?: NestedEnumMedicationDoseStateFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumMedicationConfirmationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationConfirmationType | EnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMedicationConfirmationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.MedicationConfirmationType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumMemberStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MemberStatus | EnumMemberStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMemberStatusFilter<$PrismaModel> | $Enums.MemberStatus
   }
 
   export type CareCircleScalarRelationFilter = {
@@ -14089,20 +23150,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMemberStatusFilter<$PrismaModel>
     _max?: NestedEnumMemberStatusFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumRoleNameFilter<$PrismaModel = never> = {
@@ -14362,18 +23409,6 @@ export namespace Prisma {
     _min?: NestedJsonFilter<$PrismaModel>
     _max?: NestedJsonFilter<$PrismaModel>
   }
-
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -14396,11 +23431,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type CareCircleNullableScalarRelationFilter = {
-    is?: CareCircleWhereInput | null
-    isNot?: CareCircleWhereInput | null
   }
 
   export type AuditLogCountOrderByAggregateInput = {
@@ -14439,21 +23469,6 @@ export namespace Prisma {
     userAgent?: SortOrder
     createdAt?: SortOrder
   }
-
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
@@ -14479,6 +23494,362 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumVitalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalType | EnumVitalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalTypeFilter<$PrismaModel> | $Enums.VitalType
+  }
+
+  export type EnumVitalSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalSource | EnumVitalSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalSourceFilter<$PrismaModel> | $Enums.VitalSource
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type VitalReadingCountOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    source?: SortOrder
+    systolic?: SortOrder
+    diastolic?: SortOrder
+    value?: SortOrder
+    unit?: SortOrder
+    context?: SortOrder
+    notes?: SortOrder
+    deviceModel?: SortOrder
+    deviceMacAddress?: SortOrder
+    rawBlePayload?: SortOrder
+    recordedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VitalReadingAvgOrderByAggregateInput = {
+    systolic?: SortOrder
+    diastolic?: SortOrder
+    value?: SortOrder
+  }
+
+  export type VitalReadingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    source?: SortOrder
+    systolic?: SortOrder
+    diastolic?: SortOrder
+    value?: SortOrder
+    unit?: SortOrder
+    context?: SortOrder
+    notes?: SortOrder
+    deviceModel?: SortOrder
+    deviceMacAddress?: SortOrder
+    recordedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VitalReadingMinOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    source?: SortOrder
+    systolic?: SortOrder
+    diastolic?: SortOrder
+    value?: SortOrder
+    unit?: SortOrder
+    context?: SortOrder
+    notes?: SortOrder
+    deviceModel?: SortOrder
+    deviceMacAddress?: SortOrder
+    recordedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type VitalReadingSumOrderByAggregateInput = {
+    systolic?: SortOrder
+    diastolic?: SortOrder
+    value?: SortOrder
+  }
+
+  export type EnumVitalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalType | EnumVitalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalTypeWithAggregatesFilter<$PrismaModel> | $Enums.VitalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumVitalTypeFilter<$PrismaModel>
+    _max?: NestedEnumVitalTypeFilter<$PrismaModel>
+  }
+
+  export type EnumVitalSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalSource | EnumVitalSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalSourceWithAggregatesFilter<$PrismaModel> | $Enums.VitalSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumVitalSourceFilter<$PrismaModel>
+    _max?: NestedEnumVitalSourceFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type VitalThresholdPatientIdVitalTypeCompoundUniqueInput = {
+    patientId: string
+    vitalType: $Enums.VitalType
+  }
+
+  export type VitalThresholdCountOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    minNormal?: SortOrder
+    maxNormal?: SortOrder
+    systolicMin?: SortOrder
+    systolicMax?: SortOrder
+    diastolicMin?: SortOrder
+    diastolicMax?: SortOrder
+    criticalMin?: SortOrder
+    criticalMax?: SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+    updatedById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VitalThresholdAvgOrderByAggregateInput = {
+    minNormal?: SortOrder
+    maxNormal?: SortOrder
+    systolicMin?: SortOrder
+    systolicMax?: SortOrder
+    diastolicMin?: SortOrder
+    diastolicMax?: SortOrder
+    criticalMin?: SortOrder
+    criticalMax?: SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+  }
+
+  export type VitalThresholdMaxOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    minNormal?: SortOrder
+    maxNormal?: SortOrder
+    systolicMin?: SortOrder
+    systolicMax?: SortOrder
+    diastolicMin?: SortOrder
+    diastolicMax?: SortOrder
+    criticalMin?: SortOrder
+    criticalMax?: SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+    updatedById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VitalThresholdMinOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    vitalType?: SortOrder
+    minNormal?: SortOrder
+    maxNormal?: SortOrder
+    systolicMin?: SortOrder
+    systolicMax?: SortOrder
+    diastolicMin?: SortOrder
+    diastolicMax?: SortOrder
+    criticalMin?: SortOrder
+    criticalMax?: SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+    updatedById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VitalThresholdSumOrderByAggregateInput = {
+    minNormal?: SortOrder
+    maxNormal?: SortOrder
+    systolicMin?: SortOrder
+    systolicMax?: SortOrder
+    diastolicMin?: SortOrder
+    diastolicMax?: SortOrder
+    criticalMin?: SortOrder
+    criticalMax?: SortOrder
+    consecutiveBreachLimit?: SortOrder
+    rollingBaselineDays?: SortOrder
+    baselineDeviationPercent?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type EnumAlertSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertSeverity | EnumAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertSeverityFilter<$PrismaModel> | $Enums.AlertSeverity
+  }
+
+  export type EnumAnomalyTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnomalyType | EnumAnomalyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnomalyTypeFilter<$PrismaModel> | $Enums.AnomalyType
+  }
+
+  export type EnumAlertStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertStatus | EnumAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertStatusFilter<$PrismaModel> | $Enums.AlertStatus
+  }
+
+  export type VitalReadingScalarRelationFilter = {
+    is?: VitalReadingWhereInput
+    isNot?: VitalReadingWhereInput
+  }
+
+  export type VitalAlertCountOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    readingId?: SortOrder
+    vitalType?: SortOrder
+    severity?: SortOrder
+    anomalyType?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    baselineSnapshot?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedAt?: SortOrder
+    resolutionNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VitalAlertMaxOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    readingId?: SortOrder
+    vitalType?: SortOrder
+    severity?: SortOrder
+    anomalyType?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedAt?: SortOrder
+    resolutionNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VitalAlertMinOrderByAggregateInput = {
+    id?: SortOrder
+    patientId?: SortOrder
+    readingId?: SortOrder
+    vitalType?: SortOrder
+    severity?: SortOrder
+    anomalyType?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    acknowledgedById?: SortOrder
+    acknowledgedAt?: SortOrder
+    resolutionNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumAlertSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertSeverity | EnumAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertSeverityWithAggregatesFilter<$PrismaModel> | $Enums.AlertSeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAlertSeverityFilter<$PrismaModel>
+    _max?: NestedEnumAlertSeverityFilter<$PrismaModel>
+  }
+
+  export type EnumAnomalyTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnomalyType | EnumAnomalyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnomalyTypeWithAggregatesFilter<$PrismaModel> | $Enums.AnomalyType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAnomalyTypeFilter<$PrismaModel>
+    _max?: NestedEnumAnomalyTypeFilter<$PrismaModel>
+  }
+
+  export type EnumAlertStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertStatus | EnumAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertStatusWithAggregatesFilter<$PrismaModel> | $Enums.AlertStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAlertStatusFilter<$PrismaModel>
+    _max?: NestedEnumAlertStatusFilter<$PrismaModel>
   }
 
   export type CareCircleCreateNestedManyWithoutPatientInput = {
@@ -14523,6 +23894,69 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
+  export type MedicationCreateNestedManyWithoutPatientInput = {
+    create?: XOR<MedicationCreateWithoutPatientInput, MedicationUncheckedCreateWithoutPatientInput> | MedicationCreateWithoutPatientInput[] | MedicationUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutPatientInput | MedicationCreateOrConnectWithoutPatientInput[]
+    createMany?: MedicationCreateManyPatientInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type MedicationCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<MedicationCreateWithoutCreatedByInput, MedicationUncheckedCreateWithoutCreatedByInput> | MedicationCreateWithoutCreatedByInput[] | MedicationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCreatedByInput | MedicationCreateOrConnectWithoutCreatedByInput[]
+    createMany?: MedicationCreateManyCreatedByInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type MedicationDoseCreateNestedManyWithoutAcknowledgedByInput = {
+    create?: XOR<MedicationDoseCreateWithoutAcknowledgedByInput, MedicationDoseUncheckedCreateWithoutAcknowledgedByInput> | MedicationDoseCreateWithoutAcknowledgedByInput[] | MedicationDoseUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutAcknowledgedByInput | MedicationDoseCreateOrConnectWithoutAcknowledgedByInput[]
+    createMany?: MedicationDoseCreateManyAcknowledgedByInputEnvelope
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+  }
+
+  export type VitalReadingCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<VitalReadingCreateWithoutCreatedByInput, VitalReadingUncheckedCreateWithoutCreatedByInput> | VitalReadingCreateWithoutCreatedByInput[] | VitalReadingUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutCreatedByInput | VitalReadingCreateOrConnectWithoutCreatedByInput[]
+    createMany?: VitalReadingCreateManyCreatedByInputEnvelope
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+  }
+
+  export type VitalReadingCreateNestedManyWithoutPatientInput = {
+    create?: XOR<VitalReadingCreateWithoutPatientInput, VitalReadingUncheckedCreateWithoutPatientInput> | VitalReadingCreateWithoutPatientInput[] | VitalReadingUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutPatientInput | VitalReadingCreateOrConnectWithoutPatientInput[]
+    createMany?: VitalReadingCreateManyPatientInputEnvelope
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+  }
+
+  export type VitalThresholdCreateNestedManyWithoutPatientInput = {
+    create?: XOR<VitalThresholdCreateWithoutPatientInput, VitalThresholdUncheckedCreateWithoutPatientInput> | VitalThresholdCreateWithoutPatientInput[] | VitalThresholdUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutPatientInput | VitalThresholdCreateOrConnectWithoutPatientInput[]
+    createMany?: VitalThresholdCreateManyPatientInputEnvelope
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+  }
+
+  export type VitalThresholdCreateNestedManyWithoutUpdatedByInput = {
+    create?: XOR<VitalThresholdCreateWithoutUpdatedByInput, VitalThresholdUncheckedCreateWithoutUpdatedByInput> | VitalThresholdCreateWithoutUpdatedByInput[] | VitalThresholdUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutUpdatedByInput | VitalThresholdCreateOrConnectWithoutUpdatedByInput[]
+    createMany?: VitalThresholdCreateManyUpdatedByInputEnvelope
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+  }
+
+  export type VitalAlertCreateNestedManyWithoutPatientInput = {
+    create?: XOR<VitalAlertCreateWithoutPatientInput, VitalAlertUncheckedCreateWithoutPatientInput> | VitalAlertCreateWithoutPatientInput[] | VitalAlertUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutPatientInput | VitalAlertCreateOrConnectWithoutPatientInput[]
+    createMany?: VitalAlertCreateManyPatientInputEnvelope
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+  }
+
+  export type VitalAlertCreateNestedManyWithoutAcknowledgedByInput = {
+    create?: XOR<VitalAlertCreateWithoutAcknowledgedByInput, VitalAlertUncheckedCreateWithoutAcknowledgedByInput> | VitalAlertCreateWithoutAcknowledgedByInput[] | VitalAlertUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutAcknowledgedByInput | VitalAlertCreateOrConnectWithoutAcknowledgedByInput[]
+    createMany?: VitalAlertCreateManyAcknowledgedByInputEnvelope
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+  }
+
   export type CareCircleUncheckedCreateNestedManyWithoutPatientInput = {
     create?: XOR<CareCircleCreateWithoutPatientInput, CareCircleUncheckedCreateWithoutPatientInput> | CareCircleCreateWithoutPatientInput[] | CareCircleUncheckedCreateWithoutPatientInput[]
     connectOrCreate?: CareCircleCreateOrConnectWithoutPatientInput | CareCircleCreateOrConnectWithoutPatientInput[]
@@ -14563,6 +23997,69 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutActorInput | AuditLogCreateOrConnectWithoutActorInput[]
     createMany?: AuditLogCreateManyActorInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  }
+
+  export type MedicationUncheckedCreateNestedManyWithoutPatientInput = {
+    create?: XOR<MedicationCreateWithoutPatientInput, MedicationUncheckedCreateWithoutPatientInput> | MedicationCreateWithoutPatientInput[] | MedicationUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutPatientInput | MedicationCreateOrConnectWithoutPatientInput[]
+    createMany?: MedicationCreateManyPatientInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type MedicationUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<MedicationCreateWithoutCreatedByInput, MedicationUncheckedCreateWithoutCreatedByInput> | MedicationCreateWithoutCreatedByInput[] | MedicationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCreatedByInput | MedicationCreateOrConnectWithoutCreatedByInput[]
+    createMany?: MedicationCreateManyCreatedByInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput = {
+    create?: XOR<MedicationDoseCreateWithoutAcknowledgedByInput, MedicationDoseUncheckedCreateWithoutAcknowledgedByInput> | MedicationDoseCreateWithoutAcknowledgedByInput[] | MedicationDoseUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutAcknowledgedByInput | MedicationDoseCreateOrConnectWithoutAcknowledgedByInput[]
+    createMany?: MedicationDoseCreateManyAcknowledgedByInputEnvelope
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+  }
+
+  export type VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<VitalReadingCreateWithoutCreatedByInput, VitalReadingUncheckedCreateWithoutCreatedByInput> | VitalReadingCreateWithoutCreatedByInput[] | VitalReadingUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutCreatedByInput | VitalReadingCreateOrConnectWithoutCreatedByInput[]
+    createMany?: VitalReadingCreateManyCreatedByInputEnvelope
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+  }
+
+  export type VitalReadingUncheckedCreateNestedManyWithoutPatientInput = {
+    create?: XOR<VitalReadingCreateWithoutPatientInput, VitalReadingUncheckedCreateWithoutPatientInput> | VitalReadingCreateWithoutPatientInput[] | VitalReadingUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutPatientInput | VitalReadingCreateOrConnectWithoutPatientInput[]
+    createMany?: VitalReadingCreateManyPatientInputEnvelope
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+  }
+
+  export type VitalThresholdUncheckedCreateNestedManyWithoutPatientInput = {
+    create?: XOR<VitalThresholdCreateWithoutPatientInput, VitalThresholdUncheckedCreateWithoutPatientInput> | VitalThresholdCreateWithoutPatientInput[] | VitalThresholdUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutPatientInput | VitalThresholdCreateOrConnectWithoutPatientInput[]
+    createMany?: VitalThresholdCreateManyPatientInputEnvelope
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+  }
+
+  export type VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput = {
+    create?: XOR<VitalThresholdCreateWithoutUpdatedByInput, VitalThresholdUncheckedCreateWithoutUpdatedByInput> | VitalThresholdCreateWithoutUpdatedByInput[] | VitalThresholdUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutUpdatedByInput | VitalThresholdCreateOrConnectWithoutUpdatedByInput[]
+    createMany?: VitalThresholdCreateManyUpdatedByInputEnvelope
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+  }
+
+  export type VitalAlertUncheckedCreateNestedManyWithoutPatientInput = {
+    create?: XOR<VitalAlertCreateWithoutPatientInput, VitalAlertUncheckedCreateWithoutPatientInput> | VitalAlertCreateWithoutPatientInput[] | VitalAlertUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutPatientInput | VitalAlertCreateOrConnectWithoutPatientInput[]
+    createMany?: VitalAlertCreateManyPatientInputEnvelope
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+  }
+
+  export type VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput = {
+    create?: XOR<VitalAlertCreateWithoutAcknowledgedByInput, VitalAlertUncheckedCreateWithoutAcknowledgedByInput> | VitalAlertCreateWithoutAcknowledgedByInput[] | VitalAlertUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutAcknowledgedByInput | VitalAlertCreateOrConnectWithoutAcknowledgedByInput[]
+    createMany?: VitalAlertCreateManyAcknowledgedByInputEnvelope
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -14665,6 +24162,132 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type MedicationUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<MedicationCreateWithoutPatientInput, MedicationUncheckedCreateWithoutPatientInput> | MedicationCreateWithoutPatientInput[] | MedicationUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutPatientInput | MedicationCreateOrConnectWithoutPatientInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutPatientInput | MedicationUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: MedicationCreateManyPatientInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutPatientInput | MedicationUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutPatientInput | MedicationUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
+  export type MedicationUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<MedicationCreateWithoutCreatedByInput, MedicationUncheckedCreateWithoutCreatedByInput> | MedicationCreateWithoutCreatedByInput[] | MedicationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCreatedByInput | MedicationCreateOrConnectWithoutCreatedByInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutCreatedByInput | MedicationUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: MedicationCreateManyCreatedByInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutCreatedByInput | MedicationUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutCreatedByInput | MedicationUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
+  export type MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput = {
+    create?: XOR<MedicationDoseCreateWithoutAcknowledgedByInput, MedicationDoseUncheckedCreateWithoutAcknowledgedByInput> | MedicationDoseCreateWithoutAcknowledgedByInput[] | MedicationDoseUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutAcknowledgedByInput | MedicationDoseCreateOrConnectWithoutAcknowledgedByInput[]
+    upsert?: MedicationDoseUpsertWithWhereUniqueWithoutAcknowledgedByInput | MedicationDoseUpsertWithWhereUniqueWithoutAcknowledgedByInput[]
+    createMany?: MedicationDoseCreateManyAcknowledgedByInputEnvelope
+    set?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    disconnect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    delete?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    update?: MedicationDoseUpdateWithWhereUniqueWithoutAcknowledgedByInput | MedicationDoseUpdateWithWhereUniqueWithoutAcknowledgedByInput[]
+    updateMany?: MedicationDoseUpdateManyWithWhereWithoutAcknowledgedByInput | MedicationDoseUpdateManyWithWhereWithoutAcknowledgedByInput[]
+    deleteMany?: MedicationDoseScalarWhereInput | MedicationDoseScalarWhereInput[]
+  }
+
+  export type VitalReadingUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<VitalReadingCreateWithoutCreatedByInput, VitalReadingUncheckedCreateWithoutCreatedByInput> | VitalReadingCreateWithoutCreatedByInput[] | VitalReadingUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutCreatedByInput | VitalReadingCreateOrConnectWithoutCreatedByInput[]
+    upsert?: VitalReadingUpsertWithWhereUniqueWithoutCreatedByInput | VitalReadingUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: VitalReadingCreateManyCreatedByInputEnvelope
+    set?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    disconnect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    delete?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    update?: VitalReadingUpdateWithWhereUniqueWithoutCreatedByInput | VitalReadingUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: VitalReadingUpdateManyWithWhereWithoutCreatedByInput | VitalReadingUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: VitalReadingScalarWhereInput | VitalReadingScalarWhereInput[]
+  }
+
+  export type VitalReadingUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<VitalReadingCreateWithoutPatientInput, VitalReadingUncheckedCreateWithoutPatientInput> | VitalReadingCreateWithoutPatientInput[] | VitalReadingUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutPatientInput | VitalReadingCreateOrConnectWithoutPatientInput[]
+    upsert?: VitalReadingUpsertWithWhereUniqueWithoutPatientInput | VitalReadingUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: VitalReadingCreateManyPatientInputEnvelope
+    set?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    disconnect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    delete?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    update?: VitalReadingUpdateWithWhereUniqueWithoutPatientInput | VitalReadingUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: VitalReadingUpdateManyWithWhereWithoutPatientInput | VitalReadingUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: VitalReadingScalarWhereInput | VitalReadingScalarWhereInput[]
+  }
+
+  export type VitalThresholdUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<VitalThresholdCreateWithoutPatientInput, VitalThresholdUncheckedCreateWithoutPatientInput> | VitalThresholdCreateWithoutPatientInput[] | VitalThresholdUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutPatientInput | VitalThresholdCreateOrConnectWithoutPatientInput[]
+    upsert?: VitalThresholdUpsertWithWhereUniqueWithoutPatientInput | VitalThresholdUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: VitalThresholdCreateManyPatientInputEnvelope
+    set?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    disconnect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    delete?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    update?: VitalThresholdUpdateWithWhereUniqueWithoutPatientInput | VitalThresholdUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: VitalThresholdUpdateManyWithWhereWithoutPatientInput | VitalThresholdUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: VitalThresholdScalarWhereInput | VitalThresholdScalarWhereInput[]
+  }
+
+  export type VitalThresholdUpdateManyWithoutUpdatedByNestedInput = {
+    create?: XOR<VitalThresholdCreateWithoutUpdatedByInput, VitalThresholdUncheckedCreateWithoutUpdatedByInput> | VitalThresholdCreateWithoutUpdatedByInput[] | VitalThresholdUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutUpdatedByInput | VitalThresholdCreateOrConnectWithoutUpdatedByInput[]
+    upsert?: VitalThresholdUpsertWithWhereUniqueWithoutUpdatedByInput | VitalThresholdUpsertWithWhereUniqueWithoutUpdatedByInput[]
+    createMany?: VitalThresholdCreateManyUpdatedByInputEnvelope
+    set?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    disconnect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    delete?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    update?: VitalThresholdUpdateWithWhereUniqueWithoutUpdatedByInput | VitalThresholdUpdateWithWhereUniqueWithoutUpdatedByInput[]
+    updateMany?: VitalThresholdUpdateManyWithWhereWithoutUpdatedByInput | VitalThresholdUpdateManyWithWhereWithoutUpdatedByInput[]
+    deleteMany?: VitalThresholdScalarWhereInput | VitalThresholdScalarWhereInput[]
+  }
+
+  export type VitalAlertUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<VitalAlertCreateWithoutPatientInput, VitalAlertUncheckedCreateWithoutPatientInput> | VitalAlertCreateWithoutPatientInput[] | VitalAlertUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutPatientInput | VitalAlertCreateOrConnectWithoutPatientInput[]
+    upsert?: VitalAlertUpsertWithWhereUniqueWithoutPatientInput | VitalAlertUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: VitalAlertCreateManyPatientInputEnvelope
+    set?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    disconnect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    delete?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    update?: VitalAlertUpdateWithWhereUniqueWithoutPatientInput | VitalAlertUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: VitalAlertUpdateManyWithWhereWithoutPatientInput | VitalAlertUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+  }
+
+  export type VitalAlertUpdateManyWithoutAcknowledgedByNestedInput = {
+    create?: XOR<VitalAlertCreateWithoutAcknowledgedByInput, VitalAlertUncheckedCreateWithoutAcknowledgedByInput> | VitalAlertCreateWithoutAcknowledgedByInput[] | VitalAlertUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutAcknowledgedByInput | VitalAlertCreateOrConnectWithoutAcknowledgedByInput[]
+    upsert?: VitalAlertUpsertWithWhereUniqueWithoutAcknowledgedByInput | VitalAlertUpsertWithWhereUniqueWithoutAcknowledgedByInput[]
+    createMany?: VitalAlertCreateManyAcknowledgedByInputEnvelope
+    set?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    disconnect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    delete?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    update?: VitalAlertUpdateWithWhereUniqueWithoutAcknowledgedByInput | VitalAlertUpdateWithWhereUniqueWithoutAcknowledgedByInput[]
+    updateMany?: VitalAlertUpdateManyWithWhereWithoutAcknowledgedByInput | VitalAlertUpdateManyWithWhereWithoutAcknowledgedByInput[]
+    deleteMany?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+  }
+
   export type CareCircleUncheckedUpdateManyWithoutPatientNestedInput = {
     create?: XOR<CareCircleCreateWithoutPatientInput, CareCircleUncheckedCreateWithoutPatientInput> | CareCircleCreateWithoutPatientInput[] | CareCircleUncheckedCreateWithoutPatientInput[]
     connectOrCreate?: CareCircleCreateOrConnectWithoutPatientInput | CareCircleCreateOrConnectWithoutPatientInput[]
@@ -14749,6 +24372,132 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type MedicationUncheckedUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<MedicationCreateWithoutPatientInput, MedicationUncheckedCreateWithoutPatientInput> | MedicationCreateWithoutPatientInput[] | MedicationUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutPatientInput | MedicationCreateOrConnectWithoutPatientInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutPatientInput | MedicationUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: MedicationCreateManyPatientInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutPatientInput | MedicationUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutPatientInput | MedicationUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
+  export type MedicationUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<MedicationCreateWithoutCreatedByInput, MedicationUncheckedCreateWithoutCreatedByInput> | MedicationCreateWithoutCreatedByInput[] | MedicationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCreatedByInput | MedicationCreateOrConnectWithoutCreatedByInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutCreatedByInput | MedicationUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: MedicationCreateManyCreatedByInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutCreatedByInput | MedicationUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutCreatedByInput | MedicationUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
+  export type MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput = {
+    create?: XOR<MedicationDoseCreateWithoutAcknowledgedByInput, MedicationDoseUncheckedCreateWithoutAcknowledgedByInput> | MedicationDoseCreateWithoutAcknowledgedByInput[] | MedicationDoseUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutAcknowledgedByInput | MedicationDoseCreateOrConnectWithoutAcknowledgedByInput[]
+    upsert?: MedicationDoseUpsertWithWhereUniqueWithoutAcknowledgedByInput | MedicationDoseUpsertWithWhereUniqueWithoutAcknowledgedByInput[]
+    createMany?: MedicationDoseCreateManyAcknowledgedByInputEnvelope
+    set?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    disconnect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    delete?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    update?: MedicationDoseUpdateWithWhereUniqueWithoutAcknowledgedByInput | MedicationDoseUpdateWithWhereUniqueWithoutAcknowledgedByInput[]
+    updateMany?: MedicationDoseUpdateManyWithWhereWithoutAcknowledgedByInput | MedicationDoseUpdateManyWithWhereWithoutAcknowledgedByInput[]
+    deleteMany?: MedicationDoseScalarWhereInput | MedicationDoseScalarWhereInput[]
+  }
+
+  export type VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<VitalReadingCreateWithoutCreatedByInput, VitalReadingUncheckedCreateWithoutCreatedByInput> | VitalReadingCreateWithoutCreatedByInput[] | VitalReadingUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutCreatedByInput | VitalReadingCreateOrConnectWithoutCreatedByInput[]
+    upsert?: VitalReadingUpsertWithWhereUniqueWithoutCreatedByInput | VitalReadingUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: VitalReadingCreateManyCreatedByInputEnvelope
+    set?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    disconnect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    delete?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    update?: VitalReadingUpdateWithWhereUniqueWithoutCreatedByInput | VitalReadingUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: VitalReadingUpdateManyWithWhereWithoutCreatedByInput | VitalReadingUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: VitalReadingScalarWhereInput | VitalReadingScalarWhereInput[]
+  }
+
+  export type VitalReadingUncheckedUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<VitalReadingCreateWithoutPatientInput, VitalReadingUncheckedCreateWithoutPatientInput> | VitalReadingCreateWithoutPatientInput[] | VitalReadingUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutPatientInput | VitalReadingCreateOrConnectWithoutPatientInput[]
+    upsert?: VitalReadingUpsertWithWhereUniqueWithoutPatientInput | VitalReadingUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: VitalReadingCreateManyPatientInputEnvelope
+    set?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    disconnect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    delete?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    connect?: VitalReadingWhereUniqueInput | VitalReadingWhereUniqueInput[]
+    update?: VitalReadingUpdateWithWhereUniqueWithoutPatientInput | VitalReadingUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: VitalReadingUpdateManyWithWhereWithoutPatientInput | VitalReadingUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: VitalReadingScalarWhereInput | VitalReadingScalarWhereInput[]
+  }
+
+  export type VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<VitalThresholdCreateWithoutPatientInput, VitalThresholdUncheckedCreateWithoutPatientInput> | VitalThresholdCreateWithoutPatientInput[] | VitalThresholdUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutPatientInput | VitalThresholdCreateOrConnectWithoutPatientInput[]
+    upsert?: VitalThresholdUpsertWithWhereUniqueWithoutPatientInput | VitalThresholdUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: VitalThresholdCreateManyPatientInputEnvelope
+    set?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    disconnect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    delete?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    update?: VitalThresholdUpdateWithWhereUniqueWithoutPatientInput | VitalThresholdUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: VitalThresholdUpdateManyWithWhereWithoutPatientInput | VitalThresholdUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: VitalThresholdScalarWhereInput | VitalThresholdScalarWhereInput[]
+  }
+
+  export type VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput = {
+    create?: XOR<VitalThresholdCreateWithoutUpdatedByInput, VitalThresholdUncheckedCreateWithoutUpdatedByInput> | VitalThresholdCreateWithoutUpdatedByInput[] | VitalThresholdUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: VitalThresholdCreateOrConnectWithoutUpdatedByInput | VitalThresholdCreateOrConnectWithoutUpdatedByInput[]
+    upsert?: VitalThresholdUpsertWithWhereUniqueWithoutUpdatedByInput | VitalThresholdUpsertWithWhereUniqueWithoutUpdatedByInput[]
+    createMany?: VitalThresholdCreateManyUpdatedByInputEnvelope
+    set?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    disconnect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    delete?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    connect?: VitalThresholdWhereUniqueInput | VitalThresholdWhereUniqueInput[]
+    update?: VitalThresholdUpdateWithWhereUniqueWithoutUpdatedByInput | VitalThresholdUpdateWithWhereUniqueWithoutUpdatedByInput[]
+    updateMany?: VitalThresholdUpdateManyWithWhereWithoutUpdatedByInput | VitalThresholdUpdateManyWithWhereWithoutUpdatedByInput[]
+    deleteMany?: VitalThresholdScalarWhereInput | VitalThresholdScalarWhereInput[]
+  }
+
+  export type VitalAlertUncheckedUpdateManyWithoutPatientNestedInput = {
+    create?: XOR<VitalAlertCreateWithoutPatientInput, VitalAlertUncheckedCreateWithoutPatientInput> | VitalAlertCreateWithoutPatientInput[] | VitalAlertUncheckedCreateWithoutPatientInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutPatientInput | VitalAlertCreateOrConnectWithoutPatientInput[]
+    upsert?: VitalAlertUpsertWithWhereUniqueWithoutPatientInput | VitalAlertUpsertWithWhereUniqueWithoutPatientInput[]
+    createMany?: VitalAlertCreateManyPatientInputEnvelope
+    set?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    disconnect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    delete?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    update?: VitalAlertUpdateWithWhereUniqueWithoutPatientInput | VitalAlertUpdateWithWhereUniqueWithoutPatientInput[]
+    updateMany?: VitalAlertUpdateManyWithWhereWithoutPatientInput | VitalAlertUpdateManyWithWhereWithoutPatientInput[]
+    deleteMany?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+  }
+
+  export type VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput = {
+    create?: XOR<VitalAlertCreateWithoutAcknowledgedByInput, VitalAlertUncheckedCreateWithoutAcknowledgedByInput> | VitalAlertCreateWithoutAcknowledgedByInput[] | VitalAlertUncheckedCreateWithoutAcknowledgedByInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutAcknowledgedByInput | VitalAlertCreateOrConnectWithoutAcknowledgedByInput[]
+    upsert?: VitalAlertUpsertWithWhereUniqueWithoutAcknowledgedByInput | VitalAlertUpsertWithWhereUniqueWithoutAcknowledgedByInput[]
+    createMany?: VitalAlertCreateManyAcknowledgedByInputEnvelope
+    set?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    disconnect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    delete?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    update?: VitalAlertUpdateWithWhereUniqueWithoutAcknowledgedByInput | VitalAlertUpdateWithWhereUniqueWithoutAcknowledgedByInput[]
+    updateMany?: VitalAlertUpdateManyWithWhereWithoutAcknowledgedByInput | VitalAlertUpdateManyWithWhereWithoutAcknowledgedByInput[]
+    deleteMany?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPatientCirclesInput = {
     create?: XOR<UserCreateWithoutPatientCirclesInput, UserUncheckedCreateWithoutPatientCirclesInput>
     connectOrCreate?: UserCreateOrConnectWithoutPatientCirclesInput
@@ -14789,6 +24538,13 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
+  export type MedicationCreateNestedManyWithoutCareCircleInput = {
+    create?: XOR<MedicationCreateWithoutCareCircleInput, MedicationUncheckedCreateWithoutCareCircleInput> | MedicationCreateWithoutCareCircleInput[] | MedicationUncheckedCreateWithoutCareCircleInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCareCircleInput | MedicationCreateOrConnectWithoutCareCircleInput[]
+    createMany?: MedicationCreateManyCareCircleInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
   export type CareCircleMemberUncheckedCreateNestedManyWithoutCircleInput = {
     create?: XOR<CareCircleMemberCreateWithoutCircleInput, CareCircleMemberUncheckedCreateWithoutCircleInput> | CareCircleMemberCreateWithoutCircleInput[] | CareCircleMemberUncheckedCreateWithoutCircleInput[]
     connectOrCreate?: CareCircleMemberCreateOrConnectWithoutCircleInput | CareCircleMemberCreateOrConnectWithoutCircleInput[]
@@ -14815,6 +24571,13 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutCircleInput | AuditLogCreateOrConnectWithoutCircleInput[]
     createMany?: AuditLogCreateManyCircleInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  }
+
+  export type MedicationUncheckedCreateNestedManyWithoutCareCircleInput = {
+    create?: XOR<MedicationCreateWithoutCareCircleInput, MedicationUncheckedCreateWithoutCareCircleInput> | MedicationCreateWithoutCareCircleInput[] | MedicationUncheckedCreateWithoutCareCircleInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCareCircleInput | MedicationCreateOrConnectWithoutCareCircleInput[]
+    createMany?: MedicationCreateManyCareCircleInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutPatientCirclesNestedInput = {
@@ -14889,6 +24652,20 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type MedicationUpdateManyWithoutCareCircleNestedInput = {
+    create?: XOR<MedicationCreateWithoutCareCircleInput, MedicationUncheckedCreateWithoutCareCircleInput> | MedicationCreateWithoutCareCircleInput[] | MedicationUncheckedCreateWithoutCareCircleInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCareCircleInput | MedicationCreateOrConnectWithoutCareCircleInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutCareCircleInput | MedicationUpsertWithWhereUniqueWithoutCareCircleInput[]
+    createMany?: MedicationCreateManyCareCircleInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutCareCircleInput | MedicationUpdateWithWhereUniqueWithoutCareCircleInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutCareCircleInput | MedicationUpdateManyWithWhereWithoutCareCircleInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
   export type CareCircleMemberUncheckedUpdateManyWithoutCircleNestedInput = {
     create?: XOR<CareCircleMemberCreateWithoutCircleInput, CareCircleMemberUncheckedCreateWithoutCircleInput> | CareCircleMemberCreateWithoutCircleInput[] | CareCircleMemberUncheckedCreateWithoutCircleInput[]
     connectOrCreate?: CareCircleMemberCreateOrConnectWithoutCircleInput | CareCircleMemberCreateOrConnectWithoutCircleInput[]
@@ -14945,6 +24722,156 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type MedicationUncheckedUpdateManyWithoutCareCircleNestedInput = {
+    create?: XOR<MedicationCreateWithoutCareCircleInput, MedicationUncheckedCreateWithoutCareCircleInput> | MedicationCreateWithoutCareCircleInput[] | MedicationUncheckedCreateWithoutCareCircleInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutCareCircleInput | MedicationCreateOrConnectWithoutCareCircleInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutCareCircleInput | MedicationUpsertWithWhereUniqueWithoutCareCircleInput[]
+    createMany?: MedicationCreateManyCareCircleInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutCareCircleInput | MedicationUpdateWithWhereUniqueWithoutCareCircleInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutCareCircleInput | MedicationUpdateManyWithWhereWithoutCareCircleInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutMedicationsAsPatientInput = {
+    create?: XOR<UserCreateWithoutMedicationsAsPatientInput, UserUncheckedCreateWithoutMedicationsAsPatientInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMedicationsAsPatientInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutMedicationsCreatedInput = {
+    create?: XOR<UserCreateWithoutMedicationsCreatedInput, UserUncheckedCreateWithoutMedicationsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMedicationsCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CareCircleCreateNestedOneWithoutMedicationsInput = {
+    create?: XOR<CareCircleCreateWithoutMedicationsInput, CareCircleUncheckedCreateWithoutMedicationsInput>
+    connectOrCreate?: CareCircleCreateOrConnectWithoutMedicationsInput
+    connect?: CareCircleWhereUniqueInput
+  }
+
+  export type MedicationDoseCreateNestedManyWithoutMedicationInput = {
+    create?: XOR<MedicationDoseCreateWithoutMedicationInput, MedicationDoseUncheckedCreateWithoutMedicationInput> | MedicationDoseCreateWithoutMedicationInput[] | MedicationDoseUncheckedCreateWithoutMedicationInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutMedicationInput | MedicationDoseCreateOrConnectWithoutMedicationInput[]
+    createMany?: MedicationDoseCreateManyMedicationInputEnvelope
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+  }
+
+  export type MedicationDoseUncheckedCreateNestedManyWithoutMedicationInput = {
+    create?: XOR<MedicationDoseCreateWithoutMedicationInput, MedicationDoseUncheckedCreateWithoutMedicationInput> | MedicationDoseCreateWithoutMedicationInput[] | MedicationDoseUncheckedCreateWithoutMedicationInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutMedicationInput | MedicationDoseCreateOrConnectWithoutMedicationInput[]
+    createMany?: MedicationDoseCreateManyMedicationInputEnvelope
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutMedicationsAsPatientNestedInput = {
+    create?: XOR<UserCreateWithoutMedicationsAsPatientInput, UserUncheckedCreateWithoutMedicationsAsPatientInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMedicationsAsPatientInput
+    upsert?: UserUpsertWithoutMedicationsAsPatientInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMedicationsAsPatientInput, UserUpdateWithoutMedicationsAsPatientInput>, UserUncheckedUpdateWithoutMedicationsAsPatientInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutMedicationsCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutMedicationsCreatedInput, UserUncheckedCreateWithoutMedicationsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMedicationsCreatedInput
+    upsert?: UserUpsertWithoutMedicationsCreatedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMedicationsCreatedInput, UserUpdateWithoutMedicationsCreatedInput>, UserUncheckedUpdateWithoutMedicationsCreatedInput>
+  }
+
+  export type CareCircleUpdateOneWithoutMedicationsNestedInput = {
+    create?: XOR<CareCircleCreateWithoutMedicationsInput, CareCircleUncheckedCreateWithoutMedicationsInput>
+    connectOrCreate?: CareCircleCreateOrConnectWithoutMedicationsInput
+    upsert?: CareCircleUpsertWithoutMedicationsInput
+    disconnect?: CareCircleWhereInput | boolean
+    delete?: CareCircleWhereInput | boolean
+    connect?: CareCircleWhereUniqueInput
+    update?: XOR<XOR<CareCircleUpdateToOneWithWhereWithoutMedicationsInput, CareCircleUpdateWithoutMedicationsInput>, CareCircleUncheckedUpdateWithoutMedicationsInput>
+  }
+
+  export type MedicationDoseUpdateManyWithoutMedicationNestedInput = {
+    create?: XOR<MedicationDoseCreateWithoutMedicationInput, MedicationDoseUncheckedCreateWithoutMedicationInput> | MedicationDoseCreateWithoutMedicationInput[] | MedicationDoseUncheckedCreateWithoutMedicationInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutMedicationInput | MedicationDoseCreateOrConnectWithoutMedicationInput[]
+    upsert?: MedicationDoseUpsertWithWhereUniqueWithoutMedicationInput | MedicationDoseUpsertWithWhereUniqueWithoutMedicationInput[]
+    createMany?: MedicationDoseCreateManyMedicationInputEnvelope
+    set?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    disconnect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    delete?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    update?: MedicationDoseUpdateWithWhereUniqueWithoutMedicationInput | MedicationDoseUpdateWithWhereUniqueWithoutMedicationInput[]
+    updateMany?: MedicationDoseUpdateManyWithWhereWithoutMedicationInput | MedicationDoseUpdateManyWithWhereWithoutMedicationInput[]
+    deleteMany?: MedicationDoseScalarWhereInput | MedicationDoseScalarWhereInput[]
+  }
+
+  export type MedicationDoseUncheckedUpdateManyWithoutMedicationNestedInput = {
+    create?: XOR<MedicationDoseCreateWithoutMedicationInput, MedicationDoseUncheckedCreateWithoutMedicationInput> | MedicationDoseCreateWithoutMedicationInput[] | MedicationDoseUncheckedCreateWithoutMedicationInput[]
+    connectOrCreate?: MedicationDoseCreateOrConnectWithoutMedicationInput | MedicationDoseCreateOrConnectWithoutMedicationInput[]
+    upsert?: MedicationDoseUpsertWithWhereUniqueWithoutMedicationInput | MedicationDoseUpsertWithWhereUniqueWithoutMedicationInput[]
+    createMany?: MedicationDoseCreateManyMedicationInputEnvelope
+    set?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    disconnect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    delete?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    connect?: MedicationDoseWhereUniqueInput | MedicationDoseWhereUniqueInput[]
+    update?: MedicationDoseUpdateWithWhereUniqueWithoutMedicationInput | MedicationDoseUpdateWithWhereUniqueWithoutMedicationInput[]
+    updateMany?: MedicationDoseUpdateManyWithWhereWithoutMedicationInput | MedicationDoseUpdateManyWithWhereWithoutMedicationInput[]
+    deleteMany?: MedicationDoseScalarWhereInput | MedicationDoseScalarWhereInput[]
+  }
+
+  export type MedicationCreateNestedOneWithoutDosesInput = {
+    create?: XOR<MedicationCreateWithoutDosesInput, MedicationUncheckedCreateWithoutDosesInput>
+    connectOrCreate?: MedicationCreateOrConnectWithoutDosesInput
+    connect?: MedicationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutMedicationDoseEventsInput = {
+    create?: XOR<UserCreateWithoutMedicationDoseEventsInput, UserUncheckedCreateWithoutMedicationDoseEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMedicationDoseEventsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumMedicationDoseStateFieldUpdateOperationsInput = {
+    set?: $Enums.MedicationDoseState
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MedicationConfirmationType | null
+  }
+
+  export type MedicationUpdateOneRequiredWithoutDosesNestedInput = {
+    create?: XOR<MedicationCreateWithoutDosesInput, MedicationUncheckedCreateWithoutDosesInput>
+    connectOrCreate?: MedicationCreateOrConnectWithoutDosesInput
+    upsert?: MedicationUpsertWithoutDosesInput
+    connect?: MedicationWhereUniqueInput
+    update?: XOR<XOR<MedicationUpdateToOneWithWhereWithoutDosesInput, MedicationUpdateWithoutDosesInput>, MedicationUncheckedUpdateWithoutDosesInput>
+  }
+
+  export type UserUpdateOneWithoutMedicationDoseEventsNestedInput = {
+    create?: XOR<UserCreateWithoutMedicationDoseEventsInput, UserUncheckedCreateWithoutMedicationDoseEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMedicationDoseEventsInput
+    upsert?: UserUpsertWithoutMedicationDoseEventsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMedicationDoseEventsInput, UserUpdateWithoutMedicationDoseEventsInput>, UserUncheckedUpdateWithoutMedicationDoseEventsInput>
+  }
+
   export type CareCircleCreateNestedOneWithoutMembershipsInput = {
     create?: XOR<CareCircleCreateWithoutMembershipsInput, CareCircleUncheckedCreateWithoutMembershipsInput>
     connectOrCreate?: CareCircleCreateOrConnectWithoutMembershipsInput
@@ -14979,10 +24906,6 @@ export namespace Prisma {
 
   export type EnumMemberStatusFieldUpdateOperationsInput = {
     set?: $Enums.MemberStatus
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type CareCircleUpdateOneRequiredWithoutMembershipsNestedInput = {
@@ -15359,6 +25282,184 @@ export namespace Prisma {
     update?: XOR<XOR<CareCircleUpdateToOneWithWhereWithoutAuditLogsInput, CareCircleUpdateWithoutAuditLogsInput>, CareCircleUncheckedUpdateWithoutAuditLogsInput>
   }
 
+  export type UserCreateNestedOneWithoutVitalReadingsAsPatientInput = {
+    create?: XOR<UserCreateWithoutVitalReadingsAsPatientInput, UserUncheckedCreateWithoutVitalReadingsAsPatientInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalReadingsAsPatientInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutVitalReadingsRecordedInput = {
+    create?: XOR<UserCreateWithoutVitalReadingsRecordedInput, UserUncheckedCreateWithoutVitalReadingsRecordedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalReadingsRecordedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type VitalAlertCreateNestedManyWithoutReadingInput = {
+    create?: XOR<VitalAlertCreateWithoutReadingInput, VitalAlertUncheckedCreateWithoutReadingInput> | VitalAlertCreateWithoutReadingInput[] | VitalAlertUncheckedCreateWithoutReadingInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutReadingInput | VitalAlertCreateOrConnectWithoutReadingInput[]
+    createMany?: VitalAlertCreateManyReadingInputEnvelope
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+  }
+
+  export type VitalAlertUncheckedCreateNestedManyWithoutReadingInput = {
+    create?: XOR<VitalAlertCreateWithoutReadingInput, VitalAlertUncheckedCreateWithoutReadingInput> | VitalAlertCreateWithoutReadingInput[] | VitalAlertUncheckedCreateWithoutReadingInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutReadingInput | VitalAlertCreateOrConnectWithoutReadingInput[]
+    createMany?: VitalAlertCreateManyReadingInputEnvelope
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+  }
+
+  export type EnumVitalTypeFieldUpdateOperationsInput = {
+    set?: $Enums.VitalType
+  }
+
+  export type EnumVitalSourceFieldUpdateOperationsInput = {
+    set?: $Enums.VitalSource
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutVitalReadingsAsPatientNestedInput = {
+    create?: XOR<UserCreateWithoutVitalReadingsAsPatientInput, UserUncheckedCreateWithoutVitalReadingsAsPatientInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalReadingsAsPatientInput
+    upsert?: UserUpsertWithoutVitalReadingsAsPatientInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVitalReadingsAsPatientInput, UserUpdateWithoutVitalReadingsAsPatientInput>, UserUncheckedUpdateWithoutVitalReadingsAsPatientInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutVitalReadingsRecordedNestedInput = {
+    create?: XOR<UserCreateWithoutVitalReadingsRecordedInput, UserUncheckedCreateWithoutVitalReadingsRecordedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalReadingsRecordedInput
+    upsert?: UserUpsertWithoutVitalReadingsRecordedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVitalReadingsRecordedInput, UserUpdateWithoutVitalReadingsRecordedInput>, UserUncheckedUpdateWithoutVitalReadingsRecordedInput>
+  }
+
+  export type VitalAlertUpdateManyWithoutReadingNestedInput = {
+    create?: XOR<VitalAlertCreateWithoutReadingInput, VitalAlertUncheckedCreateWithoutReadingInput> | VitalAlertCreateWithoutReadingInput[] | VitalAlertUncheckedCreateWithoutReadingInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutReadingInput | VitalAlertCreateOrConnectWithoutReadingInput[]
+    upsert?: VitalAlertUpsertWithWhereUniqueWithoutReadingInput | VitalAlertUpsertWithWhereUniqueWithoutReadingInput[]
+    createMany?: VitalAlertCreateManyReadingInputEnvelope
+    set?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    disconnect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    delete?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    update?: VitalAlertUpdateWithWhereUniqueWithoutReadingInput | VitalAlertUpdateWithWhereUniqueWithoutReadingInput[]
+    updateMany?: VitalAlertUpdateManyWithWhereWithoutReadingInput | VitalAlertUpdateManyWithWhereWithoutReadingInput[]
+    deleteMany?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+  }
+
+  export type VitalAlertUncheckedUpdateManyWithoutReadingNestedInput = {
+    create?: XOR<VitalAlertCreateWithoutReadingInput, VitalAlertUncheckedCreateWithoutReadingInput> | VitalAlertCreateWithoutReadingInput[] | VitalAlertUncheckedCreateWithoutReadingInput[]
+    connectOrCreate?: VitalAlertCreateOrConnectWithoutReadingInput | VitalAlertCreateOrConnectWithoutReadingInput[]
+    upsert?: VitalAlertUpsertWithWhereUniqueWithoutReadingInput | VitalAlertUpsertWithWhereUniqueWithoutReadingInput[]
+    createMany?: VitalAlertCreateManyReadingInputEnvelope
+    set?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    disconnect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    delete?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    connect?: VitalAlertWhereUniqueInput | VitalAlertWhereUniqueInput[]
+    update?: VitalAlertUpdateWithWhereUniqueWithoutReadingInput | VitalAlertUpdateWithWhereUniqueWithoutReadingInput[]
+    updateMany?: VitalAlertUpdateManyWithWhereWithoutReadingInput | VitalAlertUpdateManyWithWhereWithoutReadingInput[]
+    deleteMany?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutVitalThresholdsInput = {
+    create?: XOR<UserCreateWithoutVitalThresholdsInput, UserUncheckedCreateWithoutVitalThresholdsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalThresholdsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutVitalThresholdsSetInput = {
+    create?: XOR<UserCreateWithoutVitalThresholdsSetInput, UserUncheckedCreateWithoutVitalThresholdsSetInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalThresholdsSetInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutVitalThresholdsNestedInput = {
+    create?: XOR<UserCreateWithoutVitalThresholdsInput, UserUncheckedCreateWithoutVitalThresholdsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalThresholdsInput
+    upsert?: UserUpsertWithoutVitalThresholdsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVitalThresholdsInput, UserUpdateWithoutVitalThresholdsInput>, UserUncheckedUpdateWithoutVitalThresholdsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutVitalThresholdsSetNestedInput = {
+    create?: XOR<UserCreateWithoutVitalThresholdsSetInput, UserUncheckedCreateWithoutVitalThresholdsSetInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalThresholdsSetInput
+    upsert?: UserUpsertWithoutVitalThresholdsSetInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVitalThresholdsSetInput, UserUpdateWithoutVitalThresholdsSetInput>, UserUncheckedUpdateWithoutVitalThresholdsSetInput>
+  }
+
+  export type UserCreateNestedOneWithoutVitalAlertsInput = {
+    create?: XOR<UserCreateWithoutVitalAlertsInput, UserUncheckedCreateWithoutVitalAlertsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalAlertsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type VitalReadingCreateNestedOneWithoutAlertsInput = {
+    create?: XOR<VitalReadingCreateWithoutAlertsInput, VitalReadingUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutAlertsInput
+    connect?: VitalReadingWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutVitalAlertsAcknowledgedInput = {
+    create?: XOR<UserCreateWithoutVitalAlertsAcknowledgedInput, UserUncheckedCreateWithoutVitalAlertsAcknowledgedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalAlertsAcknowledgedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAlertSeverityFieldUpdateOperationsInput = {
+    set?: $Enums.AlertSeverity
+  }
+
+  export type EnumAnomalyTypeFieldUpdateOperationsInput = {
+    set?: $Enums.AnomalyType
+  }
+
+  export type EnumAlertStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AlertStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutVitalAlertsNestedInput = {
+    create?: XOR<UserCreateWithoutVitalAlertsInput, UserUncheckedCreateWithoutVitalAlertsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalAlertsInput
+    upsert?: UserUpsertWithoutVitalAlertsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVitalAlertsInput, UserUpdateWithoutVitalAlertsInput>, UserUncheckedUpdateWithoutVitalAlertsInput>
+  }
+
+  export type VitalReadingUpdateOneRequiredWithoutAlertsNestedInput = {
+    create?: XOR<VitalReadingCreateWithoutAlertsInput, VitalReadingUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: VitalReadingCreateOrConnectWithoutAlertsInput
+    upsert?: VitalReadingUpsertWithoutAlertsInput
+    connect?: VitalReadingWhereUniqueInput
+    update?: XOR<XOR<VitalReadingUpdateToOneWithWhereWithoutAlertsInput, VitalReadingUpdateWithoutAlertsInput>, VitalReadingUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type UserUpdateOneWithoutVitalAlertsAcknowledgedNestedInput = {
+    create?: XOR<UserCreateWithoutVitalAlertsAcknowledgedInput, UserUncheckedCreateWithoutVitalAlertsAcknowledgedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVitalAlertsAcknowledgedInput
+    upsert?: UserUpsertWithoutVitalAlertsAcknowledgedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVitalAlertsAcknowledgedInput, UserUpdateWithoutVitalAlertsAcknowledgedInput>, UserUncheckedUpdateWithoutVitalAlertsAcknowledgedInput>
+  }
+
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15506,11 +25607,63 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumMemberStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.MemberStatus | EnumMemberStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumMemberStatusFilter<$PrismaModel> | $Enums.MemberStatus
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumMedicationDoseStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationDoseState | EnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    in?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumMedicationDoseStateFilter<$PrismaModel> | $Enums.MedicationDoseState
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -15524,14 +25677,21 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type NestedEnumMemberStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MemberStatus | EnumMemberStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumMemberStatusWithAggregatesFilter<$PrismaModel> | $Enums.MemberStatus
+  export type NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationConfirmationType | EnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel> | $Enums.MedicationConfirmationType | null
+  }
+
+  export type NestedEnumMedicationDoseStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationDoseState | EnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    in?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MedicationDoseState[] | ListEnumMedicationDoseStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumMedicationDoseStateWithAggregatesFilter<$PrismaModel> | $Enums.MedicationDoseState
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumMemberStatusFilter<$PrismaModel>
-    _max?: NestedEnumMemberStatusFilter<$PrismaModel>
+    _min?: NestedEnumMedicationDoseStateFilter<$PrismaModel>
+    _max?: NestedEnumMedicationDoseStateFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15546,6 +25706,33 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMedicationConfirmationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MedicationConfirmationType | EnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MedicationConfirmationType[] | ListEnumMedicationConfirmationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMedicationConfirmationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.MedicationConfirmationType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumMedicationConfirmationTypeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMemberStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MemberStatus | EnumMemberStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMemberStatusFilter<$PrismaModel> | $Enums.MemberStatus
+  }
+
+  export type NestedEnumMemberStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MemberStatus | EnumMemberStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MemberStatus[] | ListEnumMemberStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMemberStatusWithAggregatesFilter<$PrismaModel> | $Enums.MemberStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMemberStatusFilter<$PrismaModel>
+    _max?: NestedEnumMemberStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumRoleNameFilter<$PrismaModel = never> = {
@@ -15621,31 +25808,6 @@ export namespace Prisma {
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
-
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -15670,6 +25832,134 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumVitalTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalType | EnumVitalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalTypeFilter<$PrismaModel> | $Enums.VitalType
+  }
+
+  export type NestedEnumVitalSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalSource | EnumVitalSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalSourceFilter<$PrismaModel> | $Enums.VitalSource
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumVitalTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalType | EnumVitalTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalType[] | ListEnumVitalTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalTypeWithAggregatesFilter<$PrismaModel> | $Enums.VitalType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumVitalTypeFilter<$PrismaModel>
+    _max?: NestedEnumVitalTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumVitalSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.VitalSource | EnumVitalSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VitalSource[] | ListEnumVitalSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumVitalSourceWithAggregatesFilter<$PrismaModel> | $Enums.VitalSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumVitalSourceFilter<$PrismaModel>
+    _max?: NestedEnumVitalSourceFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAlertSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertSeverity | EnumAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertSeverityFilter<$PrismaModel> | $Enums.AlertSeverity
+  }
+
+  export type NestedEnumAnomalyTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnomalyType | EnumAnomalyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnomalyTypeFilter<$PrismaModel> | $Enums.AnomalyType
+  }
+
+  export type NestedEnumAlertStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertStatus | EnumAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertStatusFilter<$PrismaModel> | $Enums.AlertStatus
+  }
+
+  export type NestedEnumAlertSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertSeverity | EnumAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertSeverity[] | ListEnumAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertSeverityWithAggregatesFilter<$PrismaModel> | $Enums.AlertSeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAlertSeverityFilter<$PrismaModel>
+    _max?: NestedEnumAlertSeverityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAnomalyTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AnomalyType | EnumAnomalyTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AnomalyType[] | ListEnumAnomalyTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAnomalyTypeWithAggregatesFilter<$PrismaModel> | $Enums.AnomalyType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAnomalyTypeFilter<$PrismaModel>
+    _max?: NestedEnumAnomalyTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAlertStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AlertStatus | EnumAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AlertStatus[] | ListEnumAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAlertStatusWithAggregatesFilter<$PrismaModel> | $Enums.AlertStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAlertStatusFilter<$PrismaModel>
+    _max?: NestedEnumAlertStatusFilter<$PrismaModel>
+  }
+
   export type CareCircleCreateWithoutPatientInput = {
     id?: string
     name: string
@@ -15680,6 +25970,7 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutCircleInput
     consents?: ConsentCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateWithoutPatientInput = {
@@ -15692,6 +25983,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
     consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleCreateOrConnectWithoutPatientInput = {
@@ -15714,6 +26006,7 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutCircleInput
     consents?: ConsentCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateWithoutOwnerInput = {
@@ -15726,6 +26019,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
     consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleCreateOrConnectWithoutOwnerInput = {
@@ -15867,6 +26161,416 @@ export namespace Prisma {
 
   export type AuditLogCreateManyActorInputEnvelope = {
     data: AuditLogCreateManyActorInput | AuditLogCreateManyActorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MedicationCreateWithoutPatientInput = {
+    id?: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutMedicationsCreatedInput
+    careCircle?: CareCircleCreateNestedOneWithoutMedicationsInput
+    doses?: MedicationDoseCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationUncheckedCreateWithoutPatientInput = {
+    id?: string
+    createdById: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    doses?: MedicationDoseUncheckedCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationCreateOrConnectWithoutPatientInput = {
+    where: MedicationWhereUniqueInput
+    create: XOR<MedicationCreateWithoutPatientInput, MedicationUncheckedCreateWithoutPatientInput>
+  }
+
+  export type MedicationCreateManyPatientInputEnvelope = {
+    data: MedicationCreateManyPatientInput | MedicationCreateManyPatientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MedicationCreateWithoutCreatedByInput = {
+    id?: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutMedicationsAsPatientInput
+    careCircle?: CareCircleCreateNestedOneWithoutMedicationsInput
+    doses?: MedicationDoseCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    patientId: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    doses?: MedicationDoseUncheckedCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationCreateOrConnectWithoutCreatedByInput = {
+    where: MedicationWhereUniqueInput
+    create: XOR<MedicationCreateWithoutCreatedByInput, MedicationUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type MedicationCreateManyCreatedByInputEnvelope = {
+    data: MedicationCreateManyCreatedByInput | MedicationCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MedicationDoseCreateWithoutAcknowledgedByInput = {
+    id?: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    medication: MedicationCreateNestedOneWithoutDosesInput
+  }
+
+  export type MedicationDoseUncheckedCreateWithoutAcknowledgedByInput = {
+    id?: string
+    medicationId: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationDoseCreateOrConnectWithoutAcknowledgedByInput = {
+    where: MedicationDoseWhereUniqueInput
+    create: XOR<MedicationDoseCreateWithoutAcknowledgedByInput, MedicationDoseUncheckedCreateWithoutAcknowledgedByInput>
+  }
+
+  export type MedicationDoseCreateManyAcknowledgedByInputEnvelope = {
+    data: MedicationDoseCreateManyAcknowledgedByInput | MedicationDoseCreateManyAcknowledgedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VitalReadingCreateWithoutCreatedByInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalReadingsAsPatientInput
+    alerts?: VitalAlertCreateNestedManyWithoutReadingInput
+  }
+
+  export type VitalReadingUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdAt?: Date | string
+    alerts?: VitalAlertUncheckedCreateNestedManyWithoutReadingInput
+  }
+
+  export type VitalReadingCreateOrConnectWithoutCreatedByInput = {
+    where: VitalReadingWhereUniqueInput
+    create: XOR<VitalReadingCreateWithoutCreatedByInput, VitalReadingUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type VitalReadingCreateManyCreatedByInputEnvelope = {
+    data: VitalReadingCreateManyCreatedByInput | VitalReadingCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VitalReadingCreateWithoutPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutVitalReadingsRecordedInput
+    alerts?: VitalAlertCreateNestedManyWithoutReadingInput
+  }
+
+  export type VitalReadingUncheckedCreateWithoutPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdById: string
+    createdAt?: Date | string
+    alerts?: VitalAlertUncheckedCreateNestedManyWithoutReadingInput
+  }
+
+  export type VitalReadingCreateOrConnectWithoutPatientInput = {
+    where: VitalReadingWhereUniqueInput
+    create: XOR<VitalReadingCreateWithoutPatientInput, VitalReadingUncheckedCreateWithoutPatientInput>
+  }
+
+  export type VitalReadingCreateManyPatientInputEnvelope = {
+    data: VitalReadingCreateManyPatientInput | VitalReadingCreateManyPatientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VitalThresholdCreateWithoutPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    updatedBy: UserCreateNestedOneWithoutVitalThresholdsSetInput
+  }
+
+  export type VitalThresholdUncheckedCreateWithoutPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    updatedById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalThresholdCreateOrConnectWithoutPatientInput = {
+    where: VitalThresholdWhereUniqueInput
+    create: XOR<VitalThresholdCreateWithoutPatientInput, VitalThresholdUncheckedCreateWithoutPatientInput>
+  }
+
+  export type VitalThresholdCreateManyPatientInputEnvelope = {
+    data: VitalThresholdCreateManyPatientInput | VitalThresholdCreateManyPatientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VitalThresholdCreateWithoutUpdatedByInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalThresholdsInput
+  }
+
+  export type VitalThresholdUncheckedCreateWithoutUpdatedByInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalThresholdCreateOrConnectWithoutUpdatedByInput = {
+    where: VitalThresholdWhereUniqueInput
+    create: XOR<VitalThresholdCreateWithoutUpdatedByInput, VitalThresholdUncheckedCreateWithoutUpdatedByInput>
+  }
+
+  export type VitalThresholdCreateManyUpdatedByInputEnvelope = {
+    data: VitalThresholdCreateManyUpdatedByInput | VitalThresholdCreateManyUpdatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VitalAlertCreateWithoutPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reading: VitalReadingCreateNestedOneWithoutAlertsInput
+    acknowledgedBy?: UserCreateNestedOneWithoutVitalAlertsAcknowledgedInput
+  }
+
+  export type VitalAlertUncheckedCreateWithoutPatientInput = {
+    id?: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertCreateOrConnectWithoutPatientInput = {
+    where: VitalAlertWhereUniqueInput
+    create: XOR<VitalAlertCreateWithoutPatientInput, VitalAlertUncheckedCreateWithoutPatientInput>
+  }
+
+  export type VitalAlertCreateManyPatientInputEnvelope = {
+    data: VitalAlertCreateManyPatientInput | VitalAlertCreateManyPatientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VitalAlertCreateWithoutAcknowledgedByInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalAlertsInput
+    reading: VitalReadingCreateNestedOneWithoutAlertsInput
+  }
+
+  export type VitalAlertUncheckedCreateWithoutAcknowledgedByInput = {
+    id?: string
+    patientId: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertCreateOrConnectWithoutAcknowledgedByInput = {
+    where: VitalAlertWhereUniqueInput
+    create: XOR<VitalAlertCreateWithoutAcknowledgedByInput, VitalAlertUncheckedCreateWithoutAcknowledgedByInput>
+  }
+
+  export type VitalAlertCreateManyAcknowledgedByInputEnvelope = {
+    data: VitalAlertCreateManyAcknowledgedByInput | VitalAlertCreateManyAcknowledgedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -16039,6 +26743,255 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
+  export type MedicationUpsertWithWhereUniqueWithoutPatientInput = {
+    where: MedicationWhereUniqueInput
+    update: XOR<MedicationUpdateWithoutPatientInput, MedicationUncheckedUpdateWithoutPatientInput>
+    create: XOR<MedicationCreateWithoutPatientInput, MedicationUncheckedCreateWithoutPatientInput>
+  }
+
+  export type MedicationUpdateWithWhereUniqueWithoutPatientInput = {
+    where: MedicationWhereUniqueInput
+    data: XOR<MedicationUpdateWithoutPatientInput, MedicationUncheckedUpdateWithoutPatientInput>
+  }
+
+  export type MedicationUpdateManyWithWhereWithoutPatientInput = {
+    where: MedicationScalarWhereInput
+    data: XOR<MedicationUpdateManyMutationInput, MedicationUncheckedUpdateManyWithoutPatientInput>
+  }
+
+  export type MedicationScalarWhereInput = {
+    AND?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+    OR?: MedicationScalarWhereInput[]
+    NOT?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+    id?: UuidFilter<"Medication"> | string
+    patientId?: UuidFilter<"Medication"> | string
+    createdById?: UuidFilter<"Medication"> | string
+    careCircleId?: UuidNullableFilter<"Medication"> | string | null
+    medicationName?: StringFilter<"Medication"> | string
+    dosage?: StringFilter<"Medication"> | string
+    route?: StringFilter<"Medication"> | string
+    frequencyRRule?: StringFilter<"Medication"> | string
+    prescribingDoctor?: StringFilter<"Medication"> | string
+    refillQuantity?: IntFilter<"Medication"> | number
+    refillThresholdDays?: IntFilter<"Medication"> | number
+    startsAt?: DateTimeFilter<"Medication"> | Date | string
+    active?: BoolFilter<"Medication"> | boolean
+    createdAt?: DateTimeFilter<"Medication"> | Date | string
+    updatedAt?: DateTimeFilter<"Medication"> | Date | string
+  }
+
+  export type MedicationUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: MedicationWhereUniqueInput
+    update: XOR<MedicationUpdateWithoutCreatedByInput, MedicationUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<MedicationCreateWithoutCreatedByInput, MedicationUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type MedicationUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: MedicationWhereUniqueInput
+    data: XOR<MedicationUpdateWithoutCreatedByInput, MedicationUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type MedicationUpdateManyWithWhereWithoutCreatedByInput = {
+    where: MedicationScalarWhereInput
+    data: XOR<MedicationUpdateManyMutationInput, MedicationUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type MedicationDoseUpsertWithWhereUniqueWithoutAcknowledgedByInput = {
+    where: MedicationDoseWhereUniqueInput
+    update: XOR<MedicationDoseUpdateWithoutAcknowledgedByInput, MedicationDoseUncheckedUpdateWithoutAcknowledgedByInput>
+    create: XOR<MedicationDoseCreateWithoutAcknowledgedByInput, MedicationDoseUncheckedCreateWithoutAcknowledgedByInput>
+  }
+
+  export type MedicationDoseUpdateWithWhereUniqueWithoutAcknowledgedByInput = {
+    where: MedicationDoseWhereUniqueInput
+    data: XOR<MedicationDoseUpdateWithoutAcknowledgedByInput, MedicationDoseUncheckedUpdateWithoutAcknowledgedByInput>
+  }
+
+  export type MedicationDoseUpdateManyWithWhereWithoutAcknowledgedByInput = {
+    where: MedicationDoseScalarWhereInput
+    data: XOR<MedicationDoseUpdateManyMutationInput, MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByInput>
+  }
+
+  export type MedicationDoseScalarWhereInput = {
+    AND?: MedicationDoseScalarWhereInput | MedicationDoseScalarWhereInput[]
+    OR?: MedicationDoseScalarWhereInput[]
+    NOT?: MedicationDoseScalarWhereInput | MedicationDoseScalarWhereInput[]
+    id?: UuidFilter<"MedicationDose"> | string
+    medicationId?: UuidFilter<"MedicationDose"> | string
+    scheduledAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    state?: EnumMedicationDoseStateFilter<"MedicationDose"> | $Enums.MedicationDoseState
+    escalationStep?: IntFilter<"MedicationDose"> | number
+    acknowledgedById?: UuidNullableFilter<"MedicationDose"> | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"MedicationDose"> | Date | string | null
+    confirmationType?: EnumMedicationConfirmationTypeNullableFilter<"MedicationDose"> | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: StringNullableFilter<"MedicationDose"> | string | null
+    note?: StringNullableFilter<"MedicationDose"> | string | null
+    createdAt?: DateTimeFilter<"MedicationDose"> | Date | string
+    updatedAt?: DateTimeFilter<"MedicationDose"> | Date | string
+  }
+
+  export type VitalReadingUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: VitalReadingWhereUniqueInput
+    update: XOR<VitalReadingUpdateWithoutCreatedByInput, VitalReadingUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<VitalReadingCreateWithoutCreatedByInput, VitalReadingUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type VitalReadingUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: VitalReadingWhereUniqueInput
+    data: XOR<VitalReadingUpdateWithoutCreatedByInput, VitalReadingUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type VitalReadingUpdateManyWithWhereWithoutCreatedByInput = {
+    where: VitalReadingScalarWhereInput
+    data: XOR<VitalReadingUpdateManyMutationInput, VitalReadingUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type VitalReadingScalarWhereInput = {
+    AND?: VitalReadingScalarWhereInput | VitalReadingScalarWhereInput[]
+    OR?: VitalReadingScalarWhereInput[]
+    NOT?: VitalReadingScalarWhereInput | VitalReadingScalarWhereInput[]
+    id?: UuidFilter<"VitalReading"> | string
+    patientId?: UuidFilter<"VitalReading"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalReading"> | $Enums.VitalType
+    source?: EnumVitalSourceFilter<"VitalReading"> | $Enums.VitalSource
+    systolic?: FloatNullableFilter<"VitalReading"> | number | null
+    diastolic?: FloatNullableFilter<"VitalReading"> | number | null
+    value?: FloatNullableFilter<"VitalReading"> | number | null
+    unit?: StringFilter<"VitalReading"> | string
+    context?: StringNullableFilter<"VitalReading"> | string | null
+    notes?: StringNullableFilter<"VitalReading"> | string | null
+    deviceModel?: StringNullableFilter<"VitalReading"> | string | null
+    deviceMacAddress?: StringNullableFilter<"VitalReading"> | string | null
+    rawBlePayload?: JsonNullableFilter<"VitalReading">
+    recordedAt?: DateTimeFilter<"VitalReading"> | Date | string
+    createdById?: UuidFilter<"VitalReading"> | string
+    createdAt?: DateTimeFilter<"VitalReading"> | Date | string
+  }
+
+  export type VitalReadingUpsertWithWhereUniqueWithoutPatientInput = {
+    where: VitalReadingWhereUniqueInput
+    update: XOR<VitalReadingUpdateWithoutPatientInput, VitalReadingUncheckedUpdateWithoutPatientInput>
+    create: XOR<VitalReadingCreateWithoutPatientInput, VitalReadingUncheckedCreateWithoutPatientInput>
+  }
+
+  export type VitalReadingUpdateWithWhereUniqueWithoutPatientInput = {
+    where: VitalReadingWhereUniqueInput
+    data: XOR<VitalReadingUpdateWithoutPatientInput, VitalReadingUncheckedUpdateWithoutPatientInput>
+  }
+
+  export type VitalReadingUpdateManyWithWhereWithoutPatientInput = {
+    where: VitalReadingScalarWhereInput
+    data: XOR<VitalReadingUpdateManyMutationInput, VitalReadingUncheckedUpdateManyWithoutPatientInput>
+  }
+
+  export type VitalThresholdUpsertWithWhereUniqueWithoutPatientInput = {
+    where: VitalThresholdWhereUniqueInput
+    update: XOR<VitalThresholdUpdateWithoutPatientInput, VitalThresholdUncheckedUpdateWithoutPatientInput>
+    create: XOR<VitalThresholdCreateWithoutPatientInput, VitalThresholdUncheckedCreateWithoutPatientInput>
+  }
+
+  export type VitalThresholdUpdateWithWhereUniqueWithoutPatientInput = {
+    where: VitalThresholdWhereUniqueInput
+    data: XOR<VitalThresholdUpdateWithoutPatientInput, VitalThresholdUncheckedUpdateWithoutPatientInput>
+  }
+
+  export type VitalThresholdUpdateManyWithWhereWithoutPatientInput = {
+    where: VitalThresholdScalarWhereInput
+    data: XOR<VitalThresholdUpdateManyMutationInput, VitalThresholdUncheckedUpdateManyWithoutPatientInput>
+  }
+
+  export type VitalThresholdScalarWhereInput = {
+    AND?: VitalThresholdScalarWhereInput | VitalThresholdScalarWhereInput[]
+    OR?: VitalThresholdScalarWhereInput[]
+    NOT?: VitalThresholdScalarWhereInput | VitalThresholdScalarWhereInput[]
+    id?: UuidFilter<"VitalThreshold"> | string
+    patientId?: UuidFilter<"VitalThreshold"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalThreshold"> | $Enums.VitalType
+    minNormal?: FloatNullableFilter<"VitalThreshold"> | number | null
+    maxNormal?: FloatNullableFilter<"VitalThreshold"> | number | null
+    systolicMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    systolicMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    diastolicMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    diastolicMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    criticalMin?: FloatNullableFilter<"VitalThreshold"> | number | null
+    criticalMax?: FloatNullableFilter<"VitalThreshold"> | number | null
+    consecutiveBreachLimit?: IntFilter<"VitalThreshold"> | number
+    rollingBaselineDays?: IntFilter<"VitalThreshold"> | number
+    baselineDeviationPercent?: FloatFilter<"VitalThreshold"> | number
+    updatedById?: UuidFilter<"VitalThreshold"> | string
+    isActive?: BoolFilter<"VitalThreshold"> | boolean
+    createdAt?: DateTimeFilter<"VitalThreshold"> | Date | string
+    updatedAt?: DateTimeFilter<"VitalThreshold"> | Date | string
+  }
+
+  export type VitalThresholdUpsertWithWhereUniqueWithoutUpdatedByInput = {
+    where: VitalThresholdWhereUniqueInput
+    update: XOR<VitalThresholdUpdateWithoutUpdatedByInput, VitalThresholdUncheckedUpdateWithoutUpdatedByInput>
+    create: XOR<VitalThresholdCreateWithoutUpdatedByInput, VitalThresholdUncheckedCreateWithoutUpdatedByInput>
+  }
+
+  export type VitalThresholdUpdateWithWhereUniqueWithoutUpdatedByInput = {
+    where: VitalThresholdWhereUniqueInput
+    data: XOR<VitalThresholdUpdateWithoutUpdatedByInput, VitalThresholdUncheckedUpdateWithoutUpdatedByInput>
+  }
+
+  export type VitalThresholdUpdateManyWithWhereWithoutUpdatedByInput = {
+    where: VitalThresholdScalarWhereInput
+    data: XOR<VitalThresholdUpdateManyMutationInput, VitalThresholdUncheckedUpdateManyWithoutUpdatedByInput>
+  }
+
+  export type VitalAlertUpsertWithWhereUniqueWithoutPatientInput = {
+    where: VitalAlertWhereUniqueInput
+    update: XOR<VitalAlertUpdateWithoutPatientInput, VitalAlertUncheckedUpdateWithoutPatientInput>
+    create: XOR<VitalAlertCreateWithoutPatientInput, VitalAlertUncheckedCreateWithoutPatientInput>
+  }
+
+  export type VitalAlertUpdateWithWhereUniqueWithoutPatientInput = {
+    where: VitalAlertWhereUniqueInput
+    data: XOR<VitalAlertUpdateWithoutPatientInput, VitalAlertUncheckedUpdateWithoutPatientInput>
+  }
+
+  export type VitalAlertUpdateManyWithWhereWithoutPatientInput = {
+    where: VitalAlertScalarWhereInput
+    data: XOR<VitalAlertUpdateManyMutationInput, VitalAlertUncheckedUpdateManyWithoutPatientInput>
+  }
+
+  export type VitalAlertScalarWhereInput = {
+    AND?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+    OR?: VitalAlertScalarWhereInput[]
+    NOT?: VitalAlertScalarWhereInput | VitalAlertScalarWhereInput[]
+    id?: UuidFilter<"VitalAlert"> | string
+    patientId?: UuidFilter<"VitalAlert"> | string
+    readingId?: UuidFilter<"VitalAlert"> | string
+    vitalType?: EnumVitalTypeFilter<"VitalAlert"> | $Enums.VitalType
+    severity?: EnumAlertSeverityFilter<"VitalAlert"> | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFilter<"VitalAlert"> | $Enums.AnomalyType
+    message?: StringFilter<"VitalAlert"> | string
+    status?: EnumAlertStatusFilter<"VitalAlert"> | $Enums.AlertStatus
+    baselineSnapshot?: JsonNullableFilter<"VitalAlert">
+    acknowledgedById?: UuidNullableFilter<"VitalAlert"> | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"VitalAlert"> | Date | string | null
+    resolutionNote?: StringNullableFilter<"VitalAlert"> | string | null
+    createdAt?: DateTimeFilter<"VitalAlert"> | Date | string
+    updatedAt?: DateTimeFilter<"VitalAlert"> | Date | string
+  }
+
+  export type VitalAlertUpsertWithWhereUniqueWithoutAcknowledgedByInput = {
+    where: VitalAlertWhereUniqueInput
+    update: XOR<VitalAlertUpdateWithoutAcknowledgedByInput, VitalAlertUncheckedUpdateWithoutAcknowledgedByInput>
+    create: XOR<VitalAlertCreateWithoutAcknowledgedByInput, VitalAlertUncheckedCreateWithoutAcknowledgedByInput>
+  }
+
+  export type VitalAlertUpdateWithWhereUniqueWithoutAcknowledgedByInput = {
+    where: VitalAlertWhereUniqueInput
+    data: XOR<VitalAlertUpdateWithoutAcknowledgedByInput, VitalAlertUncheckedUpdateWithoutAcknowledgedByInput>
+  }
+
+  export type VitalAlertUpdateManyWithWhereWithoutAcknowledgedByInput = {
+    where: VitalAlertScalarWhereInput
+    data: XOR<VitalAlertUpdateManyMutationInput, VitalAlertUncheckedUpdateManyWithoutAcknowledgedByInput>
+  }
+
   export type UserCreateWithoutPatientCirclesInput = {
     id?: string
     firstName: string
@@ -16053,6 +27006,15 @@ export namespace Prisma {
     sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateWithoutPatientCirclesInput = {
@@ -16069,6 +27031,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserCreateOrConnectWithoutPatientCirclesInput = {
@@ -16090,6 +27061,15 @@ export namespace Prisma {
     sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateWithoutOwnedCirclesInput = {
@@ -16106,6 +27086,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserCreateOrConnectWithoutOwnedCirclesInput = {
@@ -16245,6 +27234,52 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MedicationCreateWithoutCareCircleInput = {
+    id?: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutMedicationsAsPatientInput
+    createdBy: UserCreateNestedOneWithoutMedicationsCreatedInput
+    doses?: MedicationDoseCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationUncheckedCreateWithoutCareCircleInput = {
+    id?: string
+    patientId: string
+    createdById: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    doses?: MedicationDoseUncheckedCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationCreateOrConnectWithoutCareCircleInput = {
+    where: MedicationWhereUniqueInput
+    create: XOR<MedicationCreateWithoutCareCircleInput, MedicationUncheckedCreateWithoutCareCircleInput>
+  }
+
+  export type MedicationCreateManyCareCircleInputEnvelope = {
+    data: MedicationCreateManyCareCircleInput | MedicationCreateManyCareCircleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutPatientCirclesInput = {
     update: XOR<UserUpdateWithoutPatientCirclesInput, UserUncheckedUpdateWithoutPatientCirclesInput>
     create: XOR<UserCreateWithoutPatientCirclesInput, UserUncheckedCreateWithoutPatientCirclesInput>
@@ -16270,6 +27305,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPatientCirclesInput = {
@@ -16286,6 +27330,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUpsertWithoutOwnedCirclesInput = {
@@ -16313,6 +27366,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOwnedCirclesInput = {
@@ -16329,6 +27391,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type CareCircleMemberUpsertWithWhereUniqueWithoutCircleInput = {
@@ -16395,6 +27466,580 @@ export namespace Prisma {
     data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutCircleInput>
   }
 
+  export type MedicationUpsertWithWhereUniqueWithoutCareCircleInput = {
+    where: MedicationWhereUniqueInput
+    update: XOR<MedicationUpdateWithoutCareCircleInput, MedicationUncheckedUpdateWithoutCareCircleInput>
+    create: XOR<MedicationCreateWithoutCareCircleInput, MedicationUncheckedCreateWithoutCareCircleInput>
+  }
+
+  export type MedicationUpdateWithWhereUniqueWithoutCareCircleInput = {
+    where: MedicationWhereUniqueInput
+    data: XOR<MedicationUpdateWithoutCareCircleInput, MedicationUncheckedUpdateWithoutCareCircleInput>
+  }
+
+  export type MedicationUpdateManyWithWhereWithoutCareCircleInput = {
+    where: MedicationScalarWhereInput
+    data: XOR<MedicationUpdateManyMutationInput, MedicationUncheckedUpdateManyWithoutCareCircleInput>
+  }
+
+  export type UserCreateWithoutMedicationsAsPatientInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutMedicationsAsPatientInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutMedicationsAsPatientInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMedicationsAsPatientInput, UserUncheckedCreateWithoutMedicationsAsPatientInput>
+  }
+
+  export type UserCreateWithoutMedicationsCreatedInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutMedicationsCreatedInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutMedicationsCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMedicationsCreatedInput, UserUncheckedCreateWithoutMedicationsCreatedInput>
+  }
+
+  export type CareCircleCreateWithoutMedicationsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutPatientCirclesInput
+    owner: UserCreateNestedOneWithoutOwnedCirclesInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutCircleInput
+    invitations?: InvitationCreateNestedManyWithoutCircleInput
+    consents?: ConsentCreateNestedManyWithoutCircleInput
+    auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+  }
+
+  export type CareCircleUncheckedCreateWithoutMedicationsInput = {
+    id?: string
+    name: string
+    patientId: string
+    ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutCircleInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
+    consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+  }
+
+  export type CareCircleCreateOrConnectWithoutMedicationsInput = {
+    where: CareCircleWhereUniqueInput
+    create: XOR<CareCircleCreateWithoutMedicationsInput, CareCircleUncheckedCreateWithoutMedicationsInput>
+  }
+
+  export type MedicationDoseCreateWithoutMedicationInput = {
+    id?: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    acknowledgedBy?: UserCreateNestedOneWithoutMedicationDoseEventsInput
+  }
+
+  export type MedicationDoseUncheckedCreateWithoutMedicationInput = {
+    id?: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationDoseCreateOrConnectWithoutMedicationInput = {
+    where: MedicationDoseWhereUniqueInput
+    create: XOR<MedicationDoseCreateWithoutMedicationInput, MedicationDoseUncheckedCreateWithoutMedicationInput>
+  }
+
+  export type MedicationDoseCreateManyMedicationInputEnvelope = {
+    data: MedicationDoseCreateManyMedicationInput | MedicationDoseCreateManyMedicationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutMedicationsAsPatientInput = {
+    update: XOR<UserUpdateWithoutMedicationsAsPatientInput, UserUncheckedUpdateWithoutMedicationsAsPatientInput>
+    create: XOR<UserCreateWithoutMedicationsAsPatientInput, UserUncheckedCreateWithoutMedicationsAsPatientInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMedicationsAsPatientInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMedicationsAsPatientInput, UserUncheckedUpdateWithoutMedicationsAsPatientInput>
+  }
+
+  export type UserUpdateWithoutMedicationsAsPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMedicationsAsPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUpsertWithoutMedicationsCreatedInput = {
+    update: XOR<UserUpdateWithoutMedicationsCreatedInput, UserUncheckedUpdateWithoutMedicationsCreatedInput>
+    create: XOR<UserCreateWithoutMedicationsCreatedInput, UserUncheckedCreateWithoutMedicationsCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMedicationsCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMedicationsCreatedInput, UserUncheckedUpdateWithoutMedicationsCreatedInput>
+  }
+
+  export type UserUpdateWithoutMedicationsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMedicationsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type CareCircleUpsertWithoutMedicationsInput = {
+    update: XOR<CareCircleUpdateWithoutMedicationsInput, CareCircleUncheckedUpdateWithoutMedicationsInput>
+    create: XOR<CareCircleCreateWithoutMedicationsInput, CareCircleUncheckedCreateWithoutMedicationsInput>
+    where?: CareCircleWhereInput
+  }
+
+  export type CareCircleUpdateToOneWithWhereWithoutMedicationsInput = {
+    where?: CareCircleWhereInput
+    data: XOR<CareCircleUpdateWithoutMedicationsInput, CareCircleUncheckedUpdateWithoutMedicationsInput>
+  }
+
+  export type CareCircleUpdateWithoutMedicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutPatientCirclesNestedInput
+    owner?: UserUpdateOneRequiredWithoutOwnedCirclesNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutCircleNestedInput
+    invitations?: InvitationUpdateManyWithoutCircleNestedInput
+    consents?: ConsentUpdateManyWithoutCircleNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+  }
+
+  export type CareCircleUncheckedUpdateWithoutMedicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutCircleNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
+    consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+  }
+
+  export type MedicationDoseUpsertWithWhereUniqueWithoutMedicationInput = {
+    where: MedicationDoseWhereUniqueInput
+    update: XOR<MedicationDoseUpdateWithoutMedicationInput, MedicationDoseUncheckedUpdateWithoutMedicationInput>
+    create: XOR<MedicationDoseCreateWithoutMedicationInput, MedicationDoseUncheckedCreateWithoutMedicationInput>
+  }
+
+  export type MedicationDoseUpdateWithWhereUniqueWithoutMedicationInput = {
+    where: MedicationDoseWhereUniqueInput
+    data: XOR<MedicationDoseUpdateWithoutMedicationInput, MedicationDoseUncheckedUpdateWithoutMedicationInput>
+  }
+
+  export type MedicationDoseUpdateManyWithWhereWithoutMedicationInput = {
+    where: MedicationDoseScalarWhereInput
+    data: XOR<MedicationDoseUpdateManyMutationInput, MedicationDoseUncheckedUpdateManyWithoutMedicationInput>
+  }
+
+  export type MedicationCreateWithoutDosesInput = {
+    id?: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutMedicationsAsPatientInput
+    createdBy: UserCreateNestedOneWithoutMedicationsCreatedInput
+    careCircle?: CareCircleCreateNestedOneWithoutMedicationsInput
+  }
+
+  export type MedicationUncheckedCreateWithoutDosesInput = {
+    id?: string
+    patientId: string
+    createdById: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationCreateOrConnectWithoutDosesInput = {
+    where: MedicationWhereUniqueInput
+    create: XOR<MedicationCreateWithoutDosesInput, MedicationUncheckedCreateWithoutDosesInput>
+  }
+
+  export type UserCreateWithoutMedicationDoseEventsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutMedicationDoseEventsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutMedicationDoseEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMedicationDoseEventsInput, UserUncheckedCreateWithoutMedicationDoseEventsInput>
+  }
+
+  export type MedicationUpsertWithoutDosesInput = {
+    update: XOR<MedicationUpdateWithoutDosesInput, MedicationUncheckedUpdateWithoutDosesInput>
+    create: XOR<MedicationCreateWithoutDosesInput, MedicationUncheckedCreateWithoutDosesInput>
+    where?: MedicationWhereInput
+  }
+
+  export type MedicationUpdateToOneWithWhereWithoutDosesInput = {
+    where?: MedicationWhereInput
+    data: XOR<MedicationUpdateWithoutDosesInput, MedicationUncheckedUpdateWithoutDosesInput>
+  }
+
+  export type MedicationUpdateWithoutDosesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutMedicationsAsPatientNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutMedicationsCreatedNestedInput
+    careCircle?: CareCircleUpdateOneWithoutMedicationsNestedInput
+  }
+
+  export type MedicationUncheckedUpdateWithoutDosesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutMedicationDoseEventsInput = {
+    update: XOR<UserUpdateWithoutMedicationDoseEventsInput, UserUncheckedUpdateWithoutMedicationDoseEventsInput>
+    create: XOR<UserCreateWithoutMedicationDoseEventsInput, UserUncheckedCreateWithoutMedicationDoseEventsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMedicationDoseEventsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMedicationDoseEventsInput, UserUncheckedUpdateWithoutMedicationDoseEventsInput>
+  }
+
+  export type UserUpdateWithoutMedicationDoseEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMedicationDoseEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
   export type CareCircleCreateWithoutMembershipsInput = {
     id?: string
     name: string
@@ -16405,6 +28050,7 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutCircleInput
     consents?: ConsentCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateWithoutMembershipsInput = {
@@ -16417,6 +28063,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
     consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleCreateOrConnectWithoutMembershipsInput = {
@@ -16438,6 +28085,15 @@ export namespace Prisma {
     sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -16454,6 +28110,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -16537,6 +28202,7 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutCircleNestedInput
     consents?: ConsentUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateWithoutMembershipsInput = {
@@ -16549,6 +28215,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
     consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
   }
 
   export type UserUpsertWithoutMembershipsInput = {
@@ -16576,6 +28243,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -16592,6 +28268,15 @@ export namespace Prisma {
     sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type RoleUpsertWithoutMembershipsInput = {
@@ -16919,6 +28604,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberCreateNestedManyWithoutCircleInput
     consents?: ConsentCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateWithoutInvitationsInput = {
@@ -16931,6 +28617,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutCircleInput
     consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleCreateOrConnectWithoutInvitationsInput = {
@@ -16952,6 +28639,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
     consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateWithoutSentInvitationsInput = {
@@ -16968,6 +28664,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
     consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserCreateOrConnectWithoutSentInvitationsInput = {
@@ -17019,6 +28724,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUpdateManyWithoutCircleNestedInput
     consents?: ConsentUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateWithoutInvitationsInput = {
@@ -17031,6 +28737,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedUpdateManyWithoutCircleNestedInput
     consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
   }
 
   export type UserUpsertWithoutSentInvitationsInput = {
@@ -17058,6 +28765,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
     consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentInvitationsInput = {
@@ -17074,6 +28790,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
     consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type RoleUpsertWithoutInvitationsInput = {
@@ -17115,6 +28840,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberCreateNestedManyWithoutCircleInput
     invitations?: InvitationCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateWithoutConsentsInput = {
@@ -17127,6 +28853,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutCircleInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleCreateOrConnectWithoutConsentsInput = {
@@ -17173,6 +28900,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
     sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
     auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateWithoutConsentsGrantedInput = {
@@ -17189,6 +28925,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
     sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserCreateOrConnectWithoutConsentsGrantedInput = {
@@ -17217,6 +28962,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUpdateManyWithoutCircleNestedInput
     invitations?: InvitationUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateWithoutConsentsInput = {
@@ -17229,6 +28975,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedUpdateManyWithoutCircleNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleMemberUpsertWithoutConsentsInput = {
@@ -17287,6 +29034,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
     sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
     auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutConsentsGrantedInput = {
@@ -17303,6 +29059,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
     sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -17319,6 +29084,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
     sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -17335,6 +29109,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
     sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
     consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -17352,6 +29135,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberCreateNestedManyWithoutCircleInput
     invitations?: InvitationCreateNestedManyWithoutCircleInput
     consents?: ConsentCreateNestedManyWithoutCircleInput
+    medications?: MedicationCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleUncheckedCreateWithoutAuditLogsInput = {
@@ -17364,6 +29148,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutCircleInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutCircleInput
     consents?: ConsentUncheckedCreateNestedManyWithoutCircleInput
+    medications?: MedicationUncheckedCreateNestedManyWithoutCareCircleInput
   }
 
   export type CareCircleCreateOrConnectWithoutAuditLogsInput = {
@@ -17396,6 +29181,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
     sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -17412,6 +29206,15 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
     sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
     consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
   }
 
   export type CareCircleUpsertWithoutAuditLogsInput = {
@@ -17435,6 +29238,7 @@ export namespace Prisma {
     memberships?: CareCircleMemberUpdateManyWithoutCircleNestedInput
     invitations?: InvitationUpdateManyWithoutCircleNestedInput
     consents?: ConsentUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateWithoutAuditLogsInput = {
@@ -17447,6 +29251,853 @@ export namespace Prisma {
     memberships?: CareCircleMemberUncheckedUpdateManyWithoutCircleNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
     consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
+  }
+
+  export type UserCreateWithoutVitalReadingsAsPatientInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutVitalReadingsAsPatientInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutVitalReadingsAsPatientInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVitalReadingsAsPatientInput, UserUncheckedCreateWithoutVitalReadingsAsPatientInput>
+  }
+
+  export type UserCreateWithoutVitalReadingsRecordedInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutVitalReadingsRecordedInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutVitalReadingsRecordedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVitalReadingsRecordedInput, UserUncheckedCreateWithoutVitalReadingsRecordedInput>
+  }
+
+  export type VitalAlertCreateWithoutReadingInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalAlertsInput
+    acknowledgedBy?: UserCreateNestedOneWithoutVitalAlertsAcknowledgedInput
+  }
+
+  export type VitalAlertUncheckedCreateWithoutReadingInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertCreateOrConnectWithoutReadingInput = {
+    where: VitalAlertWhereUniqueInput
+    create: XOR<VitalAlertCreateWithoutReadingInput, VitalAlertUncheckedCreateWithoutReadingInput>
+  }
+
+  export type VitalAlertCreateManyReadingInputEnvelope = {
+    data: VitalAlertCreateManyReadingInput | VitalAlertCreateManyReadingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutVitalReadingsAsPatientInput = {
+    update: XOR<UserUpdateWithoutVitalReadingsAsPatientInput, UserUncheckedUpdateWithoutVitalReadingsAsPatientInput>
+    create: XOR<UserCreateWithoutVitalReadingsAsPatientInput, UserUncheckedCreateWithoutVitalReadingsAsPatientInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutVitalReadingsAsPatientInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutVitalReadingsAsPatientInput, UserUncheckedUpdateWithoutVitalReadingsAsPatientInput>
+  }
+
+  export type UserUpdateWithoutVitalReadingsAsPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVitalReadingsAsPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUpsertWithoutVitalReadingsRecordedInput = {
+    update: XOR<UserUpdateWithoutVitalReadingsRecordedInput, UserUncheckedUpdateWithoutVitalReadingsRecordedInput>
+    create: XOR<UserCreateWithoutVitalReadingsRecordedInput, UserUncheckedCreateWithoutVitalReadingsRecordedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutVitalReadingsRecordedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutVitalReadingsRecordedInput, UserUncheckedUpdateWithoutVitalReadingsRecordedInput>
+  }
+
+  export type UserUpdateWithoutVitalReadingsRecordedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVitalReadingsRecordedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type VitalAlertUpsertWithWhereUniqueWithoutReadingInput = {
+    where: VitalAlertWhereUniqueInput
+    update: XOR<VitalAlertUpdateWithoutReadingInput, VitalAlertUncheckedUpdateWithoutReadingInput>
+    create: XOR<VitalAlertCreateWithoutReadingInput, VitalAlertUncheckedCreateWithoutReadingInput>
+  }
+
+  export type VitalAlertUpdateWithWhereUniqueWithoutReadingInput = {
+    where: VitalAlertWhereUniqueInput
+    data: XOR<VitalAlertUpdateWithoutReadingInput, VitalAlertUncheckedUpdateWithoutReadingInput>
+  }
+
+  export type VitalAlertUpdateManyWithWhereWithoutReadingInput = {
+    where: VitalAlertScalarWhereInput
+    data: XOR<VitalAlertUpdateManyMutationInput, VitalAlertUncheckedUpdateManyWithoutReadingInput>
+  }
+
+  export type UserCreateWithoutVitalThresholdsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutVitalThresholdsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutVitalThresholdsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVitalThresholdsInput, UserUncheckedCreateWithoutVitalThresholdsInput>
+  }
+
+  export type UserCreateWithoutVitalThresholdsSetInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutVitalThresholdsSetInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutVitalThresholdsSetInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVitalThresholdsSetInput, UserUncheckedCreateWithoutVitalThresholdsSetInput>
+  }
+
+  export type UserUpsertWithoutVitalThresholdsInput = {
+    update: XOR<UserUpdateWithoutVitalThresholdsInput, UserUncheckedUpdateWithoutVitalThresholdsInput>
+    create: XOR<UserCreateWithoutVitalThresholdsInput, UserUncheckedCreateWithoutVitalThresholdsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutVitalThresholdsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutVitalThresholdsInput, UserUncheckedUpdateWithoutVitalThresholdsInput>
+  }
+
+  export type UserUpdateWithoutVitalThresholdsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVitalThresholdsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUpsertWithoutVitalThresholdsSetInput = {
+    update: XOR<UserUpdateWithoutVitalThresholdsSetInput, UserUncheckedUpdateWithoutVitalThresholdsSetInput>
+    create: XOR<UserCreateWithoutVitalThresholdsSetInput, UserUncheckedCreateWithoutVitalThresholdsSetInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutVitalThresholdsSetInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutVitalThresholdsSetInput, UserUncheckedUpdateWithoutVitalThresholdsSetInput>
+  }
+
+  export type UserUpdateWithoutVitalThresholdsSetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVitalThresholdsSetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserCreateWithoutVitalAlertsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlertsAcknowledged?: VitalAlertCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserUncheckedCreateWithoutVitalAlertsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedCreateNestedManyWithoutAcknowledgedByInput
+  }
+
+  export type UserCreateOrConnectWithoutVitalAlertsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVitalAlertsInput, UserUncheckedCreateWithoutVitalAlertsInput>
+  }
+
+  export type VitalReadingCreateWithoutAlertsInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdAt?: Date | string
+    patient: UserCreateNestedOneWithoutVitalReadingsAsPatientInput
+    createdBy: UserCreateNestedOneWithoutVitalReadingsRecordedInput
+  }
+
+  export type VitalReadingUncheckedCreateWithoutAlertsInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdById: string
+    createdAt?: Date | string
+  }
+
+  export type VitalReadingCreateOrConnectWithoutAlertsInput = {
+    where: VitalReadingWhereUniqueInput
+    create: XOR<VitalReadingCreateWithoutAlertsInput, VitalReadingUncheckedCreateWithoutAlertsInput>
+  }
+
+  export type UserCreateWithoutVitalAlertsAcknowledgedInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertCreateNestedManyWithoutPatientInput
+  }
+
+  export type UserUncheckedCreateWithoutVitalAlertsAcknowledgedInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    email?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    patientCircles?: CareCircleUncheckedCreateNestedManyWithoutPatientInput
+    ownedCircles?: CareCircleUncheckedCreateNestedManyWithoutOwnerInput
+    memberships?: CareCircleMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+    consentsGranted?: ConsentUncheckedCreateNestedManyWithoutGrantedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutActorInput
+    medicationsAsPatient?: MedicationUncheckedCreateNestedManyWithoutPatientInput
+    medicationsCreated?: MedicationUncheckedCreateNestedManyWithoutCreatedByInput
+    medicationDoseEvents?: MedicationDoseUncheckedCreateNestedManyWithoutAcknowledgedByInput
+    vitalReadingsRecorded?: VitalReadingUncheckedCreateNestedManyWithoutCreatedByInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholds?: VitalThresholdUncheckedCreateNestedManyWithoutPatientInput
+    vitalThresholdsSet?: VitalThresholdUncheckedCreateNestedManyWithoutUpdatedByInput
+    vitalAlerts?: VitalAlertUncheckedCreateNestedManyWithoutPatientInput
+  }
+
+  export type UserCreateOrConnectWithoutVitalAlertsAcknowledgedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVitalAlertsAcknowledgedInput, UserUncheckedCreateWithoutVitalAlertsAcknowledgedInput>
+  }
+
+  export type UserUpsertWithoutVitalAlertsInput = {
+    update: XOR<UserUpdateWithoutVitalAlertsInput, UserUncheckedUpdateWithoutVitalAlertsInput>
+    create: XOR<UserCreateWithoutVitalAlertsInput, UserUncheckedCreateWithoutVitalAlertsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutVitalAlertsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutVitalAlertsInput, UserUncheckedUpdateWithoutVitalAlertsInput>
+  }
+
+  export type UserUpdateWithoutVitalAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVitalAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlertsAcknowledged?: VitalAlertUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+  }
+
+  export type VitalReadingUpsertWithoutAlertsInput = {
+    update: XOR<VitalReadingUpdateWithoutAlertsInput, VitalReadingUncheckedUpdateWithoutAlertsInput>
+    create: XOR<VitalReadingCreateWithoutAlertsInput, VitalReadingUncheckedCreateWithoutAlertsInput>
+    where?: VitalReadingWhereInput
+  }
+
+  export type VitalReadingUpdateToOneWithWhereWithoutAlertsInput = {
+    where?: VitalReadingWhereInput
+    data: XOR<VitalReadingUpdateWithoutAlertsInput, VitalReadingUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type VitalReadingUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalReadingsAsPatientNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutVitalReadingsRecordedNestedInput
+  }
+
+  export type VitalReadingUncheckedUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutVitalAlertsAcknowledgedInput = {
+    update: XOR<UserUpdateWithoutVitalAlertsAcknowledgedInput, UserUncheckedUpdateWithoutVitalAlertsAcknowledgedInput>
+    create: XOR<UserCreateWithoutVitalAlertsAcknowledgedInput, UserUncheckedCreateWithoutVitalAlertsAcknowledgedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutVitalAlertsAcknowledgedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutVitalAlertsAcknowledgedInput, UserUncheckedUpdateWithoutVitalAlertsAcknowledgedInput>
+  }
+
+  export type UserUpdateWithoutVitalAlertsAcknowledgedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUpdateManyWithoutPatientNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutVitalAlertsAcknowledgedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patientCircles?: CareCircleUncheckedUpdateManyWithoutPatientNestedInput
+    ownedCircles?: CareCircleUncheckedUpdateManyWithoutOwnerNestedInput
+    memberships?: CareCircleMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+    consentsGranted?: ConsentUncheckedUpdateManyWithoutGrantedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutActorNestedInput
+    medicationsAsPatient?: MedicationUncheckedUpdateManyWithoutPatientNestedInput
+    medicationsCreated?: MedicationUncheckedUpdateManyWithoutCreatedByNestedInput
+    medicationDoseEvents?: MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByNestedInput
+    vitalReadingsRecorded?: VitalReadingUncheckedUpdateManyWithoutCreatedByNestedInput
+    vitalReadingsAsPatient?: VitalReadingUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholds?: VitalThresholdUncheckedUpdateManyWithoutPatientNestedInput
+    vitalThresholdsSet?: VitalThresholdUncheckedUpdateManyWithoutUpdatedByNestedInput
+    vitalAlerts?: VitalAlertUncheckedUpdateManyWithoutPatientNestedInput
   }
 
   export type CareCircleCreateManyPatientInput = {
@@ -17510,6 +30161,162 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type MedicationCreateManyPatientInput = {
+    id?: string
+    createdById: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationCreateManyCreatedByInput = {
+    id?: string
+    patientId: string
+    careCircleId?: string | null
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationDoseCreateManyAcknowledgedByInput = {
+    id?: string
+    medicationId: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalReadingCreateManyCreatedByInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type VitalReadingCreateManyPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    source?: $Enums.VitalSource
+    systolic?: number | null
+    diastolic?: number | null
+    value?: number | null
+    unit: string
+    context?: string | null
+    notes?: string | null
+    deviceModel?: string | null
+    deviceMacAddress?: string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: Date | string
+    createdById: string
+    createdAt?: Date | string
+  }
+
+  export type VitalThresholdCreateManyPatientInput = {
+    id?: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    updatedById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalThresholdCreateManyUpdatedByInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    minNormal?: number | null
+    maxNormal?: number | null
+    systolicMin?: number | null
+    systolicMax?: number | null
+    diastolicMin?: number | null
+    diastolicMax?: number | null
+    criticalMin?: number | null
+    criticalMax?: number | null
+    consecutiveBreachLimit?: number
+    rollingBaselineDays?: number
+    baselineDeviationPercent?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertCreateManyPatientInput = {
+    id?: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertCreateManyAcknowledgedByInput = {
+    id?: string
+    patientId: string
+    readingId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CareCircleUpdateWithoutPatientInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -17520,6 +30327,7 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutCircleNestedInput
     consents?: ConsentUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateWithoutPatientInput = {
@@ -17532,6 +30340,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
     consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateManyWithoutPatientInput = {
@@ -17552,6 +30361,7 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutCircleNestedInput
     consents?: ConsentUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateWithoutOwnerInput = {
@@ -17564,6 +30374,7 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutCircleNestedInput
     consents?: ConsentUncheckedUpdateManyWithoutCircleNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutCircleNestedInput
+    medications?: MedicationUncheckedUpdateManyWithoutCareCircleNestedInput
   }
 
   export type CareCircleUncheckedUpdateManyWithoutOwnerInput = {
@@ -17711,6 +30522,482 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MedicationUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutMedicationsCreatedNestedInput
+    careCircle?: CareCircleUpdateOneWithoutMedicationsNestedInput
+    doses?: MedicationDoseUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    doses?: MedicationDoseUncheckedUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateManyWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutMedicationsAsPatientNestedInput
+    careCircle?: CareCircleUpdateOneWithoutMedicationsNestedInput
+    doses?: MedicationDoseUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    doses?: MedicationDoseUncheckedUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    careCircleId?: NullableStringFieldUpdateOperationsInput | string | null
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseUpdateWithoutAcknowledgedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    medication?: MedicationUpdateOneRequiredWithoutDosesNestedInput
+  }
+
+  export type MedicationDoseUncheckedUpdateWithoutAcknowledgedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseUncheckedUpdateManyWithoutAcknowledgedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalReadingUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalReadingsAsPatientNestedInput
+    alerts?: VitalAlertUpdateManyWithoutReadingNestedInput
+  }
+
+  export type VitalReadingUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    alerts?: VitalAlertUncheckedUpdateManyWithoutReadingNestedInput
+  }
+
+  export type VitalReadingUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalReadingUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutVitalReadingsRecordedNestedInput
+    alerts?: VitalAlertUpdateManyWithoutReadingNestedInput
+  }
+
+  export type VitalReadingUncheckedUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    alerts?: VitalAlertUncheckedUpdateManyWithoutReadingNestedInput
+  }
+
+  export type VitalReadingUncheckedUpdateManyWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    source?: EnumVitalSourceFieldUpdateOperationsInput | $Enums.VitalSource
+    systolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolic?: NullableFloatFieldUpdateOperationsInput | number | null
+    value?: NullableFloatFieldUpdateOperationsInput | number | null
+    unit?: StringFieldUpdateOperationsInput | string
+    context?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceModel?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceMacAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    rawBlePayload?: NullableJsonNullValueInput | InputJsonValue
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: UserUpdateOneRequiredWithoutVitalThresholdsSetNestedInput
+  }
+
+  export type VitalThresholdUncheckedUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    updatedById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdUncheckedUpdateManyWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    updatedById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdUpdateWithoutUpdatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalThresholdsNestedInput
+  }
+
+  export type VitalThresholdUncheckedUpdateWithoutUpdatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalThresholdUncheckedUpdateManyWithoutUpdatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    minNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxNormal?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    systolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    diastolicMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMin?: NullableFloatFieldUpdateOperationsInput | number | null
+    criticalMax?: NullableFloatFieldUpdateOperationsInput | number | null
+    consecutiveBreachLimit?: IntFieldUpdateOperationsInput | number
+    rollingBaselineDays?: IntFieldUpdateOperationsInput | number
+    baselineDeviationPercent?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reading?: VitalReadingUpdateOneRequiredWithoutAlertsNestedInput
+    acknowledgedBy?: UserUpdateOneWithoutVitalAlertsAcknowledgedNestedInput
+  }
+
+  export type VitalAlertUncheckedUpdateWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    readingId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertUncheckedUpdateManyWithoutPatientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    readingId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertUpdateWithoutAcknowledgedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalAlertsNestedInput
+    reading?: VitalReadingUpdateOneRequiredWithoutAlertsNestedInput
+  }
+
+  export type VitalAlertUncheckedUpdateWithoutAcknowledgedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    readingId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertUncheckedUpdateManyWithoutAcknowledgedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    readingId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CareCircleMemberCreateManyCircleInput = {
     id?: string
     userId: string
@@ -17754,6 +31041,23 @@ export namespace Prisma {
     ipAddress?: string | null
     userAgent?: string | null
     createdAt?: Date | string
+  }
+
+  export type MedicationCreateManyCareCircleInput = {
+    id?: string
+    patientId: string
+    createdById: string
+    medicationName: string
+    dosage: string
+    route: string
+    frequencyRRule: string
+    prescribingDoctor: string
+    refillQuantity: number
+    refillThresholdDays?: number
+    startsAt?: Date | string
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CareCircleMemberUpdateWithoutCircleInput = {
@@ -17891,6 +31195,115 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationUpdateWithoutCareCircleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutMedicationsAsPatientNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutMedicationsCreatedNestedInput
+    doses?: MedicationDoseUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateWithoutCareCircleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    doses?: MedicationDoseUncheckedUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateManyWithoutCareCircleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    medicationName?: StringFieldUpdateOperationsInput | string
+    dosage?: StringFieldUpdateOperationsInput | string
+    route?: StringFieldUpdateOperationsInput | string
+    frequencyRRule?: StringFieldUpdateOperationsInput | string
+    prescribingDoctor?: StringFieldUpdateOperationsInput | string
+    refillQuantity?: IntFieldUpdateOperationsInput | number
+    refillThresholdDays?: IntFieldUpdateOperationsInput | number
+    startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseCreateManyMedicationInput = {
+    id?: string
+    scheduledAt: Date | string
+    state?: $Enums.MedicationDoseState
+    escalationStep?: number
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    confirmationType?: $Enums.MedicationConfirmationType | null
+    evidenceUrl?: string | null
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MedicationDoseUpdateWithoutMedicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acknowledgedBy?: UserUpdateOneWithoutMedicationDoseEventsNestedInput
+  }
+
+  export type MedicationDoseUncheckedUpdateWithoutMedicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationDoseUncheckedUpdateManyWithoutMedicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    state?: EnumMedicationDoseStateFieldUpdateOperationsInput | $Enums.MedicationDoseState
+    escalationStep?: IntFieldUpdateOperationsInput | number
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    confirmationType?: NullableEnumMedicationConfirmationTypeFieldUpdateOperationsInput | $Enums.MedicationConfirmationType | null
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConsentCreateManyMemberInput = {
@@ -18057,6 +31470,70 @@ export namespace Prisma {
 
   export type RolePermissionUncheckedUpdateManyWithoutPermissionInput = {
     roleId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type VitalAlertCreateManyReadingInput = {
+    id?: string
+    patientId: string
+    vitalType: $Enums.VitalType
+    severity: $Enums.AlertSeverity
+    anomalyType: $Enums.AnomalyType
+    message: string
+    status?: $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: string | null
+    acknowledgedAt?: Date | string | null
+    resolutionNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VitalAlertUpdateWithoutReadingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    patient?: UserUpdateOneRequiredWithoutVitalAlertsNestedInput
+    acknowledgedBy?: UserUpdateOneWithoutVitalAlertsAcknowledgedNestedInput
+  }
+
+  export type VitalAlertUncheckedUpdateWithoutReadingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VitalAlertUncheckedUpdateManyWithoutReadingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    patientId?: StringFieldUpdateOperationsInput | string
+    vitalType?: EnumVitalTypeFieldUpdateOperationsInput | $Enums.VitalType
+    severity?: EnumAlertSeverityFieldUpdateOperationsInput | $Enums.AlertSeverity
+    anomalyType?: EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumAlertStatusFieldUpdateOperationsInput | $Enums.AlertStatus
+    baselineSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    acknowledgedById?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

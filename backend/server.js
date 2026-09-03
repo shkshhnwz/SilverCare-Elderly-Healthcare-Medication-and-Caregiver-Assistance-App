@@ -7,6 +7,7 @@ require('dotenv').config();
 const CareCircleRoutes = require('./src/modules/care-circle/careCircle.routes');
 const AuthRoutes = require('./src/modules/auth/auth.routes');
 const MedicationManagementRoutes = require('./src/modules/medication-management/medicationManagement.routes');
+const VitalsRoutes = require('./src/modules/vitals-tracking/vitals.routes');
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', AuthRoutes);
 app.use('/api/care-circles', CareCircleRoutes);
 app.use('/api/medications', MedicationManagementRoutes);
+app.use('/api/vitals', VitalsRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 400;
