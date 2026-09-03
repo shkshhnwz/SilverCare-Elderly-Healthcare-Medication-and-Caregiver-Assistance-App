@@ -15,7 +15,8 @@
     "test:emergency": "node test/emergency.test.js",
     "test:appointments": "node test/appointments.test.js",
     "test:care-plan": "node test/carePlan.test.js",
-    "test:communication": "node test/communicationHub.test.js"
+    "test:communication": "node test/communicationHub.test.js",
+    "test:reporting": "node test/reporting.test.js"
   },
   "keywords": [],
   "author": "",
