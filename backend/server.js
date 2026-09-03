@@ -12,6 +12,7 @@ const LocationSafetyRoutes = require('./src/modules/geofencing-location-safety/g
 const EmergencyRoutes = require('./src/modules/emergency-detection-and-SOS/emergency-detection.routes');
 const AppointmentRoutes = require('./src/modules/appointments/appointments.routes');
 const CarePlanRoutes = require('./src/modules/care-plan-task-coordination/carePlanCoordination.routes');
+const CommunicationHubRoutes = require('./src/modules/communication-and-notification-hub/communicateAndNotification.routes');
 
 
 const app = express();
@@ -32,6 +33,8 @@ app.use('/api/location-safety', LocationSafetyRoutes);
 app.use('/api/emergency', EmergencyRoutes);
 app.use('/api/appointments', AppointmentRoutes);
 app.use('/api/care-plans', CarePlanRoutes);
+app.use('/api/communication-hub', CommunicationHubRoutes);
+
 
 
 app.use((err, req, res, next) => {

@@ -14,7 +14,8 @@
     "test:geofence": "node test/geofence.test.js",
     "test:emergency": "node test/emergency.test.js",
     "test:appointments": "node test/appointments.test.js",
-    "test:care-plan": "node test/carePlan.test.js"
+    "test:care-plan": "node test/carePlan.test.js",
+    "test:communication": "node test/communicationHub.test.js"
   },
   "keywords": [],
   "author": "",
