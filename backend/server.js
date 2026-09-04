@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
+const http = require('http');
+const { Server } = require('socket.io');
 
 const CareCircleRoutes = require('./src/modules/care-circle/careCircle.routes');
 const AuthRoutes = require('./src/modules/auth/auth.routes');
@@ -17,10 +19,39 @@ const ReportingRoutes = require('./src/modules/reporting-and-insights/reportingA
 
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server,{
+    cors:{
+        origin:"*",
+        methods:["GET","POST"],
+    }
+})
+app.set('io',io);
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(morgan('dev'));
+
+// Real-Time Socket Connection & Room Management
+io.on('connection', (socket) => {
+  console.log(`⚡ Client connected via WebSocket: ${socket.id}`);
+
+  // When a caregiver or patient opens the app, they join their Care Circle room
+  socket.on('join_care_circle', (patientId) => {
+    socket.join(`circle_${patientId}`);
+    console.log(`Socket ${socket.id} joined Care Circle: circle_${patientId}`);
+  });
+
+  socket.on('leave_care_circle', (patientId) => {
+    socket.leave(`circle_${patientId}`);
+    console.log(`Socket ${socket.id} left Care Circle: circle_${patientId}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+});
+
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'SilverCare backend running' });
@@ -49,6 +80,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
