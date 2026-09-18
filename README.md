@@ -205,3 +205,109 @@ npx prisma migrate dev
 npm run dev
 ```
 The server will start at `http://localhost:5000` with **both REST endpoints and Socket.io WebSockets active**.
+
+
+Deployment Steps we could follow:
+Deploying SilverCare and getting it to run on your physical phones **completely free of cost ($0.00)** is straightforward.
+
+Here is the exact **2-part roadmap**:
+
+---
+
+## Part 1: Deploy the Backend & Database (100% Free)
+
+Your backend needs a public HTTPS/WSS URL so mobile phones anywhere in the world can connect to it.
+
+### 1. Database: Supabase PostgreSQL (Already Done!)
+- **Cost:** **$0.00 / month** (Free tier).
+- You already have your PostgreSQL database running on Supabase (`aws-0-ap-south-1.pooler.supabase.com:5432`). It includes 500MB storage, automated backups, and SSL connection pooling.
+
+### 2. Backend Server & WebSockets: Render.com
+- **Cost:** **$0.00 / month** (Free Web Service tier).
+- **Why Render:** Fully supports Node.js, Express, and persistent **Socket.io WebSockets** with automatic free HTTPS/SSL.
+
+#### Steps to deploy backend on Render:
+1. Go to [Render.com](https://render.com) and sign up with your GitHub account.
+2. Click **New +** → **Web Service**.
+3. Select your repository: `SilverCare-Elderly-Healthcare-Medication-and-Caregiver-Assistance-App`.
+4. Configure the settings:
+   - **Root Directory:** `backend`
+   - **Environment:** `Node`
+   - **Build Command:** `npm install && npx prisma generate`
+   - **Start Command:** `node server.js`
+   - **Instance Type:** Free ($0/month)
+5. Under **Environment Variables**, add:
+   - `DATABASE_URL` = *(Your Supabase connection string from `.env`)*
+   - `JWT_SECRET` = *(Your secret key)*
+   - `PORT` = `5000`
+6. Click **Create Web Service**.
+7. In ~2 minutes, Render gives you a public URL like:
+   `https://silvercare-backend.onrender.com`
+   *(Both HTTP REST and WebSocket connections work on this exact URL!)*
+
+---
+
+## Part 2: Run the Mobile App on Your Phone (100% Free)
+
+You do **NOT** need to pay Apple ($99/year) or Google ($25) to test and run the app on your and your family's real phones.
+
+### Option A: **Expo Go** (Recommended — Instant & Zero-Build Setup)
+The fastest way to test natively on both **Android and iPhones**:
+
+1. **On your phone:**
+   - Download the free **"Expo Go"** app from the [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent) (Android) or [Apple App Store](https://apps.apple.com/app/expo-go/id982100262) (iOS).
+2. **On your computer (inside the mobile project):**
+   ```powershell
+   npx create-expo-app mobile --template
+   cd mobile
+   npm install socket.io-client
+   ```
+3. Set the backend API URL in your mobile config to your Render URL:
+   ```javascript
+   const API_BASE_URL = "https://silvercare-backend.onrender.com/api";
+   const SOCKET_URL = "https://silvercare-backend.onrender.com";
+   ```
+4. Start the mobile app:
+   ```powershell
+   npx expo start
+   ```
+5. A QR code appears in your terminal. Open your phone camera (iPhone) or the Expo Go app (Android), scan the QR code, and **the SilverCare app immediately loads and runs on your phone!**
+   > *Tip: If you and your family are on different Wi-Fi networks, run `npx expo start --tunnel`. You can send the link to any team member across the world and they can open it immediately on their phone!*
+
+---
+
+### Option B: **Generate a Standalone Android `.APK` File (EAS Free Tier)**
+If you want an actual installed app icon on your Android home screen without needing Expo Go:
+
+1. Install EAS CLI:
+   ```powershell
+   npm install -g eas-cli
+   eas login
+   ```
+2. Configure build:
+   ```powershell
+   eas build:configure
+   ```
+3. Run a free cloud build for preview APK:
+   ```powershell
+   eas build -p android --profile preview
+   ```
+4. EAS builds the `.apk` on their cloud servers for free and gives you a download link and QR code.
+5. Download the `.apk` on your phone and tap **Install** (sideloading).
+
+---
+
+### Summary Checklist to Go Live at $0:
+
+```
+[ Supabase PostgreSQL ]   ──► Free Database (Already Active)
+          ▲
+          │
+[ Render.com Web Service ] ──► Free Cloud Node.js + WebSockets
+          ▲
+          │  (https://your-app.onrender.com)
+          │
+  [ Phone with Expo Go ]   ──► Free Real-Device Native Testing (iOS + Android)
+```
+
+Whenever you are ready to begin the mobile app, we can initialize the Expo React Native project and hook it up to your deployed backend!
