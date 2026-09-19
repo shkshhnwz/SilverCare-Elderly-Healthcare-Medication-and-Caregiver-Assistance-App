@@ -160,26 +160,33 @@ const inviteMemberService = async (circleId, payload, currentUser) => {
 };
 
 const acceptInvitationService = async (payload, currentUser) => {
-  const { token } = payload;
+  const { token, invitationId } = payload;
 
-  if (!token) {
-    throw new Error("Token is required");
+  if (!token && !invitationId) {
+    throw new Error("Token or invitationId is required");
   }
 
-  // Hash the incoming token
-  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  let invitation;
 
-  // Find invitation
-  const invitation = await prisma.invitation.findUnique({
-    where: { tokenHash },
-    include: {
-      circle: true,
-      role: true,
-    },
-  });
+  if (token) {
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    invitation = await prisma.invitation.findUnique({
+      where: { tokenHash },
+      include: { circle: true, role: true },
+    });
+  } else if (invitationId) {
+    invitation = await prisma.invitation.findUnique({
+      where: { id: invitationId },
+      include: { circle: true, role: true },
+    });
+    // Verify it belongs to the current user
+    if (invitation && invitation.email !== currentUser.email && invitation.phone !== currentUser.phone) {
+      throw new Error("Access denied to this invitation");
+    }
+  }
 
   if (!invitation) {
-    throw new Error("Invalid or expired invitation token");
+    throw new Error("Invalid or expired invitation");
   }
 
   if (invitation.status !== "PENDING") {
@@ -316,6 +323,87 @@ const revokeMemberService = async (circleId, memberId, currentUser) => {
   return updatedMembership;
 };
 
+const getUserCareCirclesService = async (userId) => {
+  const memberships = await prisma.careCircleMember.findMany({
+    where: { userId, status: "ACTIVE" },
+    include: {
+      circle: {
+        include: {
+          memberships: {
+            include: {
+              role: true,
+              user: {
+                select: { id: true, firstName: true, lastName: true }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+  return memberships.map(m => {
+    // Add members array to circle to match frontend expectation
+    const circle = m.circle;
+    circle.members = circle.memberships;
+    return circle;
+  });
+};
+
+const getUserInvitationsService = async (userId) => {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new Error("User not found");
+  
+  const invitations = await prisma.invitation.findMany({
+    where: {
+      status: "PENDING",
+      OR: [
+        user.email ? { email: user.email } : undefined,
+        user.phone ? { phone: user.phone } : undefined
+      ].filter(Boolean)
+    },
+    include: {
+      circle: true,
+      role: true,
+    }
+  });
+
+  return invitations.map(inv => ({
+    id: inv.id,
+    circleName: inv.circle.name,
+    role: inv.role.name,
+    status: inv.status
+  }));
+};
+
+const deleteCareCircleService = async (circleId, currentUser) => {
+  const circle = await prisma.careCircle.findUnique({
+    where: { id: circleId }
+  });
+
+  if (!circle) {
+    throw new Error("Care circle not found");
+  }
+
+  if (circle.ownerId !== currentUser.id) {
+    throw new Error("Access denied. Only the owner can delete the care circle.");
+  }
+
+  await prisma.careCircle.delete({
+    where: { id: circleId }
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      actorId: currentUser.id,
+      action: "DELETE_CARE_CIRCLE",
+      resourceType: "CARE_CIRCLE",
+      resourceId: circleId,
+    },
+  });
+
+  return { success: true };
+};
+
 module.exports = {
   createCareCircleService,
   getCareCircleService,
@@ -323,4 +411,7 @@ module.exports = {
   inviteMemberService,
   acceptInvitationService,
   revokeMemberService,
+  getUserCareCirclesService,
+  getUserInvitationsService,
+  deleteCareCircleService,
 };

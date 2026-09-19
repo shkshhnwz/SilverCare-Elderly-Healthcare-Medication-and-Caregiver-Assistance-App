@@ -80,7 +80,52 @@ const optionalAuth = async (req, res, next) => {
   }
 };
 
+const requireCircleRole = (allowedRoles) => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const patientId = req.params.patientId || req.body.patientId;
+      if (!patientId) {
+        return res.status(400).json({ message: "patientId is required for role verification" });
+      }
+
+      if (req.user.id === patientId) {
+        return next();
+      }
+
+      const memberships = await prisma.careCircleMember.findMany({
+        where: {
+          userId: req.user.id,
+          status: "ACTIVE",
+          circle: { patientId }
+        },
+        include: { role: true },
+      });
+
+      if (memberships.length === 0) {
+        console.log(`[requireCircleRole] 403: No active memberships found for patientId=${patientId}, req.user.id=${req.user.id}`);
+        return res.status(403).json({ message: "Access denied. Not a member of this patient's Care Circle." });
+      }
+
+      const hasAllowedRole = memberships.some(m => allowedRoles.includes(m.role.name));
+      if (!hasAllowedRole) {
+        const rolesFound = memberships.map(m => m.role.name).join(", ");
+        console.log(`[requireCircleRole] 403: Roles [${rolesFound}] not in [${allowedRoles}]`);
+        return res.status(403).json({ message: `Access denied. Role ${rolesFound} is not permitted to perform this action.` });
+      }
+
+      next();
+    } catch (error) {
+      return res.status(500).json({ message: "Role verification failed", error: error.message });
+    }
+  };
+};
+
 module.exports = {
   requireAuth,
   optionalAuth,
+  requireCircleRole,
 };

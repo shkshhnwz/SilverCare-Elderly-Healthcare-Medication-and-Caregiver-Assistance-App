@@ -5,6 +5,9 @@ const {
   inviteMemberService,
   acceptInvitationService,
   revokeMemberService,
+  getUserCareCirclesService,
+  getUserInvitationsService,
+  deleteCareCircleService,
 } = require('./careCircle.service');
 
 const createCareCircle = async (req, res, next) => {
@@ -61,6 +64,33 @@ const revokeMember = async (req, res, next) => {
   }
 };
 
+const getUserCareCircles = async (req, res, next) => {
+  try {
+    const result = await getUserCareCirclesService(req.params.userId);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserInvitations = async (req, res, next) => {
+  try {
+    const result = await getUserInvitationsService(req.params.userId);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteCareCircle = async (req, res, next) => {
+  try {
+    const result = await deleteCareCircleService(req.params.id, req.user);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createCareCircle,
   getCareCircle,
@@ -68,4 +98,7 @@ module.exports = {
   inviteMember,
   acceptInvitation,
   revokeMember,
+  getUserCareCircles,
+  getUserInvitations,
+  deleteCareCircle,
 };

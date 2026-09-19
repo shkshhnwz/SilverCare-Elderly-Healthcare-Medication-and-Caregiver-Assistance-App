@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("../../middleware/auth");
+const { requireAuth, requireCircleRole } = require("../../middleware/auth");
 const {
     createMedication,
     listMedications,
@@ -11,8 +11,9 @@ const {
 } = require("./medicationManagement.controller");
 
 const MedicationManagementRouter = express.Router();
+const WRITER_ROLES = ["OWNER", "CAREGIVER_FULL", "PROFESSIONAL", "PHYSICIAN"];
 
-MedicationManagementRouter.post("/", requireAuth, createMedication);
+MedicationManagementRouter.post("/", requireAuth, requireCircleRole(WRITER_ROLES), createMedication);
 MedicationManagementRouter.get("/patients/:patientId", requireAuth, listMedications);
 MedicationManagementRouter.post("/:medicationId/doses/schedule-next", requireAuth, scheduleNextDose);
 MedicationManagementRouter.post("/:medicationId/doses/:doseId/acknowledge", requireAuth, acknowledgeDose);

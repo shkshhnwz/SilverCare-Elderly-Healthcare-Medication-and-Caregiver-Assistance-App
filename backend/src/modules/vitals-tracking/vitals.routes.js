@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("../../middleware/auth");
+const { requireAuth, requireCircleRole } = require("../../middleware/auth");
 const {
   recordVitalReading,
   setPatientThreshold,
@@ -9,9 +9,10 @@ const {
 } = require("./vitals.controller");
 
 const VitalsRouter = express.Router();
+const WRITER_ROLES = ["OWNER", "CAREGIVER_FULL", "PROFESSIONAL", "PHYSICIAN"];
 
 // Record manual or BLE reading
-VitalsRouter.post("/readings", requireAuth, recordVitalReading);
+VitalsRouter.post("/readings", requireAuth, requireCircleRole(WRITER_ROLES), recordVitalReading);
 
 // Dynamic Thresholds (per-patient)
 VitalsRouter.post("/patients/:patientId/thresholds", requireAuth, setPatientThreshold);

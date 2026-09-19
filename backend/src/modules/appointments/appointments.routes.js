@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("../../middleware/auth");
+const { requireAuth, requireCircleRole } = require("../../middleware/auth");
 const {
   scheduleAppointment,
   getAppointmentDetails,
@@ -9,9 +9,10 @@ const {
 } = require("./appointments.controller");
 
 const AppointmentsRouter = express.Router();
+const WRITER_ROLES = ["OWNER", "CAREGIVER_FULL", "PROFESSIONAL", "PHYSICIAN"];
 
 // 1. Schedule an appointment
-AppointmentsRouter.post("/", requireAuth, scheduleAppointment);
+AppointmentsRouter.post("/", requireAuth, requireCircleRole(WRITER_ROLES), scheduleAppointment);
 
 // 2. List appointments for a patient (optional filter: ?filter=upcoming or ?filter=past)
 AppointmentsRouter.get("/patients/:patientId", requireAuth, listPatientAppointments);

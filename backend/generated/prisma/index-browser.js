@@ -298,6 +298,267 @@ exports.Prisma.VitalAlertScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SafeZoneScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  name: 'name',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  radiusMeters: 'radiusMeters',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TrackingSessionScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  initiatedById: 'initiatedById',
+  triggerReason: 'triggerReason',
+  status: 'status',
+  startedAt: 'startedAt',
+  expiresAt: 'expiresAt',
+  disclosureSent: 'disclosureSent',
+  notes: 'notes'
+};
+
+exports.Prisma.LocationPingScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  trackingSessionId: 'trackingSessionId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  accuracyMeters: 'accuracyMeters',
+  batteryLevel: 'batteryLevel',
+  isInsideSafeZone: 'isInsideSafeZone',
+  recordedAt: 'recordedAt'
+};
+
+exports.Prisma.LocationAlertScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  trackingSessionId: 'trackingSessionId',
+  severity: 'severity',
+  status: 'status',
+  lastKnownLat: 'lastKnownLat',
+  lastKnownLng: 'lastKnownLng',
+  mapUrl: 'mapUrl',
+  driftDistanceM: 'driftDistanceM',
+  message: 'message',
+  resolvedById: 'resolvedById',
+  resolvedAt: 'resolvedAt',
+  resolutionNotes: 'resolutionNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EmergencyEscalationPolicyScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  name: 'name',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EscalationTierScalarFieldEnum = {
+  id: 'id',
+  policyId: 'policyId',
+  tierOrder: 'tierOrder',
+  contactUserId: 'contactUserId',
+  customName: 'customName',
+  customPhone: 'customPhone',
+  channel: 'channel',
+  timeoutMinutes: 'timeoutMinutes'
+};
+
+exports.Prisma.EmergencyEventScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  eventType: 'eventType',
+  status: 'status',
+  currentTierIndex: 'currentTierIndex',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  accuracyMeters: 'accuracyMeters',
+  mapUrl: 'mapUrl',
+  countdownSeconds: 'countdownSeconds',
+  countdownExpiresAt: 'countdownExpiresAt',
+  accelerometerVector: 'accelerometerVector',
+  acknowledgedById: 'acknowledgedById',
+  acknowledgedAt: 'acknowledgedAt',
+  resolvedById: 'resolvedById',
+  resolvedAt: 'resolvedAt',
+  resolutionNotes: 'resolutionNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EmergencyNotificationLogScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  tierOrder: 'tierOrder',
+  recipientName: 'recipientName',
+  recipientTarget: 'recipientTarget',
+  channel: 'channel',
+  deliveryStatus: 'deliveryStatus',
+  responsePayload: 'responsePayload',
+  dispatchedAt: 'dispatchedAt'
+};
+
+exports.Prisma.AppointmentScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  accompanyingCaregiverId: 'accompanyingCaregiverId',
+  title: 'title',
+  doctorName: 'doctorName',
+  specialty: 'specialty',
+  clinicOrHospital: 'clinicOrHospital',
+  locationAddress: 'locationAddress',
+  scheduledAt: 'scheduledAt',
+  durationMinutes: 'durationMinutes',
+  status: 'status',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AppointmentReminderScalarFieldEnum = {
+  id: 'id',
+  appointmentId: 'appointmentId',
+  recipientRole: 'recipientRole',
+  recipientId: 'recipientId',
+  remindAt: 'remindAt',
+  channel: 'channel',
+  status: 'status',
+  sentAt: 'sentAt',
+  message: 'message',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PostAppointmentNoteScalarFieldEnum = {
+  id: 'id',
+  appointmentId: 'appointmentId',
+  doctorSummary: 'doctorSummary',
+  prescriptionChanges: 'prescriptionChanges',
+  followUpInstructions: 'followUpInstructions',
+  nextFollowUpDate: 'nextFollowUpDate',
+  attachedToCarePlan: 'attachedToCarePlan',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CarePlanScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  version: 'version',
+  dietaryNotes: 'dietaryNotes',
+  mobilityInstructions: 'mobilityInstructions',
+  resuscitationStatus: 'resuscitationStatus',
+  emergencySummary: 'emergencySummary',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CarePlanAuditScalarFieldEnum = {
+  id: 'id',
+  carePlanId: 'carePlanId',
+  versionNumber: 'versionNumber',
+  changedById: 'changedById',
+  changeSummary: 'changeSummary',
+  snapshotJson: 'snapshotJson',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CareTaskScalarFieldEnum = {
+  id: 'id',
+  carePlanId: 'carePlanId',
+  patientId: 'patientId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  assignedToId: 'assignedToId',
+  dueWindowStart: 'dueWindowStart',
+  dueWindowEnd: 'dueWindowEnd',
+  recurringRRule: 'recurringRRule',
+  status: 'status',
+  completedById: 'completedById',
+  completedAt: 'completedAt',
+  completionNotes: 'completionNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CareShiftScalarFieldEnum = {
+  id: 'id',
+  caregiverId: 'caregiverId',
+  patientId: 'patientId',
+  status: 'status',
+  clockInAt: 'clockInAt',
+  clockOutAt: 'clockOutAt',
+  clockInLocation: 'clockInLocation',
+  clockOutLocation: 'clockOutLocation',
+  moodAndMentalState: 'moodAndMentalState',
+  mealsAndHydration: 'mealsAndHydration',
+  incidentsOrConcerns: 'incidentsOrConcerns',
+  handoffNotesNextShift: 'handoffNotesNextShift',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ActivityFeedItemScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  authorId: 'authorId',
+  activityType: 'activityType',
+  title: 'title',
+  summary: 'summary',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CareCircleMessageScalarFieldEnum = {
+  id: 'id',
+  patientId: 'patientId',
+  senderId: 'senderId',
+  content: 'content',
+  attachmentUrl: 'attachmentUrl',
+  isSystemEvent: 'isSystemEvent',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.UserNotificationPrefScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  pushEnabled: 'pushEnabled',
+  smsEnabled: 'smsEnabled',
+  voiceCallEnabled: 'voiceCallEnabled',
+  quietHoursStart: 'quietHoursStart',
+  quietHoursEnd: 'quietHoursEnd',
+  minSeverityForSms: 'minSeverityForSms',
+  minSeverityForVoice: 'minSeverityForVoice',
+  devicePushToken: 'devicePushToken',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AccessibilitySettingScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fontScale: 'fontScale',
+  highContrastMode: 'highContrastMode',
+  voiceGuidanceTTS: 'voiceGuidanceTTS',
+  simplifiedNavigation: 'simplifiedNavigation',
+  screenReaderOptimized: 'screenReaderOptimized',
+  configuredByCaregiverId: 'configuredByCaregiverId',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -404,6 +665,123 @@ exports.AlertStatus = exports.$Enums.AlertStatus = {
   RESOLVED: 'RESOLVED'
 };
 
+exports.TrackingSessionTrigger = exports.$Enums.TrackingSessionTrigger = {
+  EMERGENCY_BREACH: 'EMERGENCY_BREACH',
+  MANUAL_CAREGIVER_REQUEST: 'MANUAL_CAREGIVER_REQUEST',
+  PATIENT_SOS: 'PATIENT_SOS'
+};
+
+exports.TrackingSessionStatus = exports.$Enums.TrackingSessionStatus = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.GeofenceAlertSeverity = exports.$Enums.GeofenceAlertSeverity = {
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
+exports.GeofenceAlertStatus = exports.$Enums.GeofenceAlertStatus = {
+  ACTIVE: 'ACTIVE',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED'
+};
+
+exports.EscalationChannel = exports.$Enums.EscalationChannel = {
+  PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
+  SMS: 'SMS',
+  VOICE_CALL: 'VOICE_CALL'
+};
+
+exports.EmergencyEventType = exports.$Enums.EmergencyEventType = {
+  ONE_TAP_SOS: 'ONE_TAP_SOS',
+  FALL_DETECTED: 'FALL_DETECTED',
+  MANUAL_PANIC: 'MANUAL_PANIC'
+};
+
+exports.EmergencyStatus = exports.$Enums.EmergencyStatus = {
+  COUNTDOWN_ACTIVE: 'COUNTDOWN_ACTIVE',
+  CANCELLED_FALSE_ALARM: 'CANCELLED_FALSE_ALARM',
+  ACTIVE_EMERGENCY: 'ACTIVE_EMERGENCY',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  RESOLVED: 'RESOLVED'
+};
+
+exports.NotificationDeliveryStatus = exports.$Enums.NotificationDeliveryStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  DELIVERED: 'DELIVERED',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  FAILED: 'FAILED'
+};
+
+exports.AppointmentStatus = exports.$Enums.AppointmentStatus = {
+  SCHEDULED: 'SCHEDULED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  RESCHEDULED: 'RESCHEDULED'
+};
+
+exports.ReminderChannel = exports.$Enums.ReminderChannel = {
+  PUSH: 'PUSH',
+  SMS: 'SMS',
+  EMAIL: 'EMAIL'
+};
+
+exports.ReminderStatus = exports.$Enums.ReminderStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.TaskCategory = exports.$Enums.TaskCategory = {
+  VITALS_CHECK: 'VITALS_CHECK',
+  MEDICATION: 'MEDICATION',
+  MEAL_PREP: 'MEAL_PREP',
+  MOBILITY_EXERCISE: 'MOBILITY_EXERCISE',
+  HYGIENE: 'HYGIENE',
+  GENERAL: 'GENERAL'
+};
+
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  MISSED: 'MISSED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.ShiftStatus = exports.$Enums.ShiftStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.ActivityType = exports.$Enums.ActivityType = {
+  MEDICATION_DOSE_TAKEN: 'MEDICATION_DOSE_TAKEN',
+  MEDICATION_DOSE_MISSED: 'MEDICATION_DOSE_MISSED',
+  VITAL_RECORDED: 'VITAL_RECORDED',
+  VITAL_ANOMALY_ALERT: 'VITAL_ANOMALY_ALERT',
+  GEOFENCE_BREACH: 'GEOFENCE_BREACH',
+  EMERGENCY_SOS: 'EMERGENCY_SOS',
+  APPOINTMENT_SCHEDULED: 'APPOINTMENT_SCHEDULED',
+  APPOINTMENT_COMPLETED: 'APPOINTMENT_COMPLETED',
+  CARE_TASK_COMPLETED: 'CARE_TASK_COMPLETED',
+  SHIFT_CLOCK_IN: 'SHIFT_CLOCK_IN',
+  SHIFT_CLOCK_OUT: 'SHIFT_CLOCK_OUT',
+  CARE_PLAN_UPDATED: 'CARE_PLAN_UPDATED',
+  GENERAL_NOTE: 'GENERAL_NOTE'
+};
+
+exports.NotificationSeverityLevel = exports.$Enums.NotificationSeverityLevel = {
+  INFO: 'INFO',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   CareCircle: 'CareCircle',
@@ -418,7 +796,26 @@ exports.Prisma.ModelName = {
   AuditLog: 'AuditLog',
   VitalReading: 'VitalReading',
   VitalThreshold: 'VitalThreshold',
-  VitalAlert: 'VitalAlert'
+  VitalAlert: 'VitalAlert',
+  SafeZone: 'SafeZone',
+  TrackingSession: 'TrackingSession',
+  LocationPing: 'LocationPing',
+  LocationAlert: 'LocationAlert',
+  EmergencyEscalationPolicy: 'EmergencyEscalationPolicy',
+  EscalationTier: 'EscalationTier',
+  EmergencyEvent: 'EmergencyEvent',
+  EmergencyNotificationLog: 'EmergencyNotificationLog',
+  Appointment: 'Appointment',
+  AppointmentReminder: 'AppointmentReminder',
+  PostAppointmentNote: 'PostAppointmentNote',
+  CarePlan: 'CarePlan',
+  CarePlanAudit: 'CarePlanAudit',
+  CareTask: 'CareTask',
+  CareShift: 'CareShift',
+  ActivityFeedItem: 'ActivityFeedItem',
+  CareCircleMessage: 'CareCircleMessage',
+  UserNotificationPref: 'UserNotificationPref',
+  AccessibilitySetting: 'AccessibilitySetting'
 };
 
 /**

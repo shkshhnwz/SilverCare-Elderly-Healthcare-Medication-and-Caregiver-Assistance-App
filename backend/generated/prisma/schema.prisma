@@ -45,6 +45,45 @@ model User {
   vitalThresholdsSet      VitalThreshold[] @relation("ThresholdSetBy")
   vitalAlerts             VitalAlert[]     @relation("AlertPatient")
   vitalAlertsAcknowledged VitalAlert[]     @relation("AlertAcknowledgedBy")
+
+  // Location & Geofencing relationships
+  safeZonesCreated          SafeZone[]        @relation("SafeZoneCreator")
+  safeZonesAsPatient        SafeZone[]        @relation("SafeZonePatient")
+  locationPings             LocationPing[]    @relation("LocationPingPatient")
+  trackingSessionsAsPatient TrackingSession[] @relation("TrackingSessionPatient")
+  trackingSessionsInitiated TrackingSession[] @relation("TrackingSessionInitiator")
+  locationAlerts            LocationAlert[]   @relation("LocationAlertPatient")
+  locationAlertsResolved    LocationAlert[]   @relation("LocationAlertResolver")
+
+  // Emergency & SOS relationships
+  emergenciesAsPatient      EmergencyEvent[]            @relation("EmergencyPatient")
+  emergenciesAcknowledged   EmergencyEvent[]            @relation("EmergencyAcknowledger")
+  emergenciesResolved       EmergencyEvent[]            @relation("EmergencyResolver")
+  escalationPoliciesCreated EmergencyEscalationPolicy[] @relation("EscalationPolicyCreator")
+  escalationTierContacts    EscalationTier[]            @relation("EscalationTierContact")
+
+  // Appointment relationships
+  appointmentsAsPatient       Appointment[]         @relation("AppointmentPatient")
+  appointmentsAccompanying    Appointment[]         @relation("AppointmentAccompanyingCaregiver")
+  appointmentsCreated         Appointment[]         @relation("AppointmentCreator")
+  postAppointmentNotesCreated PostAppointmentNote[] @relation("PostNoteCreator")
+
+  // Care Plan & Coordination relationships
+  carePlansAsPatient CarePlan[]      @relation("CarePlanPatient")
+  carePlansCreated   CarePlan[]      @relation("CarePlanCreator")
+  carePlanAuditsMade CarePlanAudit[] @relation("CarePlanAuditor")
+  assignedTasks      CareTask[]      @relation("TaskAssignee")
+  completedTasks     CareTask[]      @relation("TaskCompleter")
+  shiftsAsCaregiver  CareShift[]     @relation("ShiftCaregiver")
+  shiftsAsPatient    CareShift[]     @relation("ShiftPatient")
+
+  // Communication & Notification Hub relationships
+  feedActivitiesAsPatient ActivityFeedItem[]    @relation("ActivityPatient")
+  feedActivitiesGenerated ActivityFeedItem[]    @relation("ActivityAuthor")
+  chatMessagesAsPatient   CareCircleMessage[]   @relation("ChatMessagePatient")
+  chatMessagesSent        CareCircleMessage[]   @relation("ChatMessageSender")
+  notificationPreferences UserNotificationPref?
+  accessibilitySettings   AccessibilitySetting?
 }
 
 model CareCircle {
@@ -399,4 +438,502 @@ model VitalAlert {
 
   @@index([patientId, status])
   @@index([readingId])
+}
+
+enum GeofenceAlertSeverity {
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum GeofenceAlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+enum TrackingSessionTrigger {
+  EMERGENCY_BREACH
+  MANUAL_CAREGIVER_REQUEST
+  PATIENT_SOS
+}
+
+enum TrackingSessionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model SafeZone {
+  id           String   @id @default(uuid()) @db.Uuid
+  patientId    String   @db.Uuid
+  name         String // e.g. "Home Sanctuary", "Morning Walk Route"
+  latitude     Float
+  longitude    Float
+  radiusMeters Float // e.g. 100 (meters) for home, 500 for park walk
+  isActive     Boolean  @default(true)
+  createdById  String   @db.Uuid
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  patient   User @relation("SafeZonePatient", fields: [patientId], references: [id], onDelete: Cascade)
+  createdBy User @relation("SafeZoneCreator", fields: [createdById], references: [id])
+
+  @@index([patientId, isActive])
+}
+
+model TrackingSession {
+  id             String                 @id @default(uuid()) @db.Uuid
+  patientId      String                 @db.Uuid
+  initiatedById  String?                @db.Uuid
+  triggerReason  TrackingSessionTrigger
+  status         TrackingSessionStatus  @default(ACTIVE)
+  startedAt      DateTime               @default(now())
+  expiresAt      DateTime // Privacy protection: hard cutoff timestamp (e.g., +30 mins)
+  disclosureSent Boolean                @default(true) // Transparent disclosure notice delivered to patient
+  notes          String?
+
+  patient     User            @relation("TrackingSessionPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  initiatedBy User?           @relation("TrackingSessionInitiator", fields: [initiatedById], references: [id], onDelete: SetNull)
+  pings       LocationPing[]
+  alerts      LocationAlert[]
+
+  @@index([patientId, status])
+}
+
+model LocationPing {
+  id                String   @id @default(uuid()) @db.Uuid
+  patientId         String   @db.Uuid
+  trackingSessionId String?  @db.Uuid
+  latitude          Float
+  longitude         Float
+  accuracyMeters    Float?
+  batteryLevel      Int?
+  isInsideSafeZone  Boolean  @default(true)
+  recordedAt        DateTime @default(now())
+
+  patient         User             @relation("LocationPingPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  trackingSession TrackingSession? @relation(fields: [trackingSessionId], references: [id], onDelete: SetNull)
+
+  @@index([patientId, recordedAt])
+  @@index([trackingSessionId])
+}
+
+model LocationAlert {
+  id                String                @id @default(uuid()) @db.Uuid
+  patientId         String                @db.Uuid
+  trackingSessionId String?               @db.Uuid
+  severity          GeofenceAlertSeverity @default(CRITICAL)
+  status            GeofenceAlertStatus   @default(ACTIVE)
+  lastKnownLat      Float
+  lastKnownLng      Float
+  mapUrl            String // Direct Google Maps link for first responders / caregivers
+  driftDistanceM    Float // Meters drifted beyond the nearest safe zone border
+  message           String
+  resolvedById      String?               @db.Uuid
+  resolvedAt        DateTime?
+  resolutionNotes   String?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  patient         User             @relation("LocationAlertPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  trackingSession TrackingSession? @relation(fields: [trackingSessionId], references: [id], onDelete: SetNull)
+  resolvedBy      User?            @relation("LocationAlertResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([patientId, status])
+}
+
+enum EmergencyEventType {
+  ONE_TAP_SOS
+  FALL_DETECTED
+  MANUAL_PANIC
+}
+
+enum EmergencyStatus {
+  COUNTDOWN_ACTIVE // 30s countdown window for fall detection
+  CANCELLED_FALSE_ALARM // Cancelled by patient before countdown ended
+  ACTIVE_EMERGENCY // Live active emergency triggering escalation
+  ACKNOWLEDGED // Caregiver acknowledged; escalation paused
+  RESOLVED // Emergency safely handled
+}
+
+enum EscalationChannel {
+  PUSH_NOTIFICATION
+  SMS
+  VOICE_CALL
+}
+
+enum NotificationDeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  ACKNOWLEDGED
+  FAILED
+}
+
+model EmergencyEscalationPolicy {
+  id          String   @id @default(uuid()) @db.Uuid
+  patientId   String   @db.Uuid
+  name        String   @default("Default Family Escalation Policy")
+  isActive    Boolean  @default(true)
+  createdById String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User             @relation("EscalationPolicyCreator", fields: [createdById], references: [id])
+  tiers     EscalationTier[]
+
+  @@index([patientId, isActive])
+}
+
+model EscalationTier {
+  id             String            @id @default(uuid()) @db.Uuid
+  policyId       String            @db.Uuid
+  tierOrder      Int // 1 = First line, 2 = Secondary, 3 = EMS/Professional
+  contactUserId  String?           @db.Uuid
+  customName     String? // Fallback name if contact is external
+  customPhone    String? // Fallback phone number
+  channel        EscalationChannel @default(PUSH_NOTIFICATION)
+  timeoutMinutes Int               @default(3) // Timeout before escalating to next tier
+
+  policy      EmergencyEscalationPolicy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  contactUser User?                     @relation("EscalationTierContact", fields: [contactUserId], references: [id], onDelete: SetNull)
+
+  @@unique([policyId, tierOrder])
+  @@index([policyId])
+}
+
+model EmergencyEvent {
+  id               String             @id @default(uuid()) @db.Uuid
+  patientId        String             @db.Uuid
+  eventType        EmergencyEventType
+  status           EmergencyStatus    @default(ACTIVE_EMERGENCY)
+  currentTierIndex Int                @default(1)
+
+  // Live location coordinates during active event
+  latitude       Float?
+  longitude      Float?
+  accuracyMeters Float?
+  mapUrl         String? // Direct Google Maps URL
+
+  // Countdown for fall detection heuristics
+  countdownSeconds   Int       @default(0)
+  countdownExpiresAt DateTime?
+
+  // Fall sensor heuristic telemetry (accelerometer impact vector)
+  accelerometerVector Json?
+
+  acknowledgedById String?   @db.Uuid
+  acknowledgedAt   DateTime?
+  resolvedById     String?   @db.Uuid
+  resolvedAt       DateTime?
+  resolutionNotes  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient        User                       @relation("EmergencyPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  acknowledgedBy User?                      @relation("EmergencyAcknowledger", fields: [acknowledgedById], references: [id], onDelete: SetNull)
+  resolvedBy     User?                      @relation("EmergencyResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  notifications  EmergencyNotificationLog[]
+
+  @@index([patientId, status])
+  @@index([status, currentTierIndex])
+}
+
+model EmergencyNotificationLog {
+  id              String                     @id @default(uuid()) @db.Uuid
+  eventId         String                     @db.Uuid
+  tierOrder       Int
+  recipientName   String
+  recipientTarget String // Phone number, push token, or email
+  channel         EscalationChannel
+  deliveryStatus  NotificationDeliveryStatus @default(PENDING)
+  responsePayload Json?
+  dispatchedAt    DateTime                   @default(now())
+
+  event EmergencyEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum ReminderChannel {
+  PUSH
+  SMS
+  EMAIL
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  CANCELLED
+}
+
+model Appointment {
+  id                      String            @id @default(uuid()) @db.Uuid
+  patientId               String            @db.Uuid
+  accompanyingCaregiverId String?           @db.Uuid
+  title                   String // e.g. "Cardiology Consultation & ECG"
+  doctorName              String // e.g. "Dr. Gregory House"
+  specialty               String? // e.g. "Cardiologist", "Neurologist", "General Physician"
+  clinicOrHospital        String // e.g. "Mercy General Hospital - Suite 402"
+  locationAddress         String? // Physical address or Telehealth URL
+  scheduledAt             DateTime
+  durationMinutes         Int               @default(45)
+  status                  AppointmentStatus @default(SCHEDULED)
+  notes                   String?
+  createdById             String            @db.Uuid
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+
+  patient               User                  @relation("AppointmentPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  accompanyingCaregiver User?                 @relation("AppointmentAccompanyingCaregiver", fields: [accompanyingCaregiverId], references: [id], onDelete: SetNull)
+  createdBy             User                  @relation("AppointmentCreator", fields: [createdById], references: [id])
+  reminders             AppointmentReminder[]
+  postAppointmentNote   PostAppointmentNote?
+
+  @@index([patientId, scheduledAt])
+  @@index([accompanyingCaregiverId])
+}
+
+model AppointmentReminder {
+  id            String          @id @default(uuid()) @db.Uuid
+  appointmentId String          @db.Uuid
+  recipientRole String // "PATIENT" or "ACCOMPANYING_CAREGIVER"
+  recipientId   String?         @db.Uuid
+  remindAt      DateTime
+  channel       ReminderChannel @default(PUSH)
+  status        ReminderStatus  @default(PENDING)
+  sentAt        DateTime?
+  message       String
+  createdAt     DateTime        @default(now())
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([appointmentId, status])
+  @@index([remindAt, status])
+}
+
+model PostAppointmentNote {
+  id                   String    @id @default(uuid()) @db.Uuid
+  appointmentId        String    @unique @db.Uuid
+  doctorSummary        String // Key findings, diagnosis, vitals observed
+  prescriptionChanges  String? // New medications, dosage adjustments, stopped drugs
+  followUpInstructions String? // Diet, exercise, wound care
+  nextFollowUpDate     DateTime?
+  attachedToCarePlan   Boolean   @default(true) // Automatically syncs to elderly care plan
+  createdById          String    @db.Uuid
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  createdBy   User        @relation("PostNoteCreator", fields: [createdById], references: [id])
+
+  @@index([appointmentId])
+}
+
+enum TaskCategory {
+  VITALS_CHECK
+  MEDICATION
+  MEAL_PREP
+  MOBILITY_EXERCISE
+  HYGIENE
+  GENERAL
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  MISSED
+  CANCELLED
+}
+
+enum ShiftStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model CarePlan {
+  id                   String   @id @default(uuid()) @db.Uuid
+  patientId            String   @unique @db.Uuid
+  version              Int      @default(1)
+  dietaryNotes         String? // Allergies, soft food, sodium limits
+  mobilityInstructions String? // Walker, 2-person transfer, fall risk precautions
+  resuscitationStatus  String? // DNR / Full Code notes
+  emergencySummary     String? // Critical baseline summary
+  isActive             Boolean  @default(true)
+  createdById          String   @db.Uuid
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  patient      User            @relation("CarePlanPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  createdBy    User            @relation("CarePlanCreator", fields: [createdById], references: [id])
+  auditHistory CarePlanAudit[]
+  tasks        CareTask[]
+
+  @@index([patientId])
+}
+
+model CarePlanAudit {
+  id            String   @id @default(uuid()) @db.Uuid
+  carePlanId    String   @db.Uuid
+  versionNumber Int
+  changedById   String   @db.Uuid
+  changeSummary String // e.g. "Updated mobility from independent to walker required"
+  snapshotJson  Json // Full snapshot of care plan at this revision for liability audit
+  createdAt     DateTime @default(now())
+
+  carePlan  CarePlan @relation(fields: [carePlanId], references: [id], onDelete: Cascade)
+  changedBy User     @relation("CarePlanAuditor", fields: [changedById], references: [id])
+
+  @@index([carePlanId, versionNumber])
+}
+
+model CareTask {
+  id             String       @id @default(uuid()) @db.Uuid
+  carePlanId     String       @db.Uuid
+  patientId      String       @db.Uuid
+  title          String // e.g. "Check fasting blood sugar before breakfast"
+  description    String?
+  category       TaskCategory @default(GENERAL)
+  assignedToId   String?      @db.Uuid
+  dueWindowStart DateTime
+  dueWindowEnd   DateTime
+  recurringRRule String? // e.g. "FREQ=DAILY;INTERVAL=1"
+  status         TaskStatus   @default(PENDING)
+
+  completedById   String?   @db.Uuid
+  completedAt     DateTime?
+  completionNotes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  carePlan    CarePlan @relation(fields: [carePlanId], references: [id], onDelete: Cascade)
+  assignedTo  User?    @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  completedBy User?    @relation("TaskCompleter", fields: [completedById], references: [id], onDelete: SetNull)
+
+  @@index([patientId, status])
+  @@index([assignedToId, dueWindowStart])
+}
+
+model CareShift {
+  id               String      @id @default(uuid()) @db.Uuid
+  caregiverId      String      @db.Uuid
+  patientId        String      @db.Uuid
+  status           ShiftStatus @default(ACTIVE)
+  clockInAt        DateTime    @default(now())
+  clockOutAt       DateTime?
+  clockInLocation  String? // e.g. GPS coordinates or facility name
+  clockOutLocation String?
+
+  // Structured Shift Handoff Notes (Clinical Handoff)
+  moodAndMentalState    String? // e.g. "Alert and cheerful, mild afternoon confusion"
+  mealsAndHydration     String? // e.g. "Ate 100% of lunch, drank 800ml water"
+  incidentsOrConcerns   String? // e.g. "Mild stumble at 14:00, no bruising"
+  handoffNotesNextShift String? // e.g. "Needs physical therapy leg stretches before bedtime"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  caregiver User @relation("ShiftCaregiver", fields: [caregiverId], references: [id])
+  patient   User @relation("ShiftPatient", fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([caregiverId, status])
+  @@index([patientId, clockInAt])
+}
+
+enum ActivityType {
+  MEDICATION_DOSE_TAKEN
+  MEDICATION_DOSE_MISSED
+  VITAL_RECORDED
+  VITAL_ANOMALY_ALERT
+  GEOFENCE_BREACH
+  EMERGENCY_SOS
+  APPOINTMENT_SCHEDULED
+  APPOINTMENT_COMPLETED
+  CARE_TASK_COMPLETED
+  SHIFT_CLOCK_IN
+  SHIFT_CLOCK_OUT
+  CARE_PLAN_UPDATED
+  GENERAL_NOTE
+}
+
+enum NotificationSeverityLevel {
+  INFO
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model ActivityFeedItem {
+  id           String       @id @default(uuid()) @db.Uuid
+  patientId    String       @db.Uuid
+  authorId     String?      @db.Uuid
+  activityType ActivityType
+  title        String // e.g. "Morning Insulin Dose Taken"
+  summary      String // e.g. "Arthur took 4 units Humalog confirmed with photo"
+  metadata     Json? // Deep link IDs: { medicationId, vitalReadingId, alertId, taskId }
+  createdAt    DateTime     @default(now())
+
+  patient User  @relation("ActivityPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  author  User? @relation("ActivityAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([patientId, createdAt])
+  @@index([activityType])
+}
+
+model CareCircleMessage {
+  id            String   @id @default(uuid()) @db.Uuid
+  patientId     String   @db.Uuid
+  senderId      String   @db.Uuid
+  content       String // Text message
+  attachmentUrl String? // Optional image or voice note
+  isSystemEvent Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  patient User @relation("ChatMessagePatient", fields: [patientId], references: [id], onDelete: Cascade)
+  sender  User @relation("ChatMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([patientId, createdAt])
+}
+
+model UserNotificationPref {
+  id                  String                    @id @default(uuid()) @db.Uuid
+  userId              String                    @unique @db.Uuid
+  pushEnabled         Boolean                   @default(true)
+  smsEnabled          Boolean                   @default(true)
+  voiceCallEnabled    Boolean                   @default(false) // Only for emergency escalation
+  quietHoursStart     String? // e.g. "22:00"
+  quietHoursEnd       String? // e.g. "07:00"
+  minSeverityForSms   NotificationSeverityLevel @default(HIGH)
+  minSeverityForVoice NotificationSeverityLevel @default(CRITICAL)
+  devicePushToken     String? // FCM / APNs registration token
+  updatedAt           DateTime                  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// 6.10 Assisted Setup & Accessibility Preferences (Backend sync)
+model AccessibilitySetting {
+  id                      String   @id @default(uuid()) @db.Uuid
+  userId                  String   @unique @db.Uuid
+  fontScale               Float    @default(1.2) // 1.0 = normal, 1.3 = large, 1.6 = extra large
+  highContrastMode        Boolean  @default(false) // Enhanced contrast for macular degeneration/glaucoma
+  voiceGuidanceTTS        Boolean  @default(false) // Text-to-speech reads reminders out loud
+  simplifiedNavigation    Boolean  @default(true) // Single-column, large tap targets
+  screenReaderOptimized   Boolean  @default(false)
+  configuredByCaregiverId String?  @db.Uuid // ID of family member who configured it remotely
+  updatedAt               DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
