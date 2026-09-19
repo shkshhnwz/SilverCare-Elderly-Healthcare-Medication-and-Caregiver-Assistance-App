@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("../../middleware/auth");
+const { requireAuth, requireCircleRole } = require("../../middleware/auth");
 const {
   upsertCarePlan,
   getCarePlan,
@@ -12,9 +12,10 @@ const {
 } = require("./carePlanCoordination.controller");
 
 const CarePlanRouter = express.Router();
+const WRITER_ROLES = ["OWNER", "CAREGIVER_FULL", "PROFESSIONAL", "PHYSICIAN"];
 
 // 1. Care Plan & Version Audit
-CarePlanRouter.post("/patients/:patientId", requireAuth, upsertCarePlan);
+CarePlanRouter.post("/patients/:patientId", requireAuth, requireCircleRole(WRITER_ROLES), upsertCarePlan);
 CarePlanRouter.get("/patients/:patientId", requireAuth, getCarePlan);
 
 // 2. Task Coordination

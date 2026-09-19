@@ -1,0 +1,43 @@
+name: silvercare_frontend
+description: "SilverCare — Elderly Healthcare, Medication & Caregiver Coordination"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Icons
+  cupertino_icons: ^1.0.8
+
+  # HTTP client
+  dio: ^5.7.0
+
+  # Socket.IO real-time
+  socket_io_client: ^3.0.2
+
+  # State management
+  provider: ^6.1.2
+
+  # Google Fonts (Inter, Outfit)
+  google_fonts: ^6.2.1
+
+  # Secure storage for JWT tokens
+  flutter_secure_storage: ^9.2.4
+
+  # General local storage
+  shared_preferences: ^2.3.4
+
+  # Percent indicator for adherence ring
+  percent_indicator: ^4.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

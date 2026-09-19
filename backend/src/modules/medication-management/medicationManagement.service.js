@@ -1,16 +1,13 @@
 const crypto = require("crypto");
-
-const medications = new Map(); // key: medicationId
-const patientMedicationIndex = new Map(); // key: patientId -> Set(medicationId)
-const medicationDoses = new Map(); // key: medicationId -> Array<dose>
+const prisma = require("../../config/prisma");
 
 const DOSE_STATES = {
-    SCHEDULED: "scheduled",
-    NOTIFIED: "notified",
-    CONFIRMED_TAKEN: "confirmed_taken",
-    CONFIRMED_SKIPPED: "confirmed_skipped",
-    MISSED: "missed",
-    ESCALATED: "escalated",
+    SCHEDULED: "SCHEDULED",
+    NOTIFIED: "NOTIFIED",
+    CONFIRMED_TAKEN: "CONFIRMED_TAKEN",
+    CONFIRMED_SKIPPED: "CONFIRMED_SKIPPED",
+    MISSED: "MISSED",
+    ESCALATED: "ESCALATED",
 };
 
 const ALLOWED_TRANSITIONS = {
@@ -27,18 +24,6 @@ const INTERACTION_RULES = [
     ["lisinopril", "spironolactone", "Potential high potassium risk"],
     ["ibuprofen", "naproxen", "Duplicate NSAID therapy risk"],
 ];
-
-const indexMedicationForPatient = (patientId, medicationId) => {
-    if (!patientMedicationIndex.has(patientId)) {
-        patientMedicationIndex.set(patientId, new Set());
-    }
-
-    patientMedicationIndex.get(patientId).add(medicationId);
-};
-
-const getPatientMedicationIds = (patientId) => {
-    return Array.from(patientMedicationIndex.get(patientId) || []);
-};
 
 const isTransitionValid = (fromState, toState) => {
     return (ALLOWED_TRANSITIONS[fromState] || []).includes(toState);
@@ -82,13 +67,15 @@ const computeNextDoseAt = (rrule, fromDate = new Date()) => {
     return next;
 };
 
-const runInteractionAndDuplicateCheck = (patientId, medicationName) => {
+const runInteractionAndDuplicateCheck = async (patientId, medicationName) => {
     const name = (medicationName || "").toLowerCase().trim();
     const warnings = [];
 
-    const existingMedicationNames = getPatientMedicationIds(patientId)
-        .map((medicationId) => medications.get(medicationId))
-        .filter(Boolean)
+    const existingMedications = await prisma.medication.findMany({
+        where: { patientId, active: true },
+    });
+
+    const existingMedicationNames = existingMedications
         .map((medication) => (medication.medicationName || "").toLowerCase().trim());
 
     if (existingMedicationNames.includes(name)) {
@@ -113,19 +100,6 @@ const runInteractionAndDuplicateCheck = (patientId, medicationName) => {
     return warnings;
 };
 
-const createInitialDose = (medicationId, scheduledAt) => {
-    return {
-        id: crypto.randomUUID(),
-        medicationId,
-        scheduledAt,
-        state: DOSE_STATES.SCHEDULED,
-        acknowledgement: null,
-        escalationStep: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-};
-
 const createMedicationService = async (payload, currentUser) => {
     const {
         patientId,
@@ -147,33 +121,35 @@ const createMedicationService = async (payload, currentUser) => {
     }
 
     const normalizedRRule = parseRRuleFrequency(frequencyRRule);
-    const warnings = runInteractionAndDuplicateCheck(patientId, medicationName);
-    const medicationId = crypto.randomUUID();
+    const warnings = await runInteractionAndDuplicateCheck(patientId, medicationName);
     const initialScheduledAt = startAt ? new Date(startAt) : new Date();
-    const initialDose = createInitialDose(medicationId, initialScheduledAt);
 
-    const medication = {
-        id: medicationId,
-        patientId,
-        medicationName,
-        dosage,
-        route,
-        frequencyRRule: normalizedRRule,
-        prescribingDoctor,
-        refillQuantity: Number(refillQuantity),
-        createdBy: currentUser.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-
-    medications.set(medicationId, medication);
-    indexMedicationForPatient(patientId, medicationId);
-    medicationDoses.set(medicationId, [initialDose]);
+    const medication = await prisma.medication.create({
+        data: {
+            patientId,
+            medicationName,
+            dosage,
+            route,
+            frequencyRRule: normalizedRRule,
+            prescribingDoctor,
+            refillQuantity: Number(refillQuantity),
+            createdById: currentUser.id,
+            doses: {
+                create: {
+                    scheduledAt: initialScheduledAt,
+                    state: DOSE_STATES.SCHEDULED,
+                }
+            }
+        },
+        include: {
+            doses: true
+        }
+    });
 
     return {
         medication,
         warnings,
-        initialDose,
+        initialDose: medication.doses[0],
         notes: [
             "Interaction/duplicate checks are local rules now; replace with RxNorm/OpenFDA API integration.",
         ],
@@ -185,46 +161,59 @@ const listMedicationService = async (patientId) => {
         throw new Error("patientId is required");
     }
 
-    const result = getPatientMedicationIds(patientId)
-        .map((medicationId) => medications.get(medicationId))
-        .filter(Boolean)
-        .map((medication) => ({
-            ...medication,
-            doses: medicationDoses.get(medication.id) || [],
-        }));
+    const result = await prisma.medication.findMany({
+        where: { patientId, active: true },
+        include: {
+            doses: {
+                orderBy: { scheduledAt: 'asc' }
+            }
+        },
+        orderBy: { createdAt: 'desc' }
+    });
 
-    return result;
+    // Frontend expects dose.state to be lowercase for matching Badge Variants
+    return result.map(m => ({
+        ...m,
+        doses: m.doses.map(d => ({ ...d, state: d.state.toLowerCase() }))
+    }));
 };
 
 const scheduleNextDoseService = async (medicationId) => {
-    const medication = medications.get(medicationId);
+    const medication = await prisma.medication.findUnique({
+        where: { id: medicationId },
+        include: { doses: { orderBy: { scheduledAt: 'desc' }, take: 1 } }
+    });
+
     if (!medication) {
         throw new Error("Medication not found");
     }
 
-    const doses = medicationDoses.get(medicationId) || [];
-    const latestDose = doses[doses.length - 1];
-    const nextScheduledAt = computeNextDoseAt(medication.frequencyRRule, latestDose ? new Date(latestDose.scheduledAt) : new Date());
-    const newDose = createInitialDose(medicationId, nextScheduledAt);
+    const latestDose = medication.doses[0];
+    const nextScheduledAt = computeNextDoseAt(
+        medication.frequencyRRule, 
+        latestDose ? new Date(latestDose.scheduledAt) : new Date()
+    );
 
-    doses.push(newDose);
-    medicationDoses.set(medicationId, doses);
+    const newDose = await prisma.medicationDose.create({
+        data: {
+            medicationId,
+            scheduledAt: nextScheduledAt,
+            state: DOSE_STATES.SCHEDULED,
+        }
+    });
 
-    return newDose;
+    return { ...newDose, state: newDose.state.toLowerCase() };
 };
 
 const acknowledgeDoseService = async (medicationId, doseId, payload) => {
     const { action, confirmationType, evidenceUrl, note } = payload;
-    const medication = medications.get(medicationId);
+    
+    const dose = await prisma.medicationDose.findUnique({
+        where: { id: doseId }
+    });
 
-    if (!medication) {
-        throw new Error("Medication not found");
-    }
-
-    const doses = medicationDoses.get(medicationId) || [];
-    const dose = doses.find((item) => item.id === doseId);
-    if (!dose) {
-        throw new Error("Dose not found");
+    if (!dose || dose.medicationId !== medicationId) {
+        throw new Error("Dose not found for this medication");
     }
 
     let nextState = null;
@@ -242,64 +231,73 @@ const acknowledgeDoseService = async (medicationId, doseId, payload) => {
         throw new Error(`Invalid dose state transition: ${dose.state} -> ${nextState}`);
     }
 
-    dose.state = nextState;
-    dose.updatedAt = new Date();
+    const updateData = {
+        state: nextState,
+    };
 
     if (nextState === DOSE_STATES.CONFIRMED_TAKEN || nextState === DOSE_STATES.CONFIRMED_SKIPPED) {
-        dose.acknowledgement = {
-            confirmedAt: new Date(),
-            confirmationType: confirmationType || "tap",
-            evidenceUrl: evidenceUrl || null,
-            note: note || null,
-        };
+        updateData.acknowledgedAt = new Date();
+        updateData.confirmationType = confirmationType ? confirmationType.toUpperCase() : "TAP";
+        updateData.evidenceUrl = evidenceUrl || null;
+        updateData.note = note || null;
     }
 
-    return dose;
+    const updatedDose = await prisma.medicationDose.update({
+        where: { id: doseId },
+        data: updateData
+    });
+
+    return { ...updatedDose, state: updatedDose.state.toLowerCase() };
 };
 
 const escalateDoseService = async (medicationId, doseId) => {
-    const medication = medications.get(medicationId);
-    if (!medication) {
-        throw new Error("Medication not found");
+    const dose = await prisma.medicationDose.findUnique({
+        where: { id: doseId }
+    });
+
+    if (!dose || dose.medicationId !== medicationId) {
+        throw new Error("Dose not found for this medication");
     }
 
-    const doses = medicationDoses.get(medicationId) || [];
-    const dose = doses.find((item) => item.id === doseId);
-    if (!dose) {
-        throw new Error("Dose not found");
-    }
+    let nextState = null;
+    let escalationStep = dose.escalationStep;
+    let channel = "push";
 
     if (dose.state === DOSE_STATES.SCHEDULED) {
-        dose.state = DOSE_STATES.NOTIFIED;
-        dose.escalationStep = 1;
-        dose.updatedAt = new Date();
-        return { dose, channel: "push" };
+        nextState = DOSE_STATES.NOTIFIED;
+        escalationStep = 1;
+        channel = "push";
+    } else if (dose.state === DOSE_STATES.NOTIFIED) {
+        nextState = DOSE_STATES.MISSED;
+        escalationStep = 2;
+        channel = "sms";
+    } else if (dose.state === DOSE_STATES.MISSED) {
+        nextState = DOSE_STATES.ESCALATED;
+        escalationStep = 3;
+        channel = "caregiver_call";
+    } else {
+        throw new Error(`Dose in state ${dose.state} cannot be escalated`);
     }
 
-    if (dose.state === DOSE_STATES.NOTIFIED) {
-        dose.state = DOSE_STATES.MISSED;
-        dose.escalationStep = 2;
-        dose.updatedAt = new Date();
-        return { dose, channel: "sms" };
-    }
+    const updatedDose = await prisma.medicationDose.update({
+        where: { id: doseId },
+        data: { state: nextState, escalationStep }
+    });
 
-    if (dose.state === DOSE_STATES.MISSED) {
-        dose.state = DOSE_STATES.ESCALATED;
-        dose.escalationStep = 3;
-        dose.updatedAt = new Date();
-        return { dose, channel: "caregiver_call" };
-    }
-
-    throw new Error(`Dose in state ${dose.state} cannot be escalated`);
+    return { dose: { ...updatedDose, state: updatedDose.state.toLowerCase() }, channel };
 };
 
 const getRefillPredictionService = async (medicationId) => {
-    const medication = medications.get(medicationId);
+    const medication = await prisma.medication.findUnique({
+        where: { id: medicationId },
+        include: { doses: true }
+    });
+
     if (!medication) {
         throw new Error("Medication not found");
     }
 
-    const doses = medicationDoses.get(medicationId) || [];
+    const doses = medication.doses;
     const takenCount = doses.filter((dose) => dose.state === DOSE_STATES.CONFIRMED_TAKEN).length;
 
     const daysCovered = Math.max(1, Math.ceil(doses.length / 3));
@@ -321,8 +319,12 @@ const getRefillPredictionService = async (medicationId) => {
 };
 
 const getAdherenceAnalyticsService = async (patientId) => {
-    const patientMedicationIds = getPatientMedicationIds(patientId);
-    const allDoses = patientMedicationIds.flatMap((medicationId) => medicationDoses.get(medicationId) || []);
+    const medications = await prisma.medication.findMany({
+        where: { patientId, active: true },
+        include: { doses: true }
+    });
+
+    const allDoses = medications.flatMap((medication) => medication.doses || []);
 
     const scheduled = allDoses.length;
     const taken = allDoses.filter((dose) => dose.state === DOSE_STATES.CONFIRMED_TAKEN).length;
