@@ -9,6 +9,29 @@ const createCareCircleService = async (payload, user) => {
     throw new Error("Name and patientId are required");
   }
 
+  const trimmedName = name.trim();
+  const existingCircle = await prisma.careCircle.findFirst({
+    where: {
+      name: { equals: trimmedName, mode: 'insensitive' },
+      patientId,
+      ownerId: user.id,
+    },
+    include: {
+      memberships: {
+        include: {
+          role: true,
+          user: true,
+        },
+      },
+    },
+  });
+
+  if (existingCircle) {
+    const error = new Error(`Care circle "${trimmedName}" already exists for this patient`);
+    error.statusCode = 409;
+    throw error;
+  }
+
   // Prepare memberships list
   const membershipsToCreate = [
     {

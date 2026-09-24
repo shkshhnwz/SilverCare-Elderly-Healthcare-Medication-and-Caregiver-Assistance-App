@@ -82,34 +82,43 @@ class _VitalsScreenState extends State<VitalsScreen> {
     await _load();
   }
 
-  Future<void> _handleLog() async {
+  Future<void> _handleLog([StateSetter? setModalState]) async {
+    if (_logLoading) return;
+    final auth = context.read<AuthProvider>();
+    final vc = _vitalConfigs.firstWhere((v) => v.type == _selectedVital);
+    final payload = <String, dynamic>{
+      'patientId': auth.activePatientId,
+      'vitalType': _selectedVital,
+      'source': 'MANUAL',
+      'unit': vc.unit,
+      'recordedAt': DateTime.now().toIso8601String(),
+    };
+    if (_selectedVital == 'BLOOD_PRESSURE') {
+      if (_systolicCtrl.text.trim().isEmpty || _diastolicCtrl.text.trim().isEmpty) {
+        context.showToast('Enter systolic and diastolic', type: ToastType.error);
+        return;
+      }
+      payload['systolic'] = num.tryParse(_systolicCtrl.text.trim());
+      payload['diastolic'] = num.tryParse(_diastolicCtrl.text.trim());
+      if (payload['systolic'] == null || payload['diastolic'] == null) {
+        context.showToast('Enter valid numbers', type: ToastType.error);
+        return;
+      }
+    } else {
+      if (_valueCtrl.text.trim().isEmpty) {
+        context.showToast('Enter a value', type: ToastType.error);
+        return;
+      }
+      payload['value'] = num.tryParse(_valueCtrl.text.trim());
+      if (payload['value'] == null) {
+        context.showToast('Enter a valid number', type: ToastType.error);
+        return;
+      }
+    }
+
+    setModalState?.call(() => _logLoading = true);
     setState(() => _logLoading = true);
     try {
-      final auth = context.read<AuthProvider>();
-      final vc = _vitalConfigs.firstWhere((v) => v.type == _selectedVital);
-      final payload = <String, dynamic>{
-        'patientId': auth.activePatientId,
-        'vitalType': _selectedVital,
-        'source': 'MANUAL',
-        'unit': vc.unit,
-        'recordedAt': DateTime.now().toIso8601String(),
-      };
-      if (_selectedVital == 'BLOOD_PRESSURE') {
-        if (_systolicCtrl.text.isEmpty || _diastolicCtrl.text.isEmpty) {
-          context.showToast('Enter systolic and diastolic', type: ToastType.error);
-          setState(() => _logLoading = false);
-          return;
-        }
-        payload['systolic'] = num.parse(_systolicCtrl.text);
-        payload['diastolic'] = num.parse(_diastolicCtrl.text);
-      } else {
-        if (_valueCtrl.text.isEmpty) {
-          context.showToast('Enter a value', type: ToastType.error);
-          setState(() => _logLoading = false);
-          return;
-        }
-        payload['value'] = num.parse(_valueCtrl.text);
-      }
       await _api.post('/api/vitals/readings', data: payload);
       if (mounted) {
         context.showToast('Vital reading logged!', type: ToastType.success);
@@ -122,7 +131,10 @@ class _VitalsScreenState extends State<VitalsScreen> {
     } catch (e) {
       if (mounted) context.showToast('Failed to log reading', type: ToastType.error);
     } finally {
-      if (mounted) setState(() => _logLoading = false);
+      if (mounted) {
+        setModalState?.call(() => _logLoading = false);
+        setState(() => _logLoading = false);
+      }
     }
   }
 
@@ -420,8 +432,9 @@ class _VitalsScreenState extends State<VitalsScreen> {
                   ),
                 AppButton(
                   label: 'Log Reading',
-                  onPressed: _handleLog,
+                  onPressed: () => _handleLog(setModalState),
                   loading: _logLoading,
+                  disabled: _logLoading,
                   fullWidth: true,
                   margin: const EdgeInsets.only(top: 8),
                 ),

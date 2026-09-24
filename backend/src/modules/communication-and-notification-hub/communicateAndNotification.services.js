@@ -1,4 +1,5 @@
 const prisma = require("../../config/prisma");
+const { sendPushToUsers } = require("../../config/firebase");
 
 /**
  * 1. Publish to Unified Activity Feed (Cross-Module Event Bus)
@@ -134,6 +135,13 @@ const routeNotificationService = async (userId, notification) => {
 
   // 1. Push Notification (FCM / APNs)
   if (!prefs || prefs.pushEnabled) {
+    if (prefs?.devicePushToken) {
+      sendPushToUsers([userId], {
+        title,
+        body,
+        data: { severity, type: "SYSTEM_NOTIFICATION" },
+      }).catch((err) => console.error("[FCM Push Route Error]:", err.message));
+    }
     channelsDispatched.push({
       channel: "PUSH",
       status: "SENT",

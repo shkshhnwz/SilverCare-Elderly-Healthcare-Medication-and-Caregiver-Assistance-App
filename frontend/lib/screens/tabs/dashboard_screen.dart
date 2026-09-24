@@ -55,12 +55,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (_alerts.length > 5) _alerts = _alerts.sublist(0, 5);
       });
     });
-    _socket.on('emergency_triggered', (_) {
+    _socket.on('emergency_triggered', (data) {
       if (!mounted) return;
+      final patientName = (data is Map && data['patientName'] != null)
+          ? data['patientName']
+          : 'Care recipient';
       setState(() {
-        _alerts.insert(0, '🚨 Emergency SOS triggered!');
+        _alerts.insert(0, '🚨 Emergency SOS triggered by $patientName!');
         if (_alerts.length > 5) _alerts = _alerts.sublist(0, 5);
       });
+      context.showToast('🚨 SOS ALERT: $patientName triggered an emergency!', type: ToastType.error);
     });
     _socket.on('medication_missed', (data) {
       if (!mounted) return;

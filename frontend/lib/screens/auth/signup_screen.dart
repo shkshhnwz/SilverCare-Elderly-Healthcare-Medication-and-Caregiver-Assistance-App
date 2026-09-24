@@ -1,5 +1,5 @@
 // lib/screens/auth/signup_screen.dart
-// Signup screen — ported from signup.tsx
+// Signup screen — registration with compulsory contact number and password
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +22,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _loading = false;
 
   @override
@@ -30,16 +32,43 @@ class _SignupScreenState extends State<SignupScreen> {
     _lastNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   Future<void> _handleSignup() async {
-    if (_firstNameController.text.trim().isEmpty || _lastNameController.text.trim().isEmpty) {
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
+    final phone = _phoneController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (firstName.isEmpty || lastName.isEmpty) {
       context.showToast('First and last name are required', type: ToastType.error);
       return;
     }
-    if (_emailController.text.trim().isEmpty && _phoneController.text.trim().isEmpty) {
-      context.showToast('Please provide an email or phone number', type: ToastType.error);
+
+    // Contact number is strictly compulsory
+    if (phone.isEmpty) {
+      context.showToast('Contact number is compulsory', type: ToastType.error);
+      return;
+    }
+
+    // Password validations
+    if (password.isEmpty) {
+      context.showToast('Password is required', type: ToastType.error);
+      return;
+    }
+
+    if (password.length < 6) {
+      context.showToast('Password must be at least 6 characters', type: ToastType.error);
+      return;
+    }
+
+    if (password != confirmPassword) {
+      context.showToast('Passwords do not match', type: ToastType.error);
       return;
     }
 
@@ -47,21 +76,18 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
       final auth = context.read<AuthProvider>();
       await auth.signup(
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
-        email: _emailController.text.trim().isNotEmpty
-            ? _emailController.text.trim().toLowerCase()
-            : null,
-        phone: _phoneController.text.trim().isNotEmpty
-            ? _phoneController.text.trim()
-            : null,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        password: password,
+        email: email.isNotEmpty ? email : null,
       );
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/home');
       }
     } on DioException catch (e) {
       if (mounted) {
-        final msg = e.response?.data['message'] ?? 'Signup failed. Please try again.';
+        final msg = e.response?.data?['message'] ?? 'Signup failed. Please try again.';
         context.showToast(msg, type: ToastType.error);
       }
     } catch (e) {
@@ -123,7 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Text('Create Account',
                         style: AppTypography.bodyBold(size: AppTypography.xl)),
                     const SizedBox(height: 4),
-                    Text('Tell us about yourself',
+                    Text('Fill in your details below',
                         style: AppTypography.body(
                             size: AppTypography.sm, color: AppColors.textMuted)),
                     const SizedBox(height: AppSpacing.lg),
@@ -133,7 +159,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         Expanded(
                           child: AppInput(
-                            label: 'First Name',
+                            label: 'First Name *',
                             placeholder: 'John',
                             controller: _firstNameController,
                             icon: Icons.person_outline,
@@ -142,7 +168,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: AppInput(
-                            label: 'Last Name',
+                            label: 'Last Name *',
                             placeholder: 'Doe',
                             controller: _lastNameController,
                           ),
@@ -150,27 +176,42 @@ class _SignupScreenState extends State<SignupScreen> {
                       ],
                     ),
 
+                    // Compulsory Phone Number
                     AppInput(
-                      label: 'Email Address',
+                      label: 'Contact Number * (Compulsory)',
+                      placeholder: '+1 234 567 8900',
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      icon: Icons.call_outlined,
+                    ),
+
+                    // Optional Email Address
+                    AppInput(
+                      label: 'Email Address (Optional)',
                       placeholder: 'your@email.com',
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       icon: Icons.mail_outline,
                     ),
 
-                    Center(
-                      child: Text('— or —',
-                          style: AppTypography.body(
-                              size: AppTypography.xs, color: AppColors.textMuted)),
-                    ),
-                    const SizedBox(height: 4),
-
+                    // Compulsory Password
                     AppInput(
-                      label: 'Phone Number',
-                      placeholder: '+1 234 567 8900',
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      icon: Icons.call_outlined,
+                      label: 'Password * (Min 6 chars)',
+                      placeholder: 'Create a password',
+                      controller: _passwordController,
+                      obscureText: true,
+                      secureToggle: true,
+                      icon: Icons.lock_outline,
+                    ),
+
+                    // Confirm Password
+                    AppInput(
+                      label: 'Confirm Password *',
+                      placeholder: 'Confirm your password',
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                      secureToggle: true,
+                      icon: Icons.lock_outline,
                     ),
 
                     AppButton(

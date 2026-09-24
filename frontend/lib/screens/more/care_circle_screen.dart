@@ -26,6 +26,7 @@ class _CareCircleScreenState extends State<CareCircleScreen> {
   List<dynamic> _invitations = [];
   bool _loading = true;
   bool _createLoading = false;
+  bool _inviteLoading = false;
 
   final _circleNameCtrl = TextEditingController();
   final _inviteEmailCtrl = TextEditingController();
@@ -61,16 +62,25 @@ class _CareCircleScreenState extends State<CareCircleScreen> {
     }
   }
 
-  Future<void> _createCircle(BuildContext modalContext, {bool patientCoOwn = false}) async {
-    if (_circleNameCtrl.text.trim().isEmpty) {
+  Future<void> _createCircle(
+    BuildContext modalContext,
+    StateSetter setModalState, {
+    bool patientCoOwn = false,
+  }) async {
+    if (_createLoading) return;
+    final name = _circleNameCtrl.text.trim();
+    if (name.isEmpty) {
       context.showToast('Enter a circle name', type: ToastType.error);
       return;
     }
+
+    setModalState(() => _createLoading = true);
     setState(() => _createLoading = true);
+
     try {
       final user = context.read<AuthProvider>().user;
       await _api.post('/api/care-circles', data: {
-        'name': _circleNameCtrl.text.trim(),
+        'name': name,
         'patientId': user!.id,
         'patientCoOwn': patientCoOwn,
       });
@@ -78,23 +88,41 @@ class _CareCircleScreenState extends State<CareCircleScreen> {
         context.showToast('Care circle created!', type: ToastType.success);
         _circleNameCtrl.clear();
         Navigator.pop(modalContext);
+        context.read<AuthProvider>().fetchUserCircles();
         _load();
       }
     } catch (e) {
-      if (mounted) context.showToast('Failed to create circle', type: ToastType.error);
+      if (mounted) {
+        final errMsg = e.toString().contains('already exists')
+            ? 'A care circle with this name already exists'
+            : 'Failed to create circle';
+        context.showToast(errMsg, type: ToastType.error);
+      }
     } finally {
-      if (mounted) setState(() => _createLoading = false);
+      if (mounted) {
+        setModalState(() => _createLoading = false);
+        setState(() => _createLoading = false);
+      }
     }
   }
 
-  Future<void> _sendInvite(BuildContext modalContext, String circleId, String roleName) async {
-    if (_inviteEmailCtrl.text.trim().isEmpty) {
+  Future<void> _sendInvite(
+    BuildContext modalContext,
+    StateSetter setModalState,
+    String circleId,
+    String roleName,
+  ) async {
+    if (_inviteLoading) return;
+    final email = _inviteEmailCtrl.text.trim();
+    if (email.isEmpty) {
       context.showToast('Enter an email or phone', type: ToastType.error);
       return;
     }
+    setModalState(() => _inviteLoading = true);
+    setState(() => _inviteLoading = true);
     try {
       await _api.post('/api/care-circles/$circleId/invitations', data: {
-        'email': _inviteEmailCtrl.text.trim(),
+        'email': email,
         'roleName': roleName,
       });
       if (mounted) {
@@ -104,6 +132,11 @@ class _CareCircleScreenState extends State<CareCircleScreen> {
       }
     } catch (e) {
       if (mounted) context.showToast('Failed to send invite', type: ToastType.error);
+    } finally {
+      if (mounted) {
+        setModalState(() => _inviteLoading = false);
+        setState(() => _inviteLoading = false);
+      }
     }
   }
 
@@ -397,8 +430,9 @@ class _CareCircleScreenState extends State<CareCircleScreen> {
               const SizedBox(height: 12),
               AppButton(
                 label: 'Create',
-                onPressed: () => _createCircle(ctx, patientCoOwn: patientCoOwn),
+                onPressed: () => _createCircle(ctx, setModalState, patientCoOwn: patientCoOwn),
                 loading: _createLoading,
+                disabled: _createLoading,
                 fullWidth: true,
               ),
             ],
@@ -468,7 +502,9 @@ class _CareCircleScreenState extends State<CareCircleScreen> {
               const SizedBox(height: 24),
               AppButton(
                 label: 'Send Invitation',
-                onPressed: () => _sendInvite(ctx, circleId, selectedRole),
+                onPressed: () => _sendInvite(ctx, setModalState, circleId, selectedRole),
+                loading: _inviteLoading,
+                disabled: _inviteLoading,
                 fullWidth: true,
               ),
             ],

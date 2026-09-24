@@ -54,11 +54,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
-  Future<void> _createAppointment() async {
+  Future<void> _createAppointment([StateSetter? setModalState]) async {
+    if (_createLoading) return;
     if (_titleCtrl.text.trim().isEmpty || _doctorCtrl.text.trim().isEmpty) {
       context.showToast('Enter title and doctor name', type: ToastType.error);
       return;
     }
+    setModalState?.call(() => _createLoading = true);
     setState(() => _createLoading = true);
     try {
       final auth = context.read<AuthProvider>();
@@ -81,7 +83,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     } catch (e) {
       if (mounted) context.showToast('Failed', type: ToastType.error);
     } finally {
-      if (mounted) setState(() => _createLoading = false);
+      if (mounted) {
+        setModalState?.call(() => _createLoading = false);
+        setState(() => _createLoading = false);
+      }
     }
   }
 
@@ -159,17 +164,26 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.background,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(AppSpacing.base, 16, AppSpacing.base, MediaQuery.of(ctx).viewInsets.bottom + 24),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('New Appointment', style: AppTypography.bodyBold(size: AppTypography.lg)),
-          const SizedBox(height: 16),
-          AppInput(label: 'Title', placeholder: 'e.g., Cardiology Checkup', controller: _titleCtrl, icon: Icons.calendar_today),
-          AppInput(label: 'Doctor Name', placeholder: 'e.g., Dr. Smith', controller: _doctorCtrl, icon: Icons.person_outline),
-          AppInput(label: 'Location', placeholder: 'e.g., City Hospital', controller: _locationCtrl, icon: Icons.location_on_outlined),
-          AppButton(label: 'Create', onPressed: _createAppointment, loading: _createLoading, fullWidth: true),
-        ]),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => Padding(
+          padding: EdgeInsets.fromLTRB(AppSpacing.base, 16, AppSpacing.base, MediaQuery.of(ctx).viewInsets.bottom + 24),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text('New Appointment', style: AppTypography.bodyBold(size: AppTypography.lg)),
+            const SizedBox(height: 16),
+            AppInput(label: 'Title', placeholder: 'e.g., Cardiology Checkup', controller: _titleCtrl, icon: Icons.calendar_today),
+            AppInput(label: 'Doctor Name', placeholder: 'e.g., Dr. Smith', controller: _doctorCtrl, icon: Icons.person_outline),
+            AppInput(label: 'Location', placeholder: 'e.g., City Hospital', controller: _locationCtrl, icon: Icons.location_on_outlined),
+            AppButton(
+              label: 'Create',
+              onPressed: () => _createAppointment(setModalState),
+              loading: _createLoading,
+              disabled: _createLoading,
+              fullWidth: true,
+            ),
+          ]),
+        ),
       ),
     );
   }

@@ -66,12 +66,17 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
     }
   }
 
-  Future<void> _createTask() async {
-    if (_taskTitleCtrl.text.trim().isEmpty) {
+  bool _taskLoading = false;
+
+  Future<void> _createTask([StateSetter? setModalState]) async {
+    if (_taskLoading) return;
+    final title = _taskTitleCtrl.text.trim();
+    if (title.isEmpty) {
       context.showToast('Enter task title', type: ToastType.error);
       return;
     }
-    setState(() => _loading = true);
+    setModalState?.call(() => _taskLoading = true);
+    setState(() => _taskLoading = true);
     try {
       final auth = context.read<AuthProvider>();
       
@@ -87,7 +92,7 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
       await _api.post('/api/care-plans/tasks', data: {
         'carePlanId': _plan['id'],
         'patientId': auth.activePatientId,
-        'title': _taskTitleCtrl.text.trim(),
+        'title': title,
         'dueWindowStart': now.toIso8601String(),
         'dueWindowEnd': now.add(const Duration(hours: 24)).toIso8601String(),
         'category': 'GENERAL',
@@ -100,8 +105,12 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _loading = false);
         context.showToast('Failed to create task', type: ToastType.error);
+      }
+    } finally {
+      if (mounted) {
+        setModalState?.call(() => _taskLoading = false);
+        setState(() => _taskLoading = false);
       }
     }
   }
@@ -112,33 +121,41 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
       backgroundColor: AppColors.background,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(AppSpacing.base, 16, AppSpacing.base, MediaQuery.of(ctx).viewInsets.bottom + 24),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text('New Task', style: AppTypography.bodyBold(size: AppTypography.lg)),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _taskTitleCtrl,
-            decoration: InputDecoration(
-              labelText: 'Task Title',
-              hintText: 'e.g., Check Blood Sugar',
-              prefixIcon: const Icon(Icons.assignment),
-              filled: true,
-              fillColor: AppColors.surface,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => Padding(
+          padding: EdgeInsets.fromLTRB(AppSpacing.base, 16, AppSpacing.base, MediaQuery.of(ctx).viewInsets.bottom + 24),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text('New Task', style: AppTypography.bodyBold(size: AppTypography.lg)),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _taskTitleCtrl,
+              decoration: InputDecoration(
+                labelText: 'Task Title',
+                hintText: 'e.g., Check Blood Sugar',
+                prefixIcon: const Icon(Icons.assignment),
+                filled: true,
+                fillColor: AppColors.surface,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              minimumSize: const Size(double.infinity, 48),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                minimumSize: const Size(double.infinity, 48),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: _taskLoading ? null : () => _createTask(setModalState),
+              child: _taskLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : Text('Add Task', style: AppTypography.bodyBold(color: Colors.white)),
             ),
-            onPressed: _createTask,
-            child: Text('Add Task', style: AppTypography.bodyBold(color: Colors.white)),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

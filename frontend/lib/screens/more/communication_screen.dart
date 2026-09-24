@@ -39,11 +39,14 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
     super.dispose();
   }
 
+  bool _sendLoading = false;
+
   Future<void> _load() async {
-    final user = context.read<AuthProvider>().user;
-    if (user == null) return;
+    final auth = context.read<AuthProvider>();
+    final patientId = auth.activePatientId;
+    if (patientId.isEmpty) return;
     try {
-      final res = await _api.get('/api/activity/patients/${user.id}');
+      final res = await _api.get('/api/communication-hub/patients/$patientId/timeline');
       if (mounted) setState(() { _feed = res.data ?? []; _loading = false; });
     } catch (_) {
       if (mounted) setState(() => _loading = false);
@@ -51,17 +54,24 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
   }
 
   Future<void> _sendMessage() async {
-    if (_messageCtrl.text.trim().isEmpty) return;
+    if (_sendLoading) return;
+    final text = _messageCtrl.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() => _sendLoading = true);
     try {
-      final user = context.read<AuthProvider>().user;
-      await _api.post('/api/activity/message', data: {
-        'patientId': user!.id,
-        'message': _messageCtrl.text.trim(),
+      final auth = context.read<AuthProvider>();
+      final patientId = auth.activePatientId;
+      await _api.post('/api/communication-hub/chat/messages', data: {
+        'patientId': patientId,
+        'content': text,
       });
       _messageCtrl.clear();
       _load();
     } catch (e) {
       if (mounted) context.showToast('Failed to send', type: ToastType.error);
+    } finally {
+      if (mounted) setState(() => _sendLoading = false);
     }
   }
 

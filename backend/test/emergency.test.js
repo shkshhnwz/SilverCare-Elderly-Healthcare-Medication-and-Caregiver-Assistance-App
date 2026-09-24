@@ -71,6 +71,12 @@ async function runEmergencyTestSuite() {
       await prisma.escalationTier.deleteMany({
         where: { policy: { patientId: { in: userIds } } },
       });
+      await prisma.careCircleMember.deleteMany({
+        where: { OR: [{ userId: { in: userIds } }, { circle: { patientId: { in: userIds } } }] },
+      });
+      await prisma.careCircle.deleteMany({
+        where: { OR: [{ patientId: { in: userIds } }, { ownerId: { in: userIds } }] },
+      });
       await prisma.emergencyEscalationPolicy.deleteMany({ where: { patientId: { in: userIds } } });
       await prisma.user.deleteMany({ where: { id: { in: userIds } } });
     }

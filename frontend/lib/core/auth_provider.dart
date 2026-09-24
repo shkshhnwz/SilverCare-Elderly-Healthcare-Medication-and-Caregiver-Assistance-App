@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'api_client.dart';
 import 'socket_service.dart';
 import 'config.dart';
+import 'notification_service.dart';
 
 class User {
   final String id;
@@ -82,6 +83,7 @@ class AuthProvider extends ChangeNotifier {
         _user = User.fromJson(jsonDecode(storedUser));
         _socket.connect(storedToken);
         await fetchUserCircles();
+        NotificationService.syncDeviceToken(_api);
       }
     } catch (_) {
       // Silent fail — user will need to re-login
@@ -98,6 +100,7 @@ class AuthProvider extends ChangeNotifier {
     _user = user;
     _socket.connect(token);
     await fetchUserCircles();
+    NotificationService.syncDeviceToken(_api);
     notifyListeners();
   }
 
@@ -139,20 +142,47 @@ class AuthProvider extends ChangeNotifier {
       _activePatientId = _user!.id;
       _activeRole = 'OWNER';
     }
+    _syncSocketRooms();
     notifyListeners();
+  }
+
+  void _syncSocketRooms() {
+    if (_user == null) return;
+    final Set<String> patientIdsToJoin = {};
+    if (_user!.id.isNotEmpty) {
+      patientIdsToJoin.add(_user!.id);
+    }
+    if (_activePatientId != null && _activePatientId!.isNotEmpty) {
+      patientIdsToJoin.add(_activePatientId!);
+    }
+    for (final circle in _availableCircles) {
+      final pid = circle['patientId']?.toString();
+      if (pid != null && pid.isNotEmpty) {
+        patientIdsToJoin.add(pid);
+      }
+    }
+    for (final pid in patientIdsToJoin) {
+      _socket.joinCareCircle(pid);
+    }
   }
 
   void switchPatient(String patientId, String role) async {
     _activePatientId = patientId;
     _activeRole = role;
     await _storage.write(key: 'activePatientId', value: patientId);
+    _syncSocketRooms();
     notifyListeners();
   }
 
-  Future<void> login({String? email, String? phone}) async {
+  Future<void> login({
+    String? email,
+    String? phone,
+    required String password,
+  }) async {
     final res = await _api.post('/api/auth/login', data: {
-      if (email != null) 'email': email,
-      if (phone != null) 'phone': phone,
+      if (email != null && email.isNotEmpty) 'email': email,
+      if (phone != null && phone.isNotEmpty) 'phone': phone,
+      'password': password,
     });
     final data = res.data;
     await _persist(data['token'], User.fromJson(data['user']));
@@ -161,20 +191,31 @@ class AuthProvider extends ChangeNotifier {
   Future<void> signup({
     required String firstName,
     required String lastName,
+    required String phone,
+    required String password,
     String? email,
-    String? phone,
   }) async {
     final res = await _api.post('/api/auth/signup', data: {
       'firstName': firstName,
       'lastName': lastName,
-      if (email != null) 'email': email,
-      if (phone != null) 'phone': phone,
+      'phone': phone,
+      'password': password,
+      if (email != null && email.isNotEmpty) 'email': email,
     });
     final data = res.data;
     await _persist(data['token'], User.fromJson(data['user']));
   }
 
   Future<void> logout() async {
+    for (final circle in _availableCircles) {
+      final pid = circle['patientId']?.toString();
+      if (pid != null && pid.isNotEmpty) {
+        _socket.leaveCareCircle(pid);
+      }
+    }
+    if (_user != null) {
+      _socket.leaveCareCircle(_user!.id);
+    }
     await _storage.delete(key: AppConfig.tokenKey);
     await _storage.delete(key: AppConfig.userKey);
     await _storage.delete(key: 'activePatientId');

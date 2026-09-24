@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "564774551654",
+    "project_id": "silvercare-50876",
+    "storage_bucket": "silvercare-50876.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564774551654:android:ee31fa6f344ef5f8d72da7",
+        "android_client_info": {
+          "package_name": "com.silvercare.silvercare_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7EoIvtI7nDrLUSyJzuQd6_AhY0M6_JQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

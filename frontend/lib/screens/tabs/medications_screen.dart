@@ -65,22 +65,26 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     await _load();
   }
 
-  Future<void> _handleAdd() async {
-    if (_nameCtrl.text.isEmpty || _dosageCtrl.text.isEmpty ||
-        _routeCtrl.text.isEmpty || _doctorCtrl.text.isEmpty) {
+  Future<void> _handleAdd([StateSetter? setModalState]) async {
+    if (_addLoading) return;
+    if (_nameCtrl.text.trim().isEmpty ||
+        _dosageCtrl.text.trim().isEmpty ||
+        _routeCtrl.text.trim().isEmpty ||
+        _doctorCtrl.text.trim().isEmpty) {
       context.showToast('Please fill all required fields', type: ToastType.error);
       return;
     }
+    setModalState?.call(() => _addLoading = true);
     setState(() => _addLoading = true);
     try {
       final auth = context.read<AuthProvider>();
       await _api.post('/api/medications', data: {
         'patientId': auth.activePatientId,
-        'medicationName': _nameCtrl.text,
-        'dosage': _dosageCtrl.text,
-        'route': _routeCtrl.text,
+        'medicationName': _nameCtrl.text.trim(),
+        'dosage': _dosageCtrl.text.trim(),
+        'route': _routeCtrl.text.trim(),
         'frequencyRRule': _selectedFreq,
-        'prescribingDoctor': _doctorCtrl.text,
+        'prescribingDoctor': _doctorCtrl.text.trim(),
         'refillQuantity': int.tryParse(_refillCtrl.text) ?? 30,
       });
       if (mounted) {
@@ -92,7 +96,10 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     } catch (e) {
       if (mounted) context.showToast('Failed to add medication', type: ToastType.error);
     } finally {
-      if (mounted) setState(() => _addLoading = false);
+      if (mounted) {
+        setModalState?.call(() => _addLoading = false);
+        setState(() => _addLoading = false);
+      }
     }
   }
 
@@ -371,79 +378,83 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.85,
-        maxChildSize: 0.95,
-        builder: (ctx, scrollController) => Padding(
-          padding: EdgeInsets.only(
-            left: AppSpacing.base,
-            right: AppSpacing.base,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom,
-          ),
-          child: ListView(
-            controller: scrollController,
-            children: [
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Add Medication', style: AppTypography.bodyBold(size: AppTypography.lg)),
-                  IconButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    icon: const Icon(Icons.close, color: AppColors.textSecondary),
-                  ),
-                ],
-              ),
-              const Divider(color: AppColors.surfaceBorder),
-              const SizedBox(height: 8),
-              AppInput(label: 'Medication Name *', placeholder: 'e.g., Metformin', controller: _nameCtrl, icon: Icons.medical_services_outlined),
-              AppInput(label: 'Dosage *', placeholder: 'e.g., 500mg', controller: _dosageCtrl),
-              AppInput(label: 'Route *', placeholder: 'e.g., Oral, Injection', controller: _routeCtrl),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 6.0, top: 4.0),
-                child: Text('Frequency *', style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceElevated,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.surfaceBorder),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.85,
+          maxChildSize: 0.95,
+          builder: (ctx, scrollController) => Padding(
+            padding: EdgeInsets.only(
+              left: AppSpacing.base,
+              right: AppSpacing.base,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom,
+            ),
+            child: ListView(
+              controller: scrollController,
+              children: [
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Add Medication', style: AppTypography.bodyBold(size: AppTypography.lg)),
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      icon: const Icon(Icons.close, color: AppColors.textSecondary),
+                    ),
+                  ],
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedFreq,
-                    isExpanded: true,
-                    dropdownColor: AppColors.surfaceElevated,
-                    icon: const Icon(Icons.arrow_drop_down, color: AppColors.textMuted),
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setState(() => _selectedFreq = newValue);
-                      }
-                    },
-                    items: const [
-                      DropdownMenuItem(value: 'FREQ=DAILY;INTERVAL=1', child: Text('Once Daily')),
-                      DropdownMenuItem(value: 'FREQ=DAILY;INTERVAL=1;BYHOUR=8,20', child: Text('Twice Daily')),
-                      DropdownMenuItem(value: 'FREQ=WEEKLY;INTERVAL=1', child: Text('Once a Week')),
-                      DropdownMenuItem(value: 'FREQ=MONTHLY;INTERVAL=1', child: Text('Once a Month')),
-                    ],
+                const Divider(color: AppColors.surfaceBorder),
+                const SizedBox(height: 8),
+                AppInput(label: 'Medication Name *', placeholder: 'e.g., Metformin', controller: _nameCtrl, icon: Icons.medical_services_outlined),
+                AppInput(label: 'Dosage *', placeholder: 'e.g., 500mg', controller: _dosageCtrl),
+                AppInput(label: 'Route *', placeholder: 'e.g., Oral, Injection', controller: _routeCtrl),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 6.0, top: 4.0),
+                  child: Text('Frequency *', style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceElevated,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.surfaceBorder),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedFreq,
+                      isExpanded: true,
+                      dropdownColor: AppColors.surfaceElevated,
+                      icon: const Icon(Icons.arrow_drop_down, color: AppColors.textMuted),
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setModalState(() => _selectedFreq = newValue);
+                          setState(() => _selectedFreq = newValue);
+                        }
+                      },
+                      items: const [
+                        DropdownMenuItem(value: 'FREQ=DAILY;INTERVAL=1', child: Text('Once Daily')),
+                        DropdownMenuItem(value: 'FREQ=DAILY;INTERVAL=1;BYHOUR=8,20', child: Text('Twice Daily')),
+                        DropdownMenuItem(value: 'FREQ=WEEKLY;INTERVAL=1', child: Text('Once a Week')),
+                        DropdownMenuItem(value: 'FREQ=MONTHLY;INTERVAL=1', child: Text('Once a Month')),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              AppInput(label: 'Prescribing Doctor *', placeholder: 'Dr. Smith', controller: _doctorCtrl, icon: Icons.person_outline),
-              AppInput(label: 'Refill Quantity', placeholder: '30', controller: _refillCtrl, keyboardType: TextInputType.number),
-              AppButton(
-                label: 'Add Medication',
-                onPressed: _handleAdd,
-                loading: _addLoading,
-                fullWidth: true,
-                margin: const EdgeInsets.only(top: 8),
-              ),
-              const SizedBox(height: 24),
-            ],
+                AppInput(label: 'Prescribing Doctor *', placeholder: 'Dr. Smith', controller: _doctorCtrl, icon: Icons.person_outline),
+                AppInput(label: 'Refill Quantity', placeholder: '30', controller: _refillCtrl, keyboardType: TextInputType.number),
+                AppButton(
+                  label: 'Add Medication',
+                  onPressed: () => _handleAdd(setModalState),
+                  loading: _addLoading,
+                  disabled: _addLoading,
+                  fullWidth: true,
+                  margin: const EdgeInsets.only(top: 8),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),

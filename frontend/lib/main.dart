@@ -19,9 +19,11 @@ import 'screens/more/appointments_screen.dart';
 import 'screens/more/communication_screen.dart';
 import 'screens/more/reports_screen.dart';
 import 'screens/more/settings_screen.dart';
+import 'core/notification_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.initialize();
   runApp(const SilverCareApp());
 }
 

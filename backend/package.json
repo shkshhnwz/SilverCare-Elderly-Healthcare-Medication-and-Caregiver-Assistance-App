@@ -17,7 +17,7 @@
     "test:care-plan": "node test/carePlan.test.js",
     "test:communication": "node test/communicationHub.test.js",
     "test:reporting": "node test/reporting.test.js",
-    "build" : "echo 'No build step required'"
+    "build": "echo 'No build step required'"
   },
   "keywords": [],
   "author": "",
@@ -25,9 +25,11 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "firebase-admin": "^14.5.0",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.11.0",

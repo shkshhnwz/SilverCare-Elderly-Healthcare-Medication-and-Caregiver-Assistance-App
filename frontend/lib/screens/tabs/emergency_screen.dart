@@ -55,20 +55,33 @@ class _EmergencyScreenState extends State<EmergencyScreen>
 
   void _setupSocket() {
     _socket.on('emergency_triggered', (data) {
-      if (mounted) setState(() => _activeEmergency = data);
+      if (!mounted) return;
+      final event = (data is Map && data['event'] != null)
+          ? data['event']
+          : (data is Map && data['emergency'] != null)
+              ? data['emergency']
+              : data;
+      setState(() => _activeEmergency = event);
+      if (_activeEmergency != null) {
+        _pulseController.repeat(reverse: true);
+      }
     });
     _socket.on('emergency_resolved', (_) {
-      if (mounted) setState(() => _activeEmergency = null);
+      if (!mounted) return;
+      setState(() => _activeEmergency = null);
+      _pulseController.stop();
     });
   }
 
   Future<void> _loadActive() async {
-    final user = context.read<AuthProvider>().user;
-    if (user == null) return;
+    final auth = context.read<AuthProvider>();
+    final patientId = auth.activePatientId;
+    if (patientId.isEmpty) return;
     try {
-      final res = await _api.get('/api/emergency/patients/${user.id}/active');
+      final res = await _api.get('/api/emergency/patients/$patientId/active');
       if (mounted) {
-        setState(() => _activeEmergency = res.data?['event']);
+        final event = res.data?['emergency'] ?? res.data?['event'];
+        setState(() => _activeEmergency = event);
         if (_activeEmergency != null) {
           _pulseController.repeat(reverse: true);
         } else {
@@ -85,6 +98,8 @@ class _EmergencyScreenState extends State<EmergencyScreen>
   }
 
   Future<void> _triggerSOS() async {
+    if (_sosLoading) return;
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -109,12 +124,15 @@ class _EmergencyScreenState extends State<EmergencyScreen>
     );
 
     if (confirm != true || !mounted) return;
+    if (_sosLoading) return;
 
     setState(() => _sosLoading = true);
     try {
-      final user = context.read<AuthProvider>().user;
+      final auth = context.read<AuthProvider>();
+      final patientId = auth.activePatientId;
       await _api.post('/api/emergency/trigger', data: {
-        'patientId': user!.id,
+        'patientId': patientId,
+        'eventType': 'ONE_TAP_SOS',
         'triggerType': 'MANUAL_SOS',
         'location': null,
       });
@@ -269,7 +287,9 @@ class _EmergencyScreenState extends State<EmergencyScreen>
             ),
             const SizedBox(height: 8),
             Text(
-                (_activeEmergency['triggerType'] ?? '').toString().replaceAll('_', ' '),
+                (_activeEmergency['eventType'] ?? _activeEmergency['triggerType'] ?? 'ONE TAP SOS')
+                    .toString()
+                    .replaceAll('_', ' '),
                 style: AppTypography.bodySemiBold()),
             const SizedBox(height: 4),
             Text(

@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
+import '../core/socket_service.dart';
+import '../widgets/app_toast.dart';
 import 'tabs/dashboard_screen.dart';
 import 'tabs/medications_screen.dart';
 import 'tabs/vitals_screen.dart';
@@ -18,6 +20,7 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
+  final SocketService _socket = SocketService();
 
   final _screens = const [
     DashboardScreen(),
@@ -26,6 +29,71 @@ class _AppShellState extends State<AppShell> {
     EmergencyScreen(),
     MoreScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _socket.on('emergency_triggered', _handleEmergencyAlert);
+    _socket.on('emergency_resolved', _handleEmergencyResolved);
+  }
+
+  @override
+  void dispose() {
+    _socket.off('emergency_triggered');
+    _socket.off('emergency_resolved');
+    super.dispose();
+  }
+
+  void _handleEmergencyAlert(dynamic data) {
+    if (!mounted) return;
+    final patientName = (data is Map && data['patientName'] != null)
+        ? data['patientName']
+        : 'A Care Circle Member';
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Row(
+          children: const [
+            Icon(Icons.warning_amber_rounded, color: AppColors.danger, size: 28),
+            SizedBox(width: 8),
+            Text('🚨 SOS ALERT',
+                style: TextStyle(
+                    color: AppColors.danger, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Text(
+          '$patientName has triggered an Emergency SOS! Please check immediately.',
+          style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Dismiss',
+                style: TextStyle(color: AppColors.textMuted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
+            onPressed: () {
+              Navigator.pop(ctx);
+              setState(() => _currentIndex = 3);
+            },
+            child: const Text('View Emergency',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleEmergencyResolved(dynamic data) {
+    if (!mounted) return;
+    context.showToast('Emergency has been resolved safely.',
+        type: ToastType.success);
+  }
 
   @override
   Widget build(BuildContext context) {

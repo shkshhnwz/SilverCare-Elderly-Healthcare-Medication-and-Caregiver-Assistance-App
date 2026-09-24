@@ -1,6 +1,5 @@
 // lib/screens/auth/login_screen.dart
-// Login screen — email or phone-based login
-// Ported from React Native login.tsx
+// Login screen — email or phone-based login with password verification
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,12 +21,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String _mode = 'email'; // 'email' | 'phone'
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _loading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _phoneController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -40,6 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
       context.showToast('Please enter your phone number', type: ToastType.error);
       return;
     }
+    if (_passwordController.text.trim().isEmpty) {
+      context.showToast('Please enter your password', type: ToastType.error);
+      return;
+    }
 
     setState(() => _loading = true);
     try {
@@ -47,16 +52,19 @@ class _LoginScreenState extends State<LoginScreen> {
       await auth.login(
         email: _mode == 'email' ? _emailController.text.trim().toLowerCase() : null,
         phone: _mode == 'phone' ? _phoneController.text.trim() : null,
+        password: _passwordController.text.trim(),
       );
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/home');
       }
+    } on DioException catch (e) {
+      if (mounted) {
+        final msg = e.response?.data?['message'] ?? 'Login failed. Please check your credentials.';
+        context.showToast(msg, type: ToastType.error);
+      }
     } catch (e) {
       if (mounted) {
-        final msg = e.toString().contains('message')
-            ? 'Login failed. Please try again.'
-            : 'Login failed. Please try again.';
-        context.showToast(msg, type: ToastType.error);
+        context.showToast('Login failed. Please check your credentials.', type: ToastType.error);
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -110,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildModeToggle(),
                     const SizedBox(height: AppSpacing.lg),
 
-                    // Input
+                    // Identifier input (Email or Phone)
                     if (_mode == 'email')
                       AppInput(
                         label: 'Email Address',
@@ -127,6 +135,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         keyboardType: TextInputType.phone,
                         icon: Icons.call_outlined,
                       ),
+
+                    // Password input
+                    AppInput(
+                      label: 'Password',
+                      placeholder: 'Enter your password',
+                      controller: _passwordController,
+                      obscureText: true,
+                      secureToggle: true,
+                      icon: Icons.lock_outline,
+                    ),
 
                     AppButton(
                       label: 'Sign In',
