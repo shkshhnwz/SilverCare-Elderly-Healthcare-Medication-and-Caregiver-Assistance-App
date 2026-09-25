@@ -12,6 +12,7 @@ import '../../widgets/app_badge.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_input.dart';
 import '../../widgets/app_toast.dart';
+import '../../core/location_service.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
@@ -158,7 +159,28 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                TextButton.icon(
+                  onPressed: () async {
+                    final pos = await LocationService.getCurrentPosition();
+                    if (pos != null) {
+                      setModalState(() {
+                        _latCtrl.text = pos.latitude.toStringAsFixed(6);
+                        _lngCtrl.text = pos.longitude.toStringAsFixed(6);
+                      });
+                      setState(() {
+                        _latCtrl.text = pos.latitude.toStringAsFixed(6);
+                        _lngCtrl.text = pos.longitude.toStringAsFixed(6);
+                      });
+                      context.showToast('Current GPS location captured!', type: ToastType.success);
+                    } else {
+                      context.showToast('Could not obtain current GPS location', type: ToastType.error);
+                    }
+                  },
+                  icon: const Icon(Icons.my_location, size: 16, color: AppColors.primary),
+                  label: const Text('Use My Current GPS Location',
+                      style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
+                ),
+                const SizedBox(height: 12),
                 AppButton(
                   label: 'Save Safe Zone',
                   onPressed: () => _createSafeZone(ctx, setModalState),

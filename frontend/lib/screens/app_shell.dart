@@ -4,6 +4,9 @@
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
 import '../core/socket_service.dart';
+import '../core/location_service.dart';
+import '../core/notification_service.dart';
+import '../core/api_client.dart';
 import '../widgets/app_toast.dart';
 import 'tabs/dashboard_screen.dart';
 import 'tabs/medications_screen.dart';
@@ -35,6 +38,8 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _socket.on('emergency_triggered', _handleEmergencyAlert);
     _socket.on('emergency_resolved', _handleEmergencyResolved);
+    LocationService.requestPermission();
+    NotificationService.syncDeviceToken(ApiClient());
   }
 
   @override

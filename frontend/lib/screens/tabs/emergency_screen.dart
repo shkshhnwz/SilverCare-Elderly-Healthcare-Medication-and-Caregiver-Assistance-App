@@ -12,6 +12,7 @@ import '../../widgets/app_card.dart';
 import '../../widgets/app_badge.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_toast.dart';
+import '../../core/location_service.dart';
 
 class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({super.key});
@@ -130,11 +131,14 @@ class _EmergencyScreenState extends State<EmergencyScreen>
     try {
       final auth = context.read<AuthProvider>();
       final patientId = auth.activePatientId;
+      final position = await LocationService.getCurrentPosition();
       await _api.post('/api/emergency/trigger', data: {
         'patientId': patientId,
         'eventType': 'ONE_TAP_SOS',
         'triggerType': 'MANUAL_SOS',
-        'location': null,
+        'latitude': position?.latitude,
+        'longitude': position?.longitude,
+        'accuracyMeters': position?.accuracy,
       });
       if (mounted) {
         context.showToast('🚨 Emergency SOS triggered! Care circle notified.',

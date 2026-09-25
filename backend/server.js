@@ -67,6 +67,7 @@ app.use('/api/appointments', AppointmentRoutes);
 app.use('/api/care-plans', CarePlanRoutes);
 app.use('/api/communication-hub', CommunicationHubRoutes);
 app.use('/api/communication', CommunicationHubRoutes);
+app.use('/communication', CommunicationHubRoutes);
 app.use('/api/activity', CommunicationHubRoutes);
 app.use('/api/reports', ReportingRoutes);
 

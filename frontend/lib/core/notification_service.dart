@@ -121,26 +121,49 @@ class NotificationService {
     try {
       final token = await FirebaseMessaging.instance.getToken();
       if (token != null && token.isNotEmpty) {
-        debugPrint('[FCM] Device Token: $token');
-        await apiClient.put(
-          '/communication/preferences',
-          data: {
-            'devicePushToken': token,
-            'pushEnabled': true,
-          },
-        );
+        debugPrint('[FCM] Syncing Device Token: $token');
+        try {
+          await apiClient.put(
+            '/api/communication/preferences',
+            data: {
+              'devicePushToken': token,
+              'pushEnabled': true,
+            },
+          );
+          debugPrint('[FCM] Successfully synced device token to backend.');
+        } catch (_) {
+          // Fallback if route prefix differs
+          await apiClient.put(
+            '/communication/preferences',
+            data: {
+              'devicePushToken': token,
+              'pushEnabled': true,
+            },
+          );
+          debugPrint('[FCM] Synced device token via fallback route.');
+        }
       }
 
       // Listen for token refreshes
       FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
         debugPrint('[FCM] Token refreshed: $newToken');
-        await apiClient.put(
-          '/communication/preferences',
-          data: {
-            'devicePushToken': newToken,
-            'pushEnabled': true,
-          },
-        );
+        try {
+          await apiClient.put(
+            '/api/communication/preferences',
+            data: {
+              'devicePushToken': newToken,
+              'pushEnabled': true,
+            },
+          );
+        } catch (_) {
+          await apiClient.put(
+            '/communication/preferences',
+            data: {
+              'devicePushToken': newToken,
+              'pushEnabled': true,
+            },
+          );
+        }
       });
     } catch (e) {
       debugPrint('[FCM Token Sync Warning]: $e');
