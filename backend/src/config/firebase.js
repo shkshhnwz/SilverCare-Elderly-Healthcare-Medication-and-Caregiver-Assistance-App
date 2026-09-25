@@ -107,13 +107,17 @@ const sendPushToUsers = async (userIds, { title, body, data = {} }) => {
         title,
         body,
       },
-      data: stringifiedData,
+      data: {
+        ...stringifiedData,
+        title: title || '',
+        body: body || '',
+      },
       android: {
         priority: "high",
         notification: {
           sound: "default",
           priority: "high",
-          channelId: "silvercare_alerts",
+          channelId: "silvercare_emergency_v2",
           defaultSound: true,
           defaultVibrateTimings: true,
         },

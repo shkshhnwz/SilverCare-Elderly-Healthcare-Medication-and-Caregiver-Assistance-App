@@ -41,6 +41,11 @@ class _AppShellState extends State<AppShell> {
     _socket.on('circle_notification', _handleCircleNotification);
     LocationService.requestPermission();
     NotificationService.syncDeviceToken(ApiClient());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        NotificationService.checkAndPromptPermission(context);
+      }
+    });
   }
 
   @override

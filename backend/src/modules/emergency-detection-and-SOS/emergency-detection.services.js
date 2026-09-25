@@ -140,11 +140,11 @@ const triggerEmergencyService = async (payload, patientId, io = null) => {
     });
 
     for (const circle of careCircles) {
-      if (circle.ownerId && circle.ownerId !== patientId && !notifiedUserIds.has(circle.ownerId)) {
+      if (circle.ownerId) {
         notifiedUserIds.add(circle.ownerId);
       }
       for (const m of circle.memberships) {
-        if (m.user && m.user.id !== patientId && !notifiedUserIds.has(m.user.id)) {
+        if (m.user && m.user.id) {
           notifiedUserIds.add(m.user.id);
           const target = m.user.phone || m.user.email || "Push Device Token";
           const circleLog = await prisma.emergencyNotificationLog.create({
@@ -163,6 +163,9 @@ const triggerEmergencyService = async (payload, patientId, io = null) => {
           dispatchedLogs.push(circleLog);
         }
       }
+    }
+    if (patientId) {
+      notifiedUserIds.add(patientId);
     }
 
     // 2.1 Send FCM Push Notifications to device tokens

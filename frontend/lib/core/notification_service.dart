@@ -2,10 +2,13 @@
 // SilverCare Push Notification Manager (FCM + Local Notifications)
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'api_client.dart';
+import 'theme.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -26,9 +29,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         body,
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'silvercare_alerts',
-            'Emergency & Critical Alerts',
-            channelDescription: 'High-priority notifications for emergency SOS and vitals warnings',
+            'silvercare_emergency_v2',
+            '🚨 SilverCare Emergency & Critical Alerts',
+            channelDescription: 'High-priority sound and heads-up banner alerts for emergency SOS and vitals warnings',
             importance: Importance.max,
             priority: Priority.high,
             fullScreenIntent: true,
@@ -49,9 +52,9 @@ class NotificationService {
 
   static const AndroidNotificationChannel _emergencyChannel =
       AndroidNotificationChannel(
-    'silvercare_alerts',
-    'Emergency & Critical Alerts',
-    description: 'High-priority notifications for emergency SOS and vitals warnings',
+    'silvercare_emergency_v2',
+    '🚨 SilverCare Emergency & Critical Alerts',
+    description: 'High-priority sound and heads-up banner alerts for emergency SOS and vitals warnings',
     importance: Importance.max,
     playSound: true,
     enableVibration: true,
@@ -151,6 +154,52 @@ class NotificationService {
     } catch (e) {
       debugPrint('[FCM Init Warning] Firebase Messaging could not initialize: $e');
     }
+  }
+
+  /// Check if notifications are blocked and prompt user to enable in system settings
+  static Future<void> checkAndPromptPermission(BuildContext context) async {
+    try {
+      final messaging = FirebaseMessaging.instance;
+      final settings = await messaging.getNotificationSettings();
+      if (settings.authorizationStatus == AuthorizationStatus.denied) {
+        if (!context.mounted) return;
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: AppColors.surface,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Row(
+              children: const [
+                Icon(Icons.notifications_off_outlined, color: AppColors.warning, size: 24),
+                SizedBox(width: 8),
+                Text('Enable Notifications', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+              ],
+            ),
+            content: const Text(
+              'Notifications are currently blocked for SilverCare on this phone. To receive emergency SOS and care alerts, please allow notifications in system settings.',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Later', style: TextStyle(color: AppColors.textMuted)),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  Geolocator.openAppSettings();
+                },
+                child: const Text('Open Settings', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (_) {}
   }
 
   /// Sync this device's unique FCM token to the SilverCare backend
