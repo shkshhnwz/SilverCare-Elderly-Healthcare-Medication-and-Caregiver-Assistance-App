@@ -94,6 +94,22 @@ const upsertNotificationPreferencesService = async (userId, payload) => {
     devicePushToken,
   } = payload;
 
+  const existing = await prisma.userNotificationPref.findUnique({
+    where: { userId },
+  });
+
+  let mergedToken = devicePushToken;
+  if (devicePushToken && existing?.devicePushToken) {
+    const existingTokens = existing.devicePushToken
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (!existingTokens.includes(devicePushToken.trim())) {
+      existingTokens.push(devicePushToken.trim());
+    }
+    mergedToken = existingTokens.join(',');
+  }
+
   return await prisma.userNotificationPref.upsert({
     where: { userId },
     update: {
@@ -104,7 +120,7 @@ const upsertNotificationPreferencesService = async (userId, payload) => {
       quietHoursEnd,
       minSeverityForSms,
       minSeverityForVoice,
-      devicePushToken,
+      devicePushToken: mergedToken || devicePushToken,
     },
     create: {
       userId,

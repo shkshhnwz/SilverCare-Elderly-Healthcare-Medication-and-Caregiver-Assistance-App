@@ -72,9 +72,18 @@ const sendPushToUsers = async (userIds, { title, body, data = {} }) => {
       },
     });
 
-    const tokens = prefs
-      .map((p) => p.devicePushToken)
-      .filter((t) => t && typeof t === "string" && t.trim().length > 0);
+    const tokens = [];
+    prefs.forEach((p) => {
+      if (p.devicePushToken && typeof p.devicePushToken === "string") {
+        p.devicePushToken
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+          .forEach((t) => {
+            if (!tokens.includes(t)) tokens.push(t);
+          });
+      }
+    });
 
     if (tokens.length === 0) {
       console.log(`[Push Notification] No registered FCM device tokens found for users: ${userIds.join(", ")}`);

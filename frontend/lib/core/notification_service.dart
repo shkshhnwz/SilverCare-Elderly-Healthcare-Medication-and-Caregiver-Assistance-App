@@ -9,9 +9,38 @@ import 'api_client.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Executed in the background even if the app is closed/terminated
-  await Firebase.initializeApp();
-  debugPrint('[FCM Background] Message received: ${message.messageId} - ${message.notification?.title}');
+  try {
+    await Firebase.initializeApp();
+    debugPrint('[FCM Background] Message received: ${message.messageId} - ${message.notification?.title}');
+
+    // If notification payload is absent (data-only message), display using local notifications
+    if (message.notification == null && message.data.isNotEmpty) {
+      final title = message.data['title'] ?? '🚨 Emergency Alert';
+      final body = message.data['body'] ?? 'Care Circle notification';
+      final localNotifications = FlutterLocalNotificationsPlugin();
+      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+      await localNotifications.initialize(const InitializationSettings(android: androidSettings));
+      await localNotifications.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'silvercare_alerts',
+            'Emergency & Critical Alerts',
+            channelDescription: 'High-priority notifications for emergency SOS and vitals warnings',
+            importance: Importance.max,
+            priority: Priority.high,
+            fullScreenIntent: true,
+            playSound: true,
+            enableVibration: true,
+          ),
+        ),
+      );
+    }
+  } catch (e) {
+    debugPrint('[FCM Background Handler Error]: $e');
+  }
 }
 
 class NotificationService {
@@ -38,7 +67,7 @@ class NotificationService {
       await Firebase.initializeApp();
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-      // 1. Request notification permissions from user
+      // 1. Request notification permissions from Firebase Messaging
       final messaging = FirebaseMessaging.instance;
       final settings = await messaging.requestPermission(
         alert: true,
@@ -70,6 +99,9 @@ class NotificationService {
           AndroidFlutterLocalNotificationsPlugin>();
       if (androidPlugin != null) {
         await androidPlugin.createNotificationChannel(_emergencyChannel);
+        // Explicitly request Android 13+ (API 33+) POST_NOTIFICATIONS runtime permission
+        final granted = await androidPlugin.requestNotificationsPermission();
+        debugPrint('[FCM] Android POST_NOTIFICATIONS permission granted: $granted');
       }
 
       // 3. Foreground message presentation
@@ -85,11 +117,14 @@ class NotificationService {
         final notification = message.notification;
         final android = message.notification?.android;
 
-        if (notification != null) {
+        final title = notification?.title ?? message.data['title'];
+        final body = notification?.body ?? message.data['body'];
+
+        if (title != null || body != null) {
           _localNotifications.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
+            message.messageId?.hashCode ?? (DateTime.now().millisecondsSinceEpoch ~/ 1000),
+            title ?? 'SilverCare Alert',
+            body ?? '',
             NotificationDetails(
               android: AndroidNotificationDetails(
                 _emergencyChannel.id,
@@ -99,6 +134,8 @@ class NotificationService {
                 importance: Importance.max,
                 priority: Priority.high,
                 fullScreenIntent: true,
+                playSound: true,
+                enableVibration: true,
               ),
               iOS: const DarwinNotificationDetails(
                 presentAlert: true,
@@ -122,47 +159,42 @@ class NotificationService {
       final token = await FirebaseMessaging.instance.getToken();
       if (token != null && token.isNotEmpty) {
         debugPrint('[FCM] Syncing Device Token: $token');
-        try {
-          await apiClient.put(
-            '/api/communication/preferences',
-            data: {
-              'devicePushToken': token,
-              'pushEnabled': true,
-            },
-          );
-          debugPrint('[FCM] Successfully synced device token to backend.');
-        } catch (_) {
-          // Fallback if route prefix differs
-          await apiClient.put(
-            '/communication/preferences',
-            data: {
-              'devicePushToken': token,
-              'pushEnabled': true,
-            },
-          );
-          debugPrint('[FCM] Synced device token via fallback route.');
+        for (final path in [
+          '/api/communication/preferences',
+          '/api/communication-hub/notifications/preferences',
+          '/communication/preferences',
+        ]) {
+          try {
+            await apiClient.put(path, data: {'devicePushToken': token, 'pushEnabled': true});
+            debugPrint('[FCM] Successfully synced device token to backend via $path');
+            break;
+          } catch (_) {
+            try {
+              await apiClient.post(path, data: {'devicePushToken': token, 'pushEnabled': true});
+              debugPrint('[FCM] Successfully posted device token to backend via $path');
+              break;
+            } catch (_) {}
+          }
         }
       }
 
       // Listen for token refreshes
       FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
         debugPrint('[FCM] Token refreshed: $newToken');
-        try {
-          await apiClient.put(
-            '/api/communication/preferences',
-            data: {
-              'devicePushToken': newToken,
-              'pushEnabled': true,
-            },
-          );
-        } catch (_) {
-          await apiClient.put(
-            '/communication/preferences',
-            data: {
-              'devicePushToken': newToken,
-              'pushEnabled': true,
-            },
-          );
+        for (final path in [
+          '/api/communication/preferences',
+          '/api/communication-hub/notifications/preferences',
+          '/communication/preferences',
+        ]) {
+          try {
+            await apiClient.put(path, data: {'devicePushToken': newToken, 'pushEnabled': true});
+            break;
+          } catch (_) {
+            try {
+              await apiClient.post(path, data: {'devicePushToken': newToken, 'pushEnabled': true});
+              break;
+            } catch (_) {}
+          }
         }
       });
     } catch (e) {

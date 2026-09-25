@@ -140,6 +140,9 @@ const triggerEmergencyService = async (payload, patientId, io = null) => {
     });
 
     for (const circle of careCircles) {
+      if (circle.ownerId && circle.ownerId !== patientId && !notifiedUserIds.has(circle.ownerId)) {
+        notifiedUserIds.add(circle.ownerId);
+      }
       for (const m of circle.memberships) {
         if (m.user && m.user.id !== patientId && !notifiedUserIds.has(m.user.id)) {
           notifiedUserIds.add(m.user.id);
