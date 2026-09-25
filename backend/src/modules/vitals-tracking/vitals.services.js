@@ -262,14 +262,47 @@ const recordVitalReadingService = async (payload, currentUserId) => {
 /**
  * Trend Visualization & Clinical Review for Physicians
  */
-const getVitalTrendsService = async (patientId, query) => {
+const getVitalTrendsService = async (patientId, query = {}) => {
   const { vitalType, days = 30 } = query;
-  if (!patientId || !vitalType) {
-    throw new Error("patientId and vitalType are required");
+  if (!patientId) {
+    throw new Error("patientId is required");
   }
 
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - Number(days));
+
+  // If no specific vitalType is requested, return summary grouped by type for the dashboard/tab
+  if (!vitalType) {
+    const [allReadings, alerts] = await Promise.all([
+      prisma.vitalReading.findMany({
+        where: { patientId },
+        orderBy: { recordedAt: "desc" },
+        take: 200,
+      }),
+      prisma.vitalAlert.findMany({
+        where: { patientId },
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      }),
+    ]);
+
+    const byType = {};
+    for (const r of allReadings) {
+      if (!byType[r.vitalType]) {
+        byType[r.vitalType] = { readings: [], latest: r };
+      }
+      byType[r.vitalType].readings.unshift(r);
+    }
+
+    return {
+      patientId,
+      byType,
+      recentReadings: allReadings.slice(0, 15),
+      totalReadings: allReadings.length,
+      alertsTriggered: alerts.length,
+      activeAlerts: alerts.filter((a) => a.status === "ACTIVE"),
+    };
+  }
 
   const [readings, threshold, alerts] = await Promise.all([
     prisma.vitalReading.findMany({
@@ -361,10 +394,19 @@ const resolveAlertService = async (alertId, payload, currentUserId) => {
   });
 };
 
+const listPatientReadingsService = async (patientId, limit = 50) => {
+  return await prisma.vitalReading.findMany({
+    where: { patientId },
+    orderBy: { recordedAt: "desc" },
+    take: Number(limit),
+  });
+};
+
 module.exports = {
   recordVitalReadingService,
   setPatientThresholdService,
   getPatientThresholdsService,
   getVitalTrendsService,
+  listPatientReadingsService,
   resolveAlertService,
 };

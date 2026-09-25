@@ -5,6 +5,7 @@ const {
   setPatientThreshold,
   getPatientThresholds,
   getVitalTrends,
+  listPatientReadings,
   resolveAlert,
 } = require("./vitals.controller");
 
@@ -20,6 +21,9 @@ VitalsRouter.get("/patients/:patientId/thresholds", requireAuth, getPatientThres
 
 // Physician Trend Review & Anomaly Analytics
 VitalsRouter.get("/patients/:patientId/trends", requireAuth, getVitalTrends);
+
+// List patient readings
+VitalsRouter.get("/patients/:patientId/readings", requireAuth, listPatientReadings);
 
 // Alert resolution / acknowledgement
 VitalsRouter.patch("/alerts/:alertId/resolve", requireAuth, resolveAlert);

@@ -3,6 +3,7 @@ const {
   setPatientThresholdService,
   getPatientThresholdsService,
   getVitalTrendsService,
+  listPatientReadingsService,
   resolveAlertService,
 } = require("./vitals.services");
 
@@ -48,6 +49,15 @@ const getVitalTrends = async (req, res, next) => {
   }
 };
 
+const listPatientReadings = async (req, res, next) => {
+  try {
+    const result = await listPatientReadingsService(req.params.patientId, req.query.limit);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const resolveAlert = async (req, res, next) => {
   try {
     const result = await resolveAlertService(req.params.alertId, req.body, req.user.id);
@@ -62,5 +72,6 @@ module.exports = {
   setPatientThreshold,
   getPatientThresholds,
   getVitalTrends,
+  listPatientReadings,
   resolveAlert,
 };

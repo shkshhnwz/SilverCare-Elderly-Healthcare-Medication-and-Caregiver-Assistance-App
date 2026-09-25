@@ -43,7 +43,9 @@ class _VitalsScreenState extends State<VitalsScreen> {
   final ApiClient _api = ApiClient();
   final SocketService _socket = SocketService();
   Map<String, dynamic>? _trends;
+  List<dynamic> _recentReadings = [];
   String _selectedVital = 'BLOOD_PRESSURE';
+  String? _lastPatientId;
 
   final _valueCtrl = TextEditingController();
   final _systolicCtrl = TextEditingController();
@@ -53,8 +55,20 @@ class _VitalsScreenState extends State<VitalsScreen> {
   @override
   void initState() {
     super.initState();
-    _load();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _load();
+    });
     _socket.on('vital_recorded', _onVitalRecorded);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final pid = Provider.of<AuthProvider>(context, listen: false).activePatientId;
+    if (_lastPatientId != pid) {
+      _lastPatientId = pid;
+      if (pid.isNotEmpty) _load();
+    }
   }
 
   void _onVitalRecorded(dynamic _) {
@@ -75,15 +89,29 @@ class _VitalsScreenState extends State<VitalsScreen> {
     final patientId = auth.activePatientId;
     if (patientId.isEmpty) return;
     try {
-      final trendRes = await _api.get('/api/vitals/patients/$patientId/trends').catchError((_) => null as dynamic);
-      // ignore: unused_local_variable
-      final threshRes = await _api.get('/api/vitals/patients/$patientId/thresholds').catchError((_) => null as dynamic);
+      final results = await Future.wait([
+        _api.get('/api/vitals/patients/$patientId/trends').catchError((_) => null),
+        _api.get('/api/vitals/patients/$patientId/readings?limit=30').catchError((_) => null),
+      ]);
+
+      final trendRes = results[0];
+      final readingsRes = results[1];
+
       if (mounted) {
         setState(() {
-          _trends = trendRes.data;
+          if (trendRes?.data != null && trendRes!.data is Map) {
+            _trends = Map<String, dynamic>.from(trendRes.data as Map);
+          }
+          if (readingsRes?.data != null && readingsRes!.data is List) {
+            _recentReadings = List<dynamic>.from(readingsRes.data as List);
+          } else if (_trends?['recentReadings'] != null && _trends!['recentReadings'] is List) {
+            _recentReadings = List<dynamic>.from(_trends!['recentReadings'] as List);
+          }
         });
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error loading vitals: $e');
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -147,9 +175,24 @@ class _VitalsScreenState extends State<VitalsScreen> {
   }
 
   dynamic _getLatest(String vitalType) {
+    // 1. Check trends byType
     final t = _trends?['byType']?[vitalType];
-    if (t == null || t['readings'] == null || (t['readings'] as List).isEmpty) return null;
-    return (t['readings'] as List).last;
+    if (t != null) {
+      if (t['latest'] != null) return t['latest'];
+      final readings = t['readings'] as List?;
+      if (readings != null && readings.isNotEmpty) return readings.last;
+    }
+
+    // 2. Fallback to recent readings list
+    if (_recentReadings.isNotEmpty) {
+      for (final r in _recentReadings) {
+        if (r != null && r['vitalType'] == vitalType) {
+          return r;
+        }
+      }
+    }
+
+    return null;
   }
 
   @override
@@ -203,16 +246,25 @@ class _VitalsScreenState extends State<VitalsScreen> {
                       _buildVitalsGrid(context),
                       const SizedBox(height: 24),
 
+                      // Recent Readings List
+                      if (_recentReadings.isNotEmpty) ...[
+                        Text('Recent Logs',
+                            style: AppTypography.bodyBold(size: AppTypography.md)),
+                        const SizedBox(height: 12),
+                        _buildRecentList(),
+                        const SizedBox(height: 24),
+                      ],
+
                       // Trend summary
-                      if (_trends != null) ...[
-                        Text('7-Day Summary',
+                      if (_trends != null || _recentReadings.isNotEmpty) ...[
+                        Text('Summary',
                             style: AppTypography.bodyBold(size: AppTypography.md)),
                         const SizedBox(height: 12),
                         AppCard(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Total Readings: ${_trends?['totalReadings'] ?? 0}',
+                              Text('Total Readings: ${_trends?['totalReadings'] ?? _recentReadings.length}',
                                   style: AppTypography.body(size: AppTypography.sm, color: AppColors.textSecondary)),
                               const SizedBox(height: 6),
                               Text('Alerts Triggered: ${_trends?['alertsTriggered'] ?? 0}',
@@ -282,7 +334,11 @@ class _VitalsScreenState extends State<VitalsScreen> {
         String display = '—';
         if (latest != null) {
           if (vc.type == 'BLOOD_PRESSURE') {
-            display = '${latest['systolic']}/${latest['diastolic']}';
+            if (latest['systolic'] != null && latest['diastolic'] != null) {
+              display = '${latest['systolic']}/${latest['diastolic']}';
+            } else if (latest['value'] != null) {
+              display = '${latest['value']}';
+            }
           } else {
             display = '${latest['value'] ?? '—'}';
           }
@@ -333,11 +389,66 @@ class _VitalsScreenState extends State<VitalsScreen> {
     );
   }
 
+  Widget _buildRecentList() {
+    return Column(
+      children: _recentReadings.take(8).map((r) {
+        final type = r['vitalType'] ?? '';
+        final config = _vitalConfigs.firstWhere(
+          (c) => c.type == type,
+          orElse: () => _VitalConfig(type, type.replaceAll('_', ' '), r['unit'] ?? '', '📊', AppColors.primary),
+        );
+        String valStr = '';
+        if (type == 'BLOOD_PRESSURE') {
+          if (r['systolic'] != null && r['diastolic'] != null) {
+            valStr = '${r['systolic']}/${r['diastolic']} mmHg';
+          } else {
+            valStr = '${r['value'] ?? ''} ${r['unit'] ?? ''}';
+          }
+        } else {
+          valStr = '${r['value'] ?? ''} ${config.unit}';
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: AppCard(
+            child: Row(
+              children: [
+                Text(config.icon, style: const TextStyle(fontSize: 22)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(config.label, style: AppTypography.bodyBold(size: AppTypography.sm)),
+                      const SizedBox(height: 2),
+                      Text(
+                        _formatDate(r['recordedAt']),
+                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  valStr,
+                  style: AppTypography.bodyBold(size: AppTypography.sm, color: config.color),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   String _formatDate(String? dateStr) {
     if (dateStr == null) return '';
-    final d = DateTime.tryParse(dateStr);
+    final d = DateTime.tryParse(dateStr)?.toLocal();
     if (d == null) return '';
-    return '${d.month}/${d.day}/${d.year}';
+    final now = DateTime.now();
+    final isToday = d.year == now.year && d.month == now.month && d.day == now.day;
+    final timeStr = '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+    if (isToday) return 'Today $timeStr';
+    return '${d.month}/${d.day} $timeStr';
   }
 
   void _showLogModal(BuildContext context) {
