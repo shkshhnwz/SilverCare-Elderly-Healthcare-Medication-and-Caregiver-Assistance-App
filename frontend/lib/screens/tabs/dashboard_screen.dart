@@ -12,6 +12,7 @@ import '../../core/api_client.dart';
 import '../../core/socket_service.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_badge.dart';
+import '../../widgets/app_toast.dart';
 import 'medications_screen.dart';
 import 'vitals_screen.dart';
 import 'emergency_screen.dart';
