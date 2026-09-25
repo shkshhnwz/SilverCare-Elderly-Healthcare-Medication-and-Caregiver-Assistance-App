@@ -499,7 +499,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(width: 8),
                   AppBadge(
                     label: '$completedCount/${_tasks.length} done',
-                    variant: completedCount == _tasks.length ? BadgeVariant.success : BadgeVariant.neutral,
+                    variant: completedCount == _tasks.length ? BadgeVariant.success : BadgeVariant.muted,
                   ),
                 ],
               ],

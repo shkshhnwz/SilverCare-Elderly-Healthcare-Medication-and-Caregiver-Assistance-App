@@ -60,7 +60,7 @@ class _AppShellState extends State<AppShell> {
       body = data['body']?.toString() ?? '';
     }
     final text = body.isNotEmpty ? '$title: $body' : title;
-    context.showToast(text, type: ToastType.info, duration: const Duration(seconds: 4));
+    context.showToast(text, type: ToastType.info);
   }
 
   void _handleEmergencyAlert(dynamic data) {

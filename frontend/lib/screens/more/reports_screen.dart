@@ -295,7 +295,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
               AppButton(
                 label: 'Close',
-                variant: ButtonVariant.secondary,
+                variant: AppButtonVariant.secondary,
                 onPressed: () => Navigator.pop(ctx),
                 fullWidth: true,
               ),
