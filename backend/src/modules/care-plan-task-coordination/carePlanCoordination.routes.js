@@ -5,6 +5,7 @@ const {
   getCarePlan,
   createCareTask,
   completeCareTask,
+  toggleCareTask,
   listCareTasks,
   clockInShift,
   clockOutShift,
@@ -21,6 +22,7 @@ CarePlanRouter.get("/patients/:patientId", requireAuth, getCarePlan);
 // 2. Task Coordination
 CarePlanRouter.post("/tasks", requireAuth, createCareTask);
 CarePlanRouter.patch("/tasks/:taskId/complete", requireAuth, completeCareTask);
+CarePlanRouter.patch("/tasks/:taskId/toggle", requireAuth, toggleCareTask);
 CarePlanRouter.get("/patients/:patientId/tasks", requireAuth, listCareTasks);
 
 // 3. Shift-Based Logging for Professional Caregivers

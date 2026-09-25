@@ -138,8 +138,8 @@ const createCareTaskService = async (payload) => {
 /**
  * 4. Complete a Care Task with notes
  */
-const completeCareTaskService = async (taskId, payload, completedById) => {
-  const { completionNotes } = payload;
+const completeCareTaskService = async (taskId, payload = {}, completedById) => {
+  const { completionNotes } = payload || {};
 
   return await prisma.careTask.update({
     where: { id: taskId },
@@ -148,6 +148,33 @@ const completeCareTaskService = async (taskId, payload, completedById) => {
       completedById,
       completedAt: new Date(),
       completionNotes: completionNotes || "Task completed as scheduled.",
+    },
+    include: {
+      assignedTo: { select: { id: true, firstName: true, lastName: true } },
+      completedBy: { select: { id: true, firstName: true, lastName: true } },
+    },
+  });
+};
+
+/**
+ * Toggle task between PENDING and COMPLETED
+ */
+const toggleCareTaskService = async (taskId, completedById) => {
+  const task = await prisma.careTask.findUnique({ where: { id: taskId } });
+  if (!task) throw new Error("Task not found");
+
+  const isCompleted = task.status === "COMPLETED";
+  return await prisma.careTask.update({
+    where: { id: taskId },
+    data: {
+      status: isCompleted ? "PENDING" : "COMPLETED",
+      completedById: isCompleted ? null : completedById,
+      completedAt: isCompleted ? null : new Date(),
+      completionNotes: isCompleted ? null : "Task completed as scheduled.",
+    },
+    include: {
+      assignedTo: { select: { id: true, firstName: true, lastName: true } },
+      completedBy: { select: { id: true, firstName: true, lastName: true } },
     },
   });
 };
@@ -168,7 +195,10 @@ const listCareTasksService = async (patientId, query = {}) => {
       assignedTo: { select: { id: true, firstName: true, lastName: true } },
       completedBy: { select: { id: true, firstName: true, lastName: true } },
     },
-    orderBy: { dueWindowStart: "asc" },
+    orderBy: [
+      { status: "desc" }, // PENDING first, then COMPLETED
+      { dueWindowStart: "asc" },
+    ],
   });
 };
 
@@ -249,6 +279,7 @@ module.exports = {
   getCarePlanWithHistoryService,
   createCareTaskService,
   completeCareTaskService,
+  toggleCareTaskService,
   listCareTasksService,
   clockInShiftService,
   clockOutShiftService,

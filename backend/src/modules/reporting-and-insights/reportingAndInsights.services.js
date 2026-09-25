@@ -325,9 +325,67 @@ const dispatchAppointmentReportService = async (patientId, appointmentId, recipi
   };
 };
 
+// In-memory reports store per patient
+const patientReportsCache = new Map();
+
+const generateReportService = async (patientId, reportType = "FULL", days = 30) => {
+  if (!patientId) throw new Error("patientId is required");
+
+  let title = "Clinical Health Summary";
+  let data = null;
+  let html = null;
+
+  if (reportType === "WEEKLY") {
+    data = await getCaregiverWeeklyDigestService(patientId);
+    title = data.digestTitle || "Weekly Caregiver Digest";
+  } else {
+    data = await getPhysicianReportService(patientId, days);
+    html = renderPhysicianReportHTML(data);
+    if (reportType === "ADHERENCE") {
+      title = `Medication Adherence Report (${data.timeframeDays} Days)`;
+    } else if (reportType === "VITALS") {
+      title = `Vitals & Health Trends (${data.timeframeDays} Days)`;
+    } else {
+      title = data.reportTitle || `Clinical Health Summary (${data.timeframeDays} Days)`;
+    }
+  }
+
+  const report = {
+    id: `rep_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    patientId,
+    type: reportType,
+    title,
+    createdAt: new Date().toISOString(),
+    data,
+    html,
+  };
+
+  const list = patientReportsCache.get(patientId) || [];
+  list.unshift(report);
+  patientReportsCache.set(patientId, list.slice(0, 20));
+
+  return report;
+};
+
+const getPatientReportsService = async (patientId) => {
+  if (!patientId) throw new Error("patientId is required");
+  let list = patientReportsCache.get(patientId);
+  if (!list || list.length === 0) {
+    try {
+      const full = await generateReportService(patientId, "FULL", 30);
+      list = [full];
+    } catch (_) {
+      list = [];
+    }
+  }
+  return list;
+};
+
 module.exports = {
   getPhysicianReportService,
   renderPhysicianReportHTML,
   getCaregiverWeeklyDigestService,
   dispatchAppointmentReportService,
+  generateReportService,
+  getPatientReportsService,
 };

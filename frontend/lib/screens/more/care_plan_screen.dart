@@ -9,6 +9,7 @@ import '../../core/api_client.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_badge.dart';
 import '../../widgets/app_toast.dart';
+import '../../core/socket_service.dart';
 
 class CarePlanScreen extends StatefulWidget {
   const CarePlanScreen({super.key});
@@ -18,19 +19,25 @@ class CarePlanScreen extends StatefulWidget {
 
 class _CarePlanScreenState extends State<CarePlanScreen> {
   final ApiClient _api = ApiClient();
+  final SocketService _socket = SocketService();
   List<dynamic> _tasks = [];
   dynamic _plan;
   bool _loading = true;
+  String _taskFilter = 'ALL';
   final _taskTitleCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _load();
+    _socket.on('care_task_updated', (_) {
+      if (mounted) _load();
+    });
   }
 
   @override
   void dispose() {
+    _socket.off('care_task_updated');
     _taskTitleCtrl.dispose();
     super.dispose();
   }
@@ -40,12 +47,12 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
     final patientId = auth.activePatientId;
     if (patientId.isEmpty) return;
     try {
-      final planRes = await _api.get('/api/care-plans/patients/$patientId');
-      final taskRes = await _api.get('/api/care-plans/patients/$patientId/tasks');
+      final planRes = await _api.get('/api/care-plans/patients/$patientId').catchError((_) => null as dynamic);
+      final taskRes = await _api.get('/api/care-plans/patients/$patientId/tasks').catchError((_) => null as dynamic);
       if (mounted) {
         setState(() {
-          _plan = planRes.data;
-          _tasks = taskRes.data ?? [];
+          _plan = planRes?.data;
+          _tasks = taskRes?.data is List ? List<dynamic>.from(taskRes.data as List) : [];
           _loading = false;
         });
       }
@@ -54,16 +61,28 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
     }
   }
 
-  Future<void> _completeTask(String taskId) async {
+  Future<void> _toggleTask(String taskId) async {
     try {
-      await _api.patch('/api/care-plans/tasks/$taskId/complete');
+      await _api.patch('/api/care-plans/tasks/$taskId/toggle').catchError((_) {
+        return _api.patch('/api/care-plans/tasks/$taskId/complete');
+      });
       if (mounted) {
-        context.showToast('Task completed!', type: ToastType.success);
+        context.showToast('Task updated!', type: ToastType.success);
         _load();
       }
     } catch (e) {
-      if (mounted) context.showToast('Failed to complete task', type: ToastType.error);
+      if (mounted) context.showToast('Failed to update task', type: ToastType.error);
     }
+  }
+
+  List<dynamic> get _filteredTasks {
+    if (_taskFilter == 'PENDING') {
+      return _tasks.where((t) => t is Map && t['status'] != 'COMPLETED').toList();
+    }
+    if (_taskFilter == 'COMPLETED') {
+      return _tasks.where((t) => t is Map && t['status'] == 'COMPLETED').toList();
+    }
+    return _tasks;
   }
 
   bool _taskLoading = false;
@@ -197,16 +216,52 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text('Tasks', style: AppTypography.bodyBold(size: AppTypography.md)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Care Tasks', style: AppTypography.bodyBold(size: AppTypography.md)),
+                      Text('${_tasks.where((t) => t is Map && t['status'] == 'COMPLETED').length}/${_tasks.length} done',
+                          style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Filter tabs
+                  Row(
+                    children: [
+                      _buildFilterChip('ALL', 'All (${_tasks.length})'),
+                      const SizedBox(width: 8),
+                      _buildFilterChip(
+                        'PENDING',
+                        'Pending (${_tasks.where((t) => t is Map && t['status'] != 'COMPLETED').length})',
+                      ),
+                      const SizedBox(width: 8),
+                      _buildFilterChip(
+                        'COMPLETED',
+                        'Completed (${_tasks.where((t) => t is Map && t['status'] == 'COMPLETED').length})',
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 12),
-                  if (_tasks.isEmpty)
+
+                  if (_filteredTasks.isEmpty)
                     AppCard(
                       padding: const EdgeInsets.symmetric(vertical: 24),
-                      child: Center(child: Text('📋 No tasks assigned', style: AppTypography.body(color: AppColors.textMuted))),
+                      child: Center(
+                        child: Text(
+                          _taskFilter == 'COMPLETED'
+                              ? 'No completed tasks yet'
+                              : (_taskFilter == 'PENDING' ? '✅ No pending tasks!' : '📋 No tasks assigned'),
+                          style: AppTypography.body(color: AppColors.textMuted),
+                        ),
+                      ),
                     )
                   else
-                    ..._tasks.map((task) {
-                      final isCompleted = task['status'] == 'COMPLETED';
+                    ..._filteredTasks.map((task) {
+                      final taskMap = task is Map ? Map<String, dynamic>.from(task) : <String, dynamic>{};
+                      final isCompleted = taskMap['status'] == 'COMPLETED';
+                      final taskId = taskMap['id']?.toString() ?? '';
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: AppCard(
@@ -214,31 +269,51 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
                             children: [
                               if (context.watch<AuthProvider>().canWrite)
                                 GestureDetector(
-                                  onTap: isCompleted ? null : () => _completeTask(task['id'].toString()),
+                                  onTap: taskId.isEmpty ? null : () => _toggleTask(taskId),
                                   child: Container(
-                                    width: 28, height: 28,
+                                    width: 28,
+                                    height: 28,
                                     decoration: BoxDecoration(
                                       color: isCompleted ? AppColors.successFaint : AppColors.surfaceElevated,
                                       borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(color: isCompleted ? AppColors.success : AppColors.surfaceBorder),
+                                      border: Border.all(
+                                        color: isCompleted ? AppColors.success : AppColors.surfaceBorder,
+                                        width: isCompleted ? 1.5 : 1,
+                                      ),
                                     ),
-                                    child: isCompleted ? const Icon(Icons.check, size: 16, color: AppColors.success) : null,
+                                    child: isCompleted
+                                        ? const Icon(Icons.check, size: 18, color: AppColors.success)
+                                        : null,
                                   ),
                                 ),
                               if (context.watch<AuthProvider>().canWrite)
                                 const SizedBox(width: 12),
-                              Expanded(child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(task['title'] ?? '', style: AppTypography.bodySemiBold(
-                                    color: isCompleted ? AppColors.textMuted : AppColors.textPrimary,
-                                  )),
-                                  if (task['dueAt'] != null)
-                                    Text('Due: ${task['dueAt']}', style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted)),
-                                ],
-                              )),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: (context.watch<AuthProvider>().canWrite && taskId.isNotEmpty)
+                                      ? () => _toggleTask(taskId)
+                                      : null,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        taskMap['title'] ?? '',
+                                        style: AppTypography.bodySemiBold().copyWith(
+                                          decoration: isCompleted ? TextDecoration.lineThrough : null,
+                                          color: isCompleted ? AppColors.textMuted : AppColors.textPrimary,
+                                        ),
+                                      ),
+                                      if (taskMap['dueAt'] != null || taskMap['dueWindowEnd'] != null)
+                                        Text(
+                                          'Due: ${_formatDue(taskMap['dueAt'] ?? taskMap['dueWindowEnd'])}',
+                                          style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               AppBadge(
-                                label: task['status'] ?? 'Pending',
+                                label: isCompleted ? 'Completed' : (taskMap['priority'] ?? 'Pending'),
                                 variant: isCompleted ? BadgeVariant.success : BadgeVariant.warning,
                               ),
                             ],
@@ -250,5 +325,40 @@ class _CarePlanScreenState extends State<CarePlanScreen> {
               ),
             ),
     );
+  }
+
+  Widget _buildFilterChip(String filterKey, String label) {
+    final isSelected = _taskFilter == filterKey;
+    return GestureDetector(
+      onTap: () => setState(() => _taskFilter = filterKey),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryFaint : AppColors.surfaceElevated,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.surfaceBorder,
+          ),
+        ),
+        child: Text(
+          label,
+          style: AppTypography.body(
+            size: AppTypography.xs,
+            color: isSelected ? AppColors.primary : AppColors.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDue(dynamic due) {
+    if (due == null) return '';
+    final d = DateTime.tryParse(due.toString())?.toLocal();
+    if (d == null) return due.toString();
+    final now = DateTime.now();
+    final isToday = d.year == now.year && d.month == now.month && d.day == now.day;
+    final timeStr = '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+    if (isToday) return 'Today at $timeStr';
+    return '${d.month}/${d.day} at $timeStr';
   }
 }

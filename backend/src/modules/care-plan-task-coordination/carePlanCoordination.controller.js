@@ -3,6 +3,7 @@ const {
   getCarePlanWithHistoryService,
   createCareTaskService,
   completeCareTaskService,
+  toggleCareTaskService,
   listCareTasksService,
   clockInShiftService,
   clockOutShiftService,
@@ -30,6 +31,11 @@ const getCarePlan = async (req, res, next) => {
 const createCareTask = async (req, res, next) => {
   try {
     const result = await createCareTaskService(req.body);
+    const io = req.app.get('io');
+    if (io) {
+      if (result.patientId) io.to(`circle_${result.patientId}`).emit('care_task_updated', result);
+      io.emit('care_task_updated', result);
+    }
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -39,6 +45,25 @@ const createCareTask = async (req, res, next) => {
 const completeCareTask = async (req, res, next) => {
   try {
     const result = await completeCareTaskService(req.params.taskId, req.body, req.user.id);
+    const io = req.app.get('io');
+    if (io) {
+      if (result.patientId) io.to(`circle_${result.patientId}`).emit('care_task_updated', result);
+      io.emit('care_task_updated', result);
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const toggleCareTask = async (req, res, next) => {
+  try {
+    const result = await toggleCareTaskService(req.params.taskId, req.user.id);
+    const io = req.app.get('io');
+    if (io) {
+      if (result.patientId) io.to(`circle_${result.patientId}`).emit('care_task_updated', result);
+      io.emit('care_task_updated', result);
+    }
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -86,6 +111,7 @@ module.exports = {
   getCarePlan,
   createCareTask,
   completeCareTask,
+  toggleCareTask,
   listCareTasks,
   clockInShift,
   clockOutShift,

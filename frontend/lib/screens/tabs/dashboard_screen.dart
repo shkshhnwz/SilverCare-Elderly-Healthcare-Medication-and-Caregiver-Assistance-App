@@ -45,6 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _socket.off('vital_alert');
     _socket.off('emergency_triggered');
     _socket.off('medication_missed');
+    _socket.off('care_task_updated');
     super.dispose();
   }
 
@@ -74,6 +75,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (_alerts.length > 5) _alerts = _alerts.sublist(0, 5);
       });
     });
+    _socket.on('care_task_updated', (_) {
+      if (!mounted) return;
+      _loadData();
+    });
   }
 
   Future<void> _loadData() async {
@@ -97,12 +102,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
           final summary = adhRes?.data?['summary'];
           _adherence = (summary?['adherencePercent'] ?? 0).round();
           _appointments = (appRes?.data as List<dynamic>? ?? []).take(3).toList();
-          final allTasks = tasksRes?.data ?? [];
-          // Get top 3 pending tasks
-          _tasks = (allTasks as List).where((t) => t['status'] != 'COMPLETED').take(3).toList();
+          final rawTasks = tasksRes?.data is List ? List<dynamic>.from(tasksRes.data as List) : [];
+          // Sort: pending tasks first, completed tasks after
+          rawTasks.sort((a, b) {
+            final aCompleted = a is Map && a['status'] == 'COMPLETED';
+            final bCompleted = b is Map && b['status'] == 'COMPLETED';
+            if (aCompleted != bCompleted) {
+              return aCompleted ? 1 : -1;
+            }
+            return 0;
+          });
+          _tasks = rawTasks.take(6).toList();
         });
       }
     } catch (_) {}
+  }
+
+  Future<void> _toggleTask(Map<String, dynamic> task) async {
+    final taskId = task['id'];
+    if (taskId == null) return;
+    try {
+      await _api.patch('/api/care-plans/tasks/$taskId/toggle').catchError((_) {
+        return _api.patch('/api/care-plans/tasks/$taskId/complete');
+      });
+      final wasCompleted = task['status'] == 'COMPLETED';
+      if (mounted) {
+        context.showToast(
+          wasCompleted ? 'Task marked pending' : 'Task marked completed! ✓',
+          type: ToastType.success,
+        );
+        _loadData();
+      }
+    } catch (_) {
+      if (mounted) context.showToast('Failed to update task', type: ToastType.error);
+    }
+  }
+
+  String _formatDue(dynamic due) {
+    if (due == null) return '';
+    final d = DateTime.tryParse(due.toString())?.toLocal();
+    if (d == null) return due.toString();
+    final now = DateTime.now();
+    final isToday = d.year == now.year && d.month == now.month && d.day == now.day;
+    final timeStr = '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+    if (isToday) return 'Today at $timeStr';
+    return '${d.month}/${d.day} at $timeStr';
   }
 
   Future<void> _onRefresh() async {
@@ -441,12 +485,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildTasksSection(BuildContext context) {
+    final completedCount = _tasks.where((t) => t is Map && t['status'] == 'COMPLETED').length;
+
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Today's Tasks", style: AppTypography.bodyBold(size: AppTypography.md)),
+            Row(
+              children: [
+                Text("Today's Tasks", style: AppTypography.bodyBold(size: AppTypography.md)),
+                if (_tasks.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  AppBadge(
+                    label: '$completedCount/${_tasks.length} done',
+                    variant: completedCount == _tasks.length ? BadgeVariant.success : BadgeVariant.neutral,
+                  ),
+                ],
+              ],
+            ),
             GestureDetector(
               onTap: () async {
                 await Navigator.pushNamed(context, '/care-plan');
@@ -461,39 +518,69 @@ class _DashboardScreenState extends State<DashboardScreen> {
           AppCard(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Center(
-              child: Text('✅ All caught up for today!', style: AppTypography.body(color: AppColors.textMuted)),
+              child: Text('✅ No tasks scheduled for today!', style: AppTypography.body(color: AppColors.textMuted)),
             ),
           )
         else
-          ..._tasks.map((task) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: AppCard(
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 28, height: 28,
+          ..._tasks.map((task) {
+            final taskMap = task is Map ? Map<String, dynamic>.from(task) : <String, dynamic>{};
+            final isCompleted = taskMap['status'] == 'COMPLETED';
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: AppCard(
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _toggleTask(taskMap),
+                      child: Container(
+                        width: 28,
+                        height: 28,
                         decoration: BoxDecoration(
-                          color: AppColors.surfaceElevated,
+                          color: isCompleted ? AppColors.successFaint : AppColors.surfaceElevated,
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: AppColors.surfaceBorder),
+                          border: Border.all(
+                            color: isCompleted ? AppColors.success : AppColors.surfaceBorder,
+                            width: isCompleted ? 1.5 : 1,
+                          ),
                         ),
+                        child: isCompleted
+                            ? const Icon(Icons.check, size: 18, color: AppColors.success)
+                            : null,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _toggleTask(taskMap),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(task['title'] ?? '', style: AppTypography.bodySemiBold()),
-                            if (task['dueAt'] != null)
-                              Text('Due: ${task['dueAt']}', style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted)),
+                            Text(
+                              taskMap['title'] ?? '',
+                              style: AppTypography.bodySemiBold().copyWith(
+                                decoration: isCompleted ? TextDecoration.lineThrough : null,
+                                color: isCompleted ? AppColors.textMuted : AppColors.textPrimary,
+                              ),
+                            ),
+                            if (taskMap['dueAt'] != null || taskMap['dueWindowEnd'] != null)
+                              Text(
+                                'Due: ${_formatDue(taskMap['dueAt'] ?? taskMap['dueWindowEnd'])}',
+                                style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted),
+                              ),
                           ],
                         ),
                       ),
-                      AppBadge(label: task['priority'] ?? 'NORMAL', variant: BadgeVariant.warning),
-                    ],
-                  ),
+                    ),
+                    AppBadge(
+                      label: isCompleted ? 'Completed' : (taskMap['priority'] ?? 'Pending'),
+                      variant: isCompleted ? BadgeVariant.success : BadgeVariant.warning,
+                    ),
+                  ],
                 ),
-              )),
+              ),
+            );
+          }),
       ],
     );
   }
