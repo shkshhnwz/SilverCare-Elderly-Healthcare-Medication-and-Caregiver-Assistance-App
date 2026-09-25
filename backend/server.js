@@ -20,13 +20,13 @@ const ReportingRoutes = require('./src/modules/reporting-and-insights/reportingA
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server,{
-    cors:{
-        origin:"*",
-        methods:["GET","POST"],
-    }
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  }
 })
-app.set('io',io);
+app.set('io', io);
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
@@ -71,7 +71,12 @@ app.use('/api/activity', CommunicationHubRoutes);
 app.use('/api/reports', ReportingRoutes);
 
 
-
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'SilverCare backend is running'
+  });
+});
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 400;

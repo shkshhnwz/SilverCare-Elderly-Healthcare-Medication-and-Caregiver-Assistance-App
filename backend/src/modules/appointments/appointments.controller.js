@@ -9,6 +9,12 @@ const {
 const scheduleAppointment = async (req, res, next) => {
   try {
     const result = await scheduleAppointmentService(req.body, req.user.id);
+    const io = req.app.get('io');
+    if (io) {
+      const patientId = result.patientId || req.body.patientId;
+      if (patientId) io.to(`circle_${patientId}`).emit('appointment_created', result);
+      io.emit('appointment_created', result);
+    }
     res.status(201).json(result);
   } catch (error) {
     next(error);

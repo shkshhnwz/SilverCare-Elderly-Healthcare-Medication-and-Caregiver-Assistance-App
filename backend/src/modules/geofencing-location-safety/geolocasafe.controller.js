@@ -10,6 +10,12 @@ const {
 const createSafeZone = async (req, res, next) => {
   try {
     const result = await createSafeZoneService(req.body, req.user.id);
+    const io = req.app.get('io');
+    if (io) {
+      const patientId = result.patientId || req.body.patientId;
+      if (patientId) io.to(`circle_${patientId}`).emit('safe_zone_created', result);
+      io.emit('safe_zone_created', result);
+    }
     res.status(201).json(result);
   } catch (error) {
     next(error);

@@ -9,6 +9,12 @@ const {
 const recordVitalReading = async (req, res, next) => {
   try {
     const result = await recordVitalReadingService(req.body, req.user.id);
+    const io = req.app.get('io');
+    if (io) {
+      const patientId = result.patientId || req.body.patientId;
+      if (patientId) io.to(`circle_${patientId}`).emit('vital_recorded', result);
+      io.emit('vital_recorded', result);
+    }
     res.status(201).json(result);
   } catch (error) {
     next(error);

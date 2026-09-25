@@ -11,6 +11,7 @@ import '../../widgets/app_badge.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_input.dart';
 import '../../widgets/app_toast.dart';
+import '../../core/socket_service.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -20,6 +21,7 @@ class AppointmentsScreen extends StatefulWidget {
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
   final ApiClient _api = ApiClient();
+  final SocketService _socket = SocketService();
   List<dynamic> _appointments = [];
   bool _loading = true;
   bool _createLoading = false;
@@ -27,15 +29,25 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   final _titleCtrl = TextEditingController();
   final _doctorCtrl = TextEditingController();
   final _locationCtrl = TextEditingController();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
 
   @override
   void initState() {
     super.initState();
     _load();
+    _socket.on('appointment_created', _onSocketUpdate);
+    _socket.on('appointment_updated', _onSocketUpdate);
+  }
+
+  void _onSocketUpdate(dynamic _) {
+    if (mounted) _load();
   }
 
   @override
   void dispose() {
+    _socket.off('appointment_created');
+    _socket.off('appointment_updated');
     _titleCtrl.dispose();
     _doctorCtrl.dispose();
     _locationCtrl.dispose();
@@ -60,6 +72,23 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       context.showToast('Enter title and doctor name', type: ToastType.error);
       return;
     }
+    if (_selectedDate == null) {
+      context.showToast('Please select appointment date', type: ToastType.error);
+      return;
+    }
+    if (_selectedTime == null) {
+      context.showToast('Please select appointment time', type: ToastType.error);
+      return;
+    }
+
+    final scheduled = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
+    );
+
     setModalState?.call(() => _createLoading = true);
     setState(() => _createLoading = true);
     try {
@@ -69,7 +98,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         'title': _titleCtrl.text.trim(),
         'doctorName': _doctorCtrl.text.trim(),
         'clinicOrHospital': _locationCtrl.text.trim().isEmpty ? 'TBD' : _locationCtrl.text.trim(),
-        'scheduledAt': DateTime.now().add(const Duration(days: 7)).toIso8601String(),
+        'scheduledAt': scheduled.toIso8601String(),
         'type': 'Visit',
       });
       if (mounted) {
@@ -77,11 +106,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         _titleCtrl.clear();
         _doctorCtrl.clear();
         _locationCtrl.clear();
+        _selectedDate = null;
+        _selectedTime = null;
         Navigator.pop(context);
         _load();
       }
     } catch (e) {
-      if (mounted) context.showToast('Failed', type: ToastType.error);
+      if (mounted) context.showToast('Failed to create appointment', type: ToastType.error);
     } finally {
       if (mounted) {
         setModalState?.call(() => _createLoading = false);
@@ -161,6 +192,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   void _showCreateModal(BuildContext context) {
+    _selectedDate = DateTime.now().add(const Duration(days: 1));
+    _selectedTime = const TimeOfDay(hour: 10, minute: 0);
+
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.background,
@@ -169,20 +203,89 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) => Padding(
           padding: EdgeInsets.fromLTRB(AppSpacing.base, 16, AppSpacing.base, MediaQuery.of(ctx).viewInsets.bottom + 24),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text('New Appointment', style: AppTypography.bodyBold(size: AppTypography.lg)),
-            const SizedBox(height: 16),
-            AppInput(label: 'Title', placeholder: 'e.g., Cardiology Checkup', controller: _titleCtrl, icon: Icons.calendar_today),
-            AppInput(label: 'Doctor Name', placeholder: 'e.g., Dr. Smith', controller: _doctorCtrl, icon: Icons.person_outline),
-            AppInput(label: 'Location', placeholder: 'e.g., City Hospital', controller: _locationCtrl, icon: Icons.location_on_outlined),
-            AppButton(
-              label: 'Create',
-              onPressed: () => _createAppointment(setModalState),
-              loading: _createLoading,
-              disabled: _createLoading,
-              fullWidth: true,
-            ),
-          ]),
+          child: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Center(
+                child: Text('New Appointment', style: AppTypography.bodyBold(size: AppTypography.lg)),
+              ),
+              const SizedBox(height: 16),
+              AppInput(label: 'Title *', placeholder: 'e.g., Cardiology Checkup', controller: _titleCtrl, icon: Icons.calendar_today),
+              AppInput(label: 'Doctor Name *', placeholder: 'e.g., Dr. Smith', controller: _doctorCtrl, icon: Icons.person_outline),
+              AppInput(label: 'Location / Hospital', placeholder: 'e.g., City Hospital', controller: _locationCtrl, icon: Icons.location_on_outlined),
+              
+              const Text('Appointment Date & Time *', style: TextStyle(color: AppColors.textSecondary, fontSize: 13, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: AppColors.surfaceBorder),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        backgroundColor: AppColors.surfaceElevated,
+                      ),
+                      icon: const Icon(Icons.calendar_month, size: 18, color: AppColors.primary),
+                      label: Text(
+                        _selectedDate != null
+                            ? '${_selectedDate!.day} ${_monthShort(_selectedDate)} ${_selectedDate!.year}'
+                            : 'Pick Date',
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                      onPressed: () async {
+                        final picked = await showDatePicker(
+                          context: ctx,
+                          initialDate: _selectedDate ?? DateTime.now().add(const Duration(days: 1)),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime.now().add(const Duration(days: 365)),
+                        );
+                        if (picked != null) {
+                          setModalState(() => _selectedDate = picked);
+                          setState(() => _selectedDate = picked);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: AppColors.surfaceBorder),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        backgroundColor: AppColors.surfaceElevated,
+                      ),
+                      icon: const Icon(Icons.access_time, size: 18, color: AppColors.primary),
+                      label: Text(
+                        _selectedTime != null ? _selectedTime!.format(ctx) : 'Pick Time',
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                      onPressed: () async {
+                        final picked = await showTimePicker(
+                          context: ctx,
+                          initialTime: _selectedTime ?? const TimeOfDay(hour: 10, minute: 0),
+                        );
+                        if (picked != null) {
+                          setModalState(() => _selectedTime = picked);
+                          setState(() => _selectedTime = picked);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              AppButton(
+                label: 'Schedule Appointment',
+                onPressed: () => _createAppointment(setModalState),
+                loading: _createLoading,
+                disabled: _createLoading,
+                fullWidth: true,
+              ),
+            ]),
+          ),
         ),
       ),
     );

@@ -8,10 +8,33 @@ let isInitialized = false;
 let messaging = null;
 
 const serviceAccountPath = path.join(__dirname, "serviceAccountKey.json");
+let serviceAccount = null;
 
-if (fs.existsSync(serviceAccountPath)) {
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try {
-    const serviceAccount = require(serviceAccountPath);
+    const raw = process.env.FIREBASE_SERVICE_ACCOUNT.trim();
+    if (raw.startsWith('{')) {
+      serviceAccount = JSON.parse(raw);
+    } else {
+      const decoded = Buffer.from(raw, 'base64').toString('utf8');
+      serviceAccount = JSON.parse(decoded);
+    }
+  } catch (e) {
+    console.error("[Firebase] Failed to parse FIREBASE_SERVICE_ACCOUNT env var:", e.message);
+  }
+} else if (fs.existsSync(serviceAccountPath)) {
+  try {
+    serviceAccount = require(serviceAccountPath);
+  } catch (e) {
+    console.error("[Firebase] Failed to load serviceAccountKey.json:", e.message);
+  }
+}
+
+if (serviceAccount) {
+  try {
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+    }
     const certFn = admin.credential?.cert || admin.cert;
     const app = admin.initializeApp({
       credential: certFn(serviceAccount),
@@ -24,7 +47,7 @@ if (fs.existsSync(serviceAccountPath)) {
   }
 } else {
   console.warn(
-    "[Firebase] serviceAccountKey.json not found at " + serviceAccountPath + ". Push notifications are in mock mode."
+    "[Firebase] serviceAccountKey.json or FIREBASE_SERVICE_ACCOUNT env variable not found. Push notifications are in mock mode."
   );
 }
 
@@ -82,6 +105,8 @@ const sendPushToUsers = async (userIds, { title, body, data = {} }) => {
           sound: "default",
           priority: "high",
           channelId: "silvercare_alerts",
+          defaultSound: true,
+          defaultVibrateTimings: true,
         },
       },
       apns: {

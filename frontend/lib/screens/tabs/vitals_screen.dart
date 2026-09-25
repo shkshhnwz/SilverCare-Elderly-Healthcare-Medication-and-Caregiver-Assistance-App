@@ -12,6 +12,7 @@ import '../../widgets/app_badge.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_input.dart';
 import '../../widgets/app_toast.dart';
+import '../../core/socket_service.dart';
 
 class _VitalConfig {
   final String type;
@@ -40,6 +41,7 @@ class VitalsScreen extends StatefulWidget {
 
 class _VitalsScreenState extends State<VitalsScreen> {
   final ApiClient _api = ApiClient();
+  final SocketService _socket = SocketService();
   Map<String, dynamic>? _trends;
   String _selectedVital = 'BLOOD_PRESSURE';
 
@@ -52,10 +54,16 @@ class _VitalsScreenState extends State<VitalsScreen> {
   void initState() {
     super.initState();
     _load();
+    _socket.on('vital_recorded', _onVitalRecorded);
+  }
+
+  void _onVitalRecorded(dynamic _) {
+    if (mounted) _load();
   }
 
   @override
   void dispose() {
+    _socket.off('vital_recorded');
     _valueCtrl.dispose();
     _systolicCtrl.dispose();
     _diastolicCtrl.dispose();
