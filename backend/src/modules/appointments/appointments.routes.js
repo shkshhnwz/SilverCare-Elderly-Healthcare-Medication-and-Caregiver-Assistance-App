@@ -5,6 +5,7 @@ const {
   getAppointmentDetails,
   listPatientAppointments,
   attachPostAppointmentNotes,
+  completeAppointment,
   downloadICSFile,
 } = require("./appointments.controller");
 
@@ -25,5 +26,8 @@ AppointmentsRouter.get("/:appointmentId/calendar.ics", requireAuth, downloadICSF
 
 // 5. Post-appointment notes attachable to care plan
 AppointmentsRouter.post("/:appointmentId/post-notes", requireAuth, attachPostAppointmentNotes);
+
+// 6. Mark appointment visit as completed
+AppointmentsRouter.patch("/:appointmentId/complete", requireAuth, completeAppointment);
 
 module.exports = AppointmentsRouter;

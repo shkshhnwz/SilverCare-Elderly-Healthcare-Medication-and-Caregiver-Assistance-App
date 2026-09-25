@@ -178,7 +178,8 @@ const listMedicationService = async (patientId) => {
     }));
 };
 
-const scheduleNextDoseService = async (medicationId) => {
+const scheduleNextDoseService = async (medicationId, payload = {}) => {
+    const { scheduledAt } = payload || {};
     const medication = await prisma.medication.findUnique({
         where: { id: medicationId },
         include: { doses: { orderBy: { scheduledAt: 'desc' }, take: 1 } }
@@ -189,7 +190,7 @@ const scheduleNextDoseService = async (medicationId) => {
     }
 
     const latestDose = medication.doses[0];
-    const nextScheduledAt = computeNextDoseAt(
+    const nextScheduledAt = scheduledAt ? new Date(scheduledAt) : computeNextDoseAt(
         medication.frequencyRRule, 
         latestDose ? new Date(latestDose.scheduledAt) : new Date()
     );
@@ -202,7 +203,43 @@ const scheduleNextDoseService = async (medicationId) => {
         }
     });
 
-    return { ...newDose, state: newDose.state.toLowerCase() };
+    return { ...newDose, state: newDose.state.toLowerCase(), patientId: medication.patientId, medicationName: medication.medicationName };
+};
+
+const rescheduleDoseService = async (medicationId, doseId, payload = {}) => {
+    const { newScheduledAt, reason } = payload;
+    if (!newScheduledAt) {
+        throw new Error("newScheduledAt is required");
+    }
+
+    const dose = await prisma.medicationDose.findUnique({
+        where: { id: doseId },
+        include: { medication: { select: { id: true, patientId: true, medicationName: true } } },
+    });
+
+    if (!dose || dose.medicationId !== medicationId) {
+        throw new Error("Dose not found for this medication");
+    }
+
+    const updated = await prisma.medicationDose.update({
+        where: { id: doseId },
+        data: {
+            scheduledAt: new Date(newScheduledAt),
+            state: DOSE_STATES.SCHEDULED,
+            metadata: {
+                ...(dose.metadata || {}),
+                rescheduledAt: new Date().toISOString(),
+                rescheduleReason: reason || "User requested reschedule",
+            },
+        },
+    });
+
+    return {
+        ...updated,
+        state: updated.state.toLowerCase(),
+        patientId: dose.medication.patientId,
+        medicationName: dose.medication.medicationName,
+    };
 };
 
 const acknowledgeDoseService = async (medicationId, doseId, payload) => {
@@ -370,6 +407,7 @@ module.exports = {
     createMedicationService,
     listMedicationService,
     scheduleNextDoseService,
+    rescheduleDoseService,
     acknowledgeDoseService,
     escalateDoseService,
     getRefillPredictionService,

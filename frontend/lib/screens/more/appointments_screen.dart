@@ -121,8 +121,29 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
+  int _selectedTab = 0; // 0: Upcoming, 1: Completed
+
+  Future<void> _completeAppointment(String aptId) async {
+    try {
+      await _api.patch('/api/appointments/$aptId/complete');
+      if (mounted) {
+        context.showToast('Appointment marked as completed! 🎉', type: ToastType.success);
+        _load();
+      }
+    } catch (e) {
+      if (mounted) {
+        context.showToast('Failed to complete appointment', type: ToastType.error);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredAppointments = _appointments.where((apt) {
+      final isCompleted = apt['status'] == 'COMPLETED';
+      return _selectedTab == 0 ? !isCompleted : isCompleted;
+    }).toList();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -130,58 +151,213 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         backgroundColor: AppColors.background,
         actions: [
           if (context.watch<AuthProvider>().canWrite)
-            IconButton(icon: const Icon(Icons.add, color: AppColors.primary),
-                onPressed: () => _showCreateModal(context)),
+            IconButton(
+              icon: const Icon(Icons.add, color: AppColors.primary),
+              onPressed: () => _showCreateModal(context),
+            ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
-          : RefreshIndicator(
-              onRefresh: _load,
-              color: AppColors.primary,
-              child: _appointments.isEmpty
-                  ? ListView(children: [
-                      const SizedBox(height: 60),
-                      Center(child: Column(children: [
-                        const Text('📅', style: TextStyle(fontSize: 48)),
-                        const SizedBox(height: 12),
-                        Text('No Appointments', style: AppTypography.bodyBold(size: AppTypography.lg)),
-                        const SizedBox(height: 4),
-                        Text('Schedule your next appointment', style: AppTypography.body(size: AppTypography.sm, color: AppColors.textMuted)),
-                      ])),
-                    ])
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(AppSpacing.base),
-                      itemCount: _appointments.length,
-                      itemBuilder: (_, i) {
-                        final apt = _appointments[i];
-                        final date = DateTime.tryParse(apt['scheduledAt'] ?? '');
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: AppCard(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 44, height: 44,
-                                  decoration: BoxDecoration(color: AppColors.primaryFaint, borderRadius: BorderRadius.circular(12)),
-                                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                    Text('${date?.day ?? ''}', style: AppTypography.bodyBold(size: AppTypography.md, color: AppColors.primary)),
-                                    Text(_monthShort(date), style: TextStyle(fontSize: 10, color: AppColors.primary)),
-                                  ]),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  Text(apt['title'] ?? 'Appointment', style: AppTypography.bodySemiBold()),
-                                  Text(apt['location'] ?? 'Location TBD', style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted)),
-                                ])),
-                                AppBadge(label: apt['type'] ?? 'Visit', variant: BadgeVariant.primary),
-                              ],
+      body: Column(
+        children: [
+          // Filter Tabs
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.base, vertical: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceElevated,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.surfaceBorder),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedTab = 0),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _selectedTab == 0 ? AppColors.primary : Colors.transparent,
+                          borderRadius: BorderRadius.circular(9),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Upcoming (${_appointments.where((a) => a['status'] != 'COMPLETED').length})',
+                            style: TextStyle(
+                              color: _selectedTab == 0 ? Colors.white : AppColors.textMuted,
+                              fontWeight: _selectedTab == 0 ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 13,
                             ),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedTab = 1),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _selectedTab == 1 ? AppColors.primary : Colors.transparent,
+                          borderRadius: BorderRadius.circular(9),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Completed (${_appointments.where((a) => a['status'] == 'COMPLETED').length})',
+                            style: TextStyle(
+                              color: _selectedTab == 1 ? Colors.white : AppColors.textMuted,
+                              fontWeight: _selectedTab == 1 ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+          ),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    color: AppColors.primary,
+                    child: filteredAppointments.isEmpty
+                        ? ListView(children: [
+                            const SizedBox(height: 60),
+                            Center(child: Column(children: [
+                              Text(_selectedTab == 0 ? '📅' : '✅', style: const TextStyle(fontSize: 48)),
+                              const SizedBox(height: 12),
+                              Text(
+                                _selectedTab == 0 ? 'No Upcoming Appointments' : 'No Completed Visits',
+                                style: AppTypography.bodyBold(size: AppTypography.lg),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _selectedTab == 0
+                                    ? 'Schedule your next visit above'
+                                    : 'Completed visits will be archived here',
+                                style: AppTypography.body(size: AppTypography.sm, color: AppColors.textMuted),
+                              ),
+                            ])),
+                          ])
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(AppSpacing.base),
+                            itemCount: filteredAppointments.length,
+                            itemBuilder: (_, i) {
+                              final apt = filteredAppointments[i];
+                              final date = DateTime.tryParse(apt['scheduledAt'] ?? '');
+                              final isCompleted = apt['status'] == 'COMPLETED';
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: AppCard(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 48,
+                                            height: 48,
+                                            decoration: BoxDecoration(
+                                              color: isCompleted ? AppColors.successFaint : AppColors.primaryFaint,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '${date?.day ?? ''}',
+                                                  style: AppTypography.bodyBold(
+                                                    size: AppTypography.md,
+                                                    color: isCompleted ? AppColors.success : AppColors.primary,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  _monthShort(date),
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: isCompleted ? AppColors.success : AppColors.primary,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  apt['title'] ?? 'Appointment',
+                                                  style: AppTypography.bodySemiBold(size: AppTypography.md),
+                                                ),
+                                                if (apt['doctorName'] != null && apt['doctorName'].toString().isNotEmpty) ...[
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    'Dr. ${apt['doctorName']}',
+                                                    style: AppTypography.body(size: AppTypography.xs, color: AppColors.primary),
+                                                  ),
+                                                ],
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  '📍 ${apt['clinicOrHospital'] ?? apt['location'] ?? 'Location TBD'}',
+                                                  style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              AppBadge(
+                                                label: isCompleted ? 'Completed' : (apt['type'] ?? 'Visit'),
+                                                variant: isCompleted ? BadgeVariant.success : BadgeVariant.primary,
+                                              ),
+                                              if (date != null) ...[
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
+                                                  style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      if (!isCompleted && context.watch<AuthProvider>().canWrite) ...[
+                                        const SizedBox(height: 12),
+                                        const Divider(height: 1, color: AppColors.surfaceBorder),
+                                        const SizedBox(height: 10),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: OutlinedButton.icon(
+                                            onPressed: () => _completeAppointment(apt['id'].toString()),
+                                            icon: const Icon(Icons.check_circle_outline, size: 18, color: AppColors.success),
+                                            label: const Text('Mark Visit Completed', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.bold, fontSize: 13)),
+                                            style: OutlinedButton.styleFrom(
+                                              side: const BorderSide(color: AppColors.success),
+                                              backgroundColor: AppColors.successFaint,
+                                              padding: const EdgeInsets.symmetric(vertical: 10),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 

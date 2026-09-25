@@ -127,15 +127,121 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     }
   }
 
-  Future<void> _scheduleNext(String medId) async {
+  Future<void> _rescheduleDose(String medId, String doseId, dynamic currentScheduledAt) async {
+    DateTime initial = DateTime.now().add(const Duration(hours: 1));
+    if (currentScheduledAt != null) {
+      final parsed = DateTime.tryParse(currentScheduledAt.toString());
+      if (parsed != null) initial = parsed;
+    }
+
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initial.isBefore(DateTime.now()) ? DateTime.now() : initial,
+      firstDate: DateTime.now().subtract(const Duration(days: 1)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      helpText: 'Select New Dose Date',
+    );
+    if (pickedDate == null || !mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initial),
+      helpText: 'Select New Dose Time',
+    );
+    if (pickedTime == null || !mounted) return;
+
+    final newScheduled = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+
     try {
-      await _api.post('/api/medications/$medId/doses/schedule-next');
+      await _api.post('/api/medications/$medId/doses/$doseId/reschedule', data: {
+        'newScheduledAt': newScheduled.toIso8601String(),
+        'reason': 'Rescheduled from app',
+      });
+      if (mounted) {
+        context.showToast('Dose rescheduled to ${_formatDateTime(newScheduled.toIso8601String())}', type: ToastType.success);
+        _load();
+      }
+    } catch (e) {
+      if (mounted) context.showToast('Failed to reschedule dose', type: ToastType.error);
+    }
+  }
+
+  Future<void> _scheduleNext(String medId) async {
+    final choice = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(AppSpacing.base),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Schedule Next Dose', style: AppTypography.bodyBold(size: AppTypography.lg)),
+            const SizedBox(height: 12),
+            ListTile(
+              leading: const Icon(Icons.auto_awesome, color: AppColors.primary),
+              title: const Text('Recommended Time', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              subtitle: const Text('Calculates next dose based on medication schedule', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+              onTap: () => Navigator.pop(ctx, 'AUTO'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule, color: AppColors.info),
+              title: const Text('Pick Specific Date & Time', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              subtitle: const Text('Select a custom time for the dose', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+              onTap: () => Navigator.pop(ctx, 'CUSTOM'),
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+
+    if (choice == null || !mounted) return;
+
+    DateTime? customDateTime;
+    if (choice == 'CUSTOM') {
+      final now = DateTime.now();
+      final pickedDate = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: now,
+        lastDate: now.add(const Duration(days: 365)),
+        helpText: 'Select Next Dose Date',
+      );
+      if (pickedDate == null || !mounted) return;
+
+      final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: 'Select Next Dose Time',
+      );
+      if (pickedTime == null || !mounted) return;
+
+      customDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+    }
+
+    try {
+      final payload = customDateTime != null ? {'scheduledAt': customDateTime.toIso8601String()} : null;
+      await _api.post('/api/medications/$medId/doses/schedule-next', data: payload);
       if (mounted) {
         context.showToast('Next dose scheduled', type: ToastType.success);
         _load();
       }
     } catch (e) {
-      if (mounted) context.showToast('Failed', type: ToastType.error);
+      if (mounted) context.showToast('Failed to schedule next dose', type: ToastType.error);
     }
   }
 
@@ -320,6 +426,18 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(Icons.check, size: 16, color: AppColors.success),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => _rescheduleDose(med['id'].toString(), dose['id'].toString(), dose['scheduledAt']),
+                        child: Container(
+                          width: 32, height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.infoFaint,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.schedule, size: 16, color: AppColors.info),
                         ),
                       ),
                       const SizedBox(width: 8),

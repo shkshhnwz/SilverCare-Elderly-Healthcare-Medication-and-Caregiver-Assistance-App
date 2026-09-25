@@ -9,6 +9,7 @@ const {
   clockOutShiftService,
   listPatientShiftsService,
 } = require("./carePlanCoordination.services");
+const { notifyCareCircle } = require("../../utils/circleNotifier");
 
 const upsertCarePlan = async (req, res, next) => {
   try {
@@ -36,6 +37,13 @@ const createCareTask = async (req, res, next) => {
       if (result.patientId) io.to(`circle_${result.patientId}`).emit('care_task_updated', result);
       io.emit('care_task_updated', result);
     }
+    notifyCareCircle(result.patientId, {
+      title: "📋 New Task Assigned",
+      body: `New care task: "${result.title}" scheduled`,
+      data: { type: "TASK_CREATED", taskId: result.id },
+      actorUserId: req.user.id,
+      io,
+    });
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -50,6 +58,13 @@ const completeCareTask = async (req, res, next) => {
       if (result.patientId) io.to(`circle_${result.patientId}`).emit('care_task_updated', result);
       io.emit('care_task_updated', result);
     }
+    notifyCareCircle(result.patientId, {
+      title: "✅ Task Completed",
+      body: `Task "${result.title}" marked as completed`,
+      data: { type: "TASK_COMPLETED", taskId: result.id },
+      actorUserId: req.user.id,
+      io,
+    });
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -64,6 +79,14 @@ const toggleCareTask = async (req, res, next) => {
       if (result.patientId) io.to(`circle_${result.patientId}`).emit('care_task_updated', result);
       io.emit('care_task_updated', result);
     }
+    const isCompleted = result.status === 'COMPLETED';
+    notifyCareCircle(result.patientId, {
+      title: isCompleted ? "✅ Task Completed" : "📋 Task Re-opened",
+      body: `Task "${result.title}" ${isCompleted ? 'marked as completed' : 'set to pending'}`,
+      data: { type: "TASK_TOGGLED", taskId: result.id, status: result.status },
+      actorUserId: req.user.id,
+      io,
+    });
     res.status(200).json(result);
   } catch (error) {
     next(error);

@@ -38,6 +38,7 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _socket.on('emergency_triggered', _handleEmergencyAlert);
     _socket.on('emergency_resolved', _handleEmergencyResolved);
+    _socket.on('circle_notification', _handleCircleNotification);
     LocationService.requestPermission();
     NotificationService.syncDeviceToken(ApiClient());
   }
@@ -46,7 +47,20 @@ class _AppShellState extends State<AppShell> {
   void dispose() {
     _socket.off('emergency_triggered');
     _socket.off('emergency_resolved');
+    _socket.off('circle_notification');
     super.dispose();
+  }
+
+  void _handleCircleNotification(dynamic data) {
+    if (!mounted || data == null) return;
+    String title = 'Care Circle';
+    String body = '';
+    if (data is Map) {
+      title = data['title']?.toString() ?? 'Care Circle';
+      body = data['body']?.toString() ?? '';
+    }
+    final text = body.isNotEmpty ? '$title: $body' : title;
+    context.showToast(text, type: ToastType.info, duration: const Duration(seconds: 4));
   }
 
   void _handleEmergencyAlert(dynamic data) {

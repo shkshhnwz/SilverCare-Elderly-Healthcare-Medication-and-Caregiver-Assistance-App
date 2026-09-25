@@ -59,6 +59,7 @@ class _VitalsScreenState extends State<VitalsScreen> {
       if (mounted) _load();
     });
     _socket.on('vital_recorded', _onVitalRecorded);
+    _socket.on('vital_deleted', _onVitalRecorded);
   }
 
   @override
@@ -78,6 +79,7 @@ class _VitalsScreenState extends State<VitalsScreen> {
   @override
   void dispose() {
     _socket.off('vital_recorded');
+    _socket.off('vital_deleted');
     _valueCtrl.dispose();
     _systolicCtrl.dispose();
     _diastolicCtrl.dispose();
@@ -116,6 +118,55 @@ class _VitalsScreenState extends State<VitalsScreen> {
 
   Future<void> _onRefresh() async {
     await _load();
+  }
+
+  Future<void> _deleteReading(String readingId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: const [
+            Icon(Icons.delete_outline, color: AppColors.danger, size: 24),
+            SizedBox(width: 8),
+            Text('Delete Vital Reading', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
+        content: const Text(
+          'Are you sure you want to delete this vital record? This cannot be undone.',
+          style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.danger,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await _api.delete('/api/vitals/readings/$readingId');
+      if (mounted) {
+        context.showToast('Vital reading deleted', type: ToastType.success);
+        _load();
+      }
+    } catch (e) {
+      if (mounted) {
+        context.showToast('Failed to delete vital reading', type: ToastType.error);
+      }
+    }
   }
 
   Future<void> _handleLog([StateSetter? setModalState]) async {
@@ -391,7 +442,7 @@ class _VitalsScreenState extends State<VitalsScreen> {
 
   Widget _buildRecentList() {
     return Column(
-      children: _recentReadings.take(8).map((r) {
+      children: _recentReadings.take(15).map((r) {
         final type = r['vitalType'] ?? '';
         final config = _vitalConfigs.firstWhere(
           (c) => c.type == type,
@@ -407,6 +458,8 @@ class _VitalsScreenState extends State<VitalsScreen> {
         } else {
           valStr = '${r['value'] ?? ''} ${config.unit}';
         }
+
+        final readingId = r['id']?.toString();
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -432,6 +485,17 @@ class _VitalsScreenState extends State<VitalsScreen> {
                   valStr,
                   style: AppTypography.bodyBold(size: AppTypography.sm, color: config.color),
                 ),
+                if (readingId != null && context.watch<AuthProvider>().canWrite) ...[
+                  const SizedBox(width: 8),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => _deleteReading(readingId),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: const Icon(Icons.delete_outline, size: 18, color: AppColors.textMuted),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

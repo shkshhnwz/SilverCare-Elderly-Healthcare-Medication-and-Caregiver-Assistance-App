@@ -402,11 +402,20 @@ const listPatientReadingsService = async (patientId, limit = 50) => {
   });
 };
 
+const deleteVitalReadingService = async (readingId, userId) => {
+  const reading = await prisma.vitalReading.findUnique({ where: { id: readingId } });
+  if (!reading) throw new Error("Vital reading not found");
+
+  await prisma.vitalReading.delete({ where: { id: readingId } });
+  return { success: true, readingId, patientId: reading.patientId, vitalType: reading.vitalType };
+};
+
 module.exports = {
   recordVitalReadingService,
   setPatientThresholdService,
   getPatientThresholdsService,
   getVitalTrendsService,
   listPatientReadingsService,
+  deleteVitalReadingService,
   resolveAlertService,
 };

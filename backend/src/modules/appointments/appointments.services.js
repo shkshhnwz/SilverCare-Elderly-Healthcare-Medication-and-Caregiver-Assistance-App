@@ -278,10 +278,30 @@ const attachPostAppointmentNotesService = async (appointmentId, payload, created
   };
 };
 
+/**
+ * 5. Mark Appointment Visit as Completed
+ */
+const completeAppointmentService = async (appointmentId, payload = {}) => {
+  const { notes } = payload || {};
+  return await prisma.appointment.update({
+    where: { id: appointmentId },
+    data: {
+      status: "COMPLETED",
+      notes: notes || undefined,
+    },
+    include: {
+      patient: { select: { id: true, firstName: true, lastName: true } },
+      accompanyingCaregiver: { select: { id: true, firstName: true, lastName: true } },
+      postAppointmentNote: true,
+    },
+  });
+};
+
 module.exports = {
   scheduleAppointmentService,
   getAppointmentDetailsService,
   listPatientAppointmentsService,
   attachPostAppointmentNotesService,
+  completeAppointmentService,
   generateICSContent,
 };

@@ -6,6 +6,7 @@ const {
   getPatientThresholds,
   getVitalTrends,
   listPatientReadings,
+  deleteVitalReading,
   resolveAlert,
 } = require("./vitals.controller");
 
@@ -14,6 +15,9 @@ const WRITER_ROLES = ["OWNER", "CAREGIVER_FULL", "PROFESSIONAL", "PHYSICIAN"];
 
 // Record manual or BLE reading
 VitalsRouter.post("/readings", requireAuth, requireCircleRole(WRITER_ROLES), recordVitalReading);
+
+// Delete vital reading
+VitalsRouter.delete("/readings/:readingId", requireAuth, deleteVitalReading);
 
 // Dynamic Thresholds (per-patient)
 VitalsRouter.post("/patients/:patientId/thresholds", requireAuth, setPatientThreshold);
