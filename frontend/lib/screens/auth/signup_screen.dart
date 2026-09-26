@@ -113,15 +113,13 @@ class _SignupScreenState extends State<SignupScreen> {
               // Header
               Column(
                 children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryFaint,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primary, width: 2),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      'assets/brand/silvercare-app-icon-512x512.png',
+                      width: 64,
+                      height: 64,
                     ),
-                    child: const Center(child: Text('🏥', style: TextStyle(fontSize: 28))),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text('SilverCare',
