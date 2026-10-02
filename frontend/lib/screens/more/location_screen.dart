@@ -148,7 +148,7 @@ class _LocationScreenState extends State<LocationScreen> {
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text('Delete', style: TextStyle(color: AppColors.danger)),
           ),
         ],
       ),
@@ -380,24 +380,24 @@ class _LocationScreenState extends State<LocationScreen> {
                         margin: const EdgeInsets.only(bottom: 16),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppColors.errorFaint,
+                          color: AppColors.dangerFaint,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.error.withValues(alpha: 0.4), width: 1.5),
+                          border: Border.all(color: AppColors.danger.withValues(alpha: 0.4), width: 1.5),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 24),
+                                const Icon(Icons.warning_amber_rounded, color: AppColors.danger, size: 24),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     'CRITICAL: Safe Zone Breach Detected!',
-                                    style: AppTypography.bodyBold(size: AppTypography.md, color: AppColors.error),
+                                    style: AppTypography.bodyBold(size: AppTypography.md, color: AppColors.danger),
                                   ),
                                 ),
-                                AppBadge(label: 'ACTIVE', variant: BadgeVariant.error),
+                                const AppBadge(label: 'ACTIVE', variant: BadgeVariant.danger),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -595,7 +595,7 @@ class _LocationScreenState extends State<LocationScreen> {
                               ),
                               if (context.watch<AuthProvider>().canWrite && zoneId.isNotEmpty)
                                 IconButton(
-                                  icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                                  icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.danger),
                                   onPressed: () => _deleteSafeZone(zoneId),
                                   tooltip: 'Delete Zone',
                                 ),

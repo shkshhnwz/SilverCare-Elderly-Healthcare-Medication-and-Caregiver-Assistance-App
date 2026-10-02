@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
 
-enum BadgeVariant { success, danger, warning, info, primary, muted }
+enum BadgeVariant { success, danger, warning, info, primary, muted, accent, error }
 
 class AppBadge extends StatelessWidget {
   final String label;
@@ -49,6 +49,10 @@ class AppBadge extends StatelessWidget {
         return _BadgeConfig(AppColors.primaryFaint, AppColors.primary);
       case BadgeVariant.muted:
         return _BadgeConfig(AppColors.surfaceElevated, AppColors.textMuted);
+      case BadgeVariant.accent:
+        return _BadgeConfig(AppColors.accentFaint, AppColors.accent);
+      case BadgeVariant.error:
+        return _BadgeConfig(AppColors.dangerFaint, AppColors.danger);
     }
   }
 }

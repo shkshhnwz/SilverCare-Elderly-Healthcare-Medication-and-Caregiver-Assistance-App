@@ -4,26 +4,28 @@
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
 
-enum AppButtonVariant { primary, secondary, danger, ghost, warning }
+enum AppButtonVariant { primary, secondary, danger, ghost, warning, outline }
 
 class AppButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final AppButtonVariant variant;
   final bool loading;
   final bool disabled;
   final bool fullWidth;
   final EdgeInsetsGeometry? margin;
+  final IconData? icon;
 
   const AppButton({
     super.key,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     this.variant = AppButtonVariant.primary,
     this.loading = false,
     this.disabled = false,
     this.fullWidth = false,
     this.margin,
+    this.icon,
   });
 
   @override
@@ -36,7 +38,7 @@ class AppButton extends StatelessWidget {
         width: fullWidth ? double.infinity : null,
         height: 50,
         child: Opacity(
-          opacity: (disabled || loading) ? 0.5 : 1.0,
+          opacity: (disabled || loading || onPressed == null) ? 0.5 : 1.0,
           child: OutlinedButton(
             onPressed: (disabled || loading) ? null : onPressed,
             style: OutlinedButton.styleFrom(
@@ -56,13 +58,29 @@ class AppButton extends StatelessWidget {
                       color: config.text,
                     ),
                   )
-                : Text(
-                    label,
-                    style: AppTypography.bodySemiBold(
-                      size: AppTypography.base,
-                      color: config.text,
-                    ).copyWith(letterSpacing: 0.3),
-                  ),
+                : (icon != null)
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(icon, size: 18, color: config.text),
+                          const SizedBox(width: 8),
+                          Text(
+                            label,
+                            style: AppTypography.bodySemiBold(
+                              size: AppTypography.base,
+                              color: config.text,
+                            ).copyWith(letterSpacing: 0.3),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        label,
+                        style: AppTypography.bodySemiBold(
+                          size: AppTypography.base,
+                          color: config.text,
+                        ).copyWith(letterSpacing: 0.3),
+                      ),
           ),
         ),
       ),
@@ -81,6 +99,8 @@ class AppButton extends StatelessWidget {
         return _VariantConfig(Colors.transparent, AppColors.primary, AppColors.primary);
       case AppButtonVariant.warning:
         return _VariantConfig(AppColors.warning, AppColors.textInverse, AppColors.warning);
+      case AppButtonVariant.outline:
+        return _VariantConfig(Colors.transparent, AppColors.primary, AppColors.primary);
     }
   }
 }

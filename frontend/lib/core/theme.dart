@@ -28,6 +28,8 @@ class AppColors {
   // Semantic
   static const Color danger = Color(0xFFF43F5E);
   static Color dangerFaint = const Color(0xFFF43F5E).withValues(alpha: 0.12);
+  static const Color error = danger;
+  static Color get errorFaint => dangerFaint;
   static const Color warning = Color(0xFFF59E0B);
   static Color warningFaint = const Color(0xFFF59E0B).withValues(alpha: 0.12);
   static const Color success = Color(0xFF10B981);
