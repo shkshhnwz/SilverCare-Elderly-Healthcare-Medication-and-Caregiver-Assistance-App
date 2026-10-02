@@ -2,7 +2,9 @@
 // Bottom navigation shell — 5 tabs matching the React Native layout
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../core/theme.dart';
+import '../core/auth_provider.dart';
 import '../core/socket_service.dart';
 import '../core/location_service.dart';
 import '../core/notification_service.dart';
@@ -39,11 +41,16 @@ class _AppShellState extends State<AppShell> {
     _socket.on('emergency_triggered', _handleEmergencyAlert);
     _socket.on('emergency_resolved', _handleEmergencyResolved);
     _socket.on('circle_notification', _handleCircleNotification);
+    _socket.on('location_alert', _handleLocationAlert);
     LocationService.requestPermission();
     NotificationService.syncDeviceToken(ApiClient());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         NotificationService.checkAndPromptPermission(context);
+        final auth = context.read<AuthProvider>();
+        if (auth.activePatientId.isNotEmpty) {
+          LocationService.startPeriodicTracking(patientId: auth.activePatientId);
+        }
       }
     });
   }
@@ -53,7 +60,17 @@ class _AppShellState extends State<AppShell> {
     _socket.off('emergency_triggered');
     _socket.off('emergency_resolved');
     _socket.off('circle_notification');
+    _socket.off('location_alert');
+    LocationService.stopPeriodicTracking();
     super.dispose();
+  }
+
+  void _handleLocationAlert(dynamic data) {
+    if (!mounted || data == null) return;
+    final drift = (data is Map && data['driftDistanceM'] != null)
+        ? '${data['driftDistanceM']}m'
+        : 'outside safe zone';
+    context.showToast('⚠️ Safe Zone Breach: Patient is $drift beyond designated boundary!', type: ToastType.error);
   }
 
   void _handleCircleNotification(dynamic data) {

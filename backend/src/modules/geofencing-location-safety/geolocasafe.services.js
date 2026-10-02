@@ -1,4 +1,5 @@
 const prisma = require("../../config/prisma");
+const { sendPushToUsers } = require("../../config/firebase");
 
 /**
  * Calculates Great-Circle distance between two coordinates in meters using the Haversine formula
@@ -146,6 +147,54 @@ const recordLocationPingService = async (payload) => {
         message: `Geofence breach detected! Patient is ${driftM}m outside safe zones. Real-time emergency tracking active.`,
       },
     });
+
+    // 4. Create ActivityFeedItem & dispatch push notifications to caregivers
+    try {
+      const patient = await prisma.user.findUnique({
+        where: { id: patientId },
+        select: { firstName: true, lastName: true },
+      });
+      const patientName = patient ? `${patient.firstName} ${patient.lastName}` : "Care Recipient";
+
+      await prisma.activityFeedItem.create({
+        data: {
+          patientId,
+          authorId: patientId,
+          activityType: "GEOFENCE_BREACH",
+          title: "⚠️ Geofence Breach Detected",
+          summary: `${patientName} drifted ${driftM}m outside designated safe zones.`,
+          metadata: {
+            alertId: triggeredAlert.id,
+            driftDistanceM: driftM,
+            latitude: lat,
+            longitude: lng,
+            mapUrl,
+          },
+        },
+      });
+
+      // Send push notification to care circle members
+      const memberships = await prisma.careCircleMember.findMany({
+        where: { circle: { patientId }, status: "ACTIVE" },
+        select: { userId: true },
+      });
+      const caregiverIds = memberships.map((m) => m.userId).filter(Boolean);
+      if (caregiverIds.length > 0) {
+        sendPushToUsers(caregiverIds, {
+          title: "⚠️ Geofence Breach Alert",
+          body: `${patientName} is ${driftM}m outside safe boundaries!`,
+          data: {
+            type: "GEOFENCE_BREACH",
+            patientId,
+            alertId: triggeredAlert.id,
+            mapUrl,
+            driftDistanceM: driftM,
+          },
+        }).catch((err) => console.error("[FCM Geofence Push Error]:", err.message));
+      }
+    } catch (feedErr) {
+      console.error("[Geofence Alert Feed/Notification Error]:", feedErr.message);
+    }
   } else {
     // If inside safe zone, check if there's an ongoing session
     const now = new Date();
@@ -218,9 +267,19 @@ const getActiveTrackingStatusService = async (patientId) => {
     },
   });
 
+  // Also query all active (unresolved) location alerts for this patient
+  const activeAlerts = await prisma.locationAlert.findMany({
+    where: {
+      patientId,
+      status: "ACTIVE",
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
   return {
     isTrackingActive: !!session,
     session: session || null,
+    activeAlerts: activeAlerts || [],
   };
 };
 
@@ -239,11 +298,33 @@ const resolveLocationAlertService = async (alertId, caregiverId, resolutionNotes
   });
 };
 
+/**
+ * Delete a Safe Zone
+ */
+const deleteSafeZoneService = async (zoneId) => {
+  return await prisma.safeZone.delete({
+    where: { id: zoneId },
+  });
+};
+
+/**
+ * List all location alerts for a patient (history)
+ */
+const listLocationAlertsService = async (patientId) => {
+  return await prisma.locationAlert.findMany({
+    where: { patientId },
+    orderBy: { createdAt: "desc" },
+    take: 20,
+  });
+};
+
 module.exports = {
   createSafeZoneService,
   listSafeZonesService,
+  deleteSafeZoneService,
   recordLocationPingService,
   initiateTrackingSessionService,
   getActiveTrackingStatusService,
   resolveLocationAlertService,
+  listLocationAlertsService,
 };

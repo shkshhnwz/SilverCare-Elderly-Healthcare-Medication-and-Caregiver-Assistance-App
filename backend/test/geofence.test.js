@@ -253,10 +253,43 @@ async function runGeofenceTestSuite() {
     pass(`Alert resolved by Mary Bailey with recovery notes: "${resolveData.resolutionNotes}"`);
 
     // --------------------------------------------------------------------------------------------
+    // 7. VERIFY ACTIVITY FEED ITEM CREATION
+    // --------------------------------------------------------------------------------------------
+    header("7. Verify Unified Care Activity Feed Item");
+    console.log("   WHY: Caregivers monitoring the activity feed must see the geofence breach timeline entry.");
+
+    const feedItem = await prisma.activityFeedItem.findFirst({
+      where: {
+        patientId,
+        activityType: "GEOFENCE_BREACH",
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!feedItem) {
+      throw new Error("Expected ActivityFeedItem with activityType GEOFENCE_BREACH to be created");
+    }
+    pass(`ActivityFeedItem verified: "${feedItem.title}" - "${feedItem.summary}"`);
+
+    // --------------------------------------------------------------------------------------------
+    // 8. DELETE SAFE ZONE
+    // --------------------------------------------------------------------------------------------
+    header("8. Caregiver Deletes Safe Zone");
+    console.log("   WHY: Caregiver can remove outdated or temporary safe zones.");
+
+    const deleteRes = await fetch(`${BASE_URL}/location-safety/safe-zones/${zoneData.id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${caregiverToken}` },
+    });
+    const deleteData = await deleteRes.json();
+    if (!deleteRes.ok) throw new Error(`Safe zone deletion failed: ${JSON.stringify(deleteData)}`);
+    pass(`Safe zone deleted successfully (ID: ${zoneData.id})`);
+
+    // --------------------------------------------------------------------------------------------
     // ALL TESTS PASSED
     // --------------------------------------------------------------------------------------------
     console.log(`\n${colors.bold}${colors.green}========================================================================${colors.reset}`);
-    console.log(`${colors.bold}${colors.green}  ALL 6 GEOFENCING & LOCATION SAFETY (6.5) TESTS PASSED!                ${colors.reset}`);
+    console.log(`${colors.bold}${colors.green}  ALL 8 GEOFENCING & LOCATION SAFETY (6.5) TESTS PASSED!                ${colors.reset}`);
     console.log(`${colors.bold}${colors.green}========================================================================${colors.reset}\n`);
 
   } catch (error) {

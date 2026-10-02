@@ -2,6 +2,7 @@
 // Location Safety — safe zones & geofencing (PRD 6.5)
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme.dart';
 import '../../core/auth_provider.dart';
@@ -24,8 +25,12 @@ class _LocationScreenState extends State<LocationScreen> {
   final ApiClient _api = ApiClient();
   final SocketService _socket = SocketService();
   List<dynamic> _geofences = [];
+  List<dynamic> _activeAlerts = [];
+  Map<String, dynamic>? _trackingSession;
+  bool _isTrackingActive = false;
   bool _loading = true;
   bool _createLoading = false;
+  bool _pingLoading = false;
 
   final _nameCtrl = TextEditingController();
   final _radiusCtrl = TextEditingController(text: '500');
@@ -37,7 +42,10 @@ class _LocationScreenState extends State<LocationScreen> {
     super.initState();
     _load();
     _socket.on('safe_zone_created', _onSocketUpdate);
+    _socket.on('safe_zone_deleted', _onSocketUpdate);
     _socket.on('location_alert', _onSocketUpdate);
+    _socket.on('location_alert_resolved', _onSocketUpdate);
+    _socket.on('location_ping', _onSocketUpdate);
   }
 
   void _onSocketUpdate(dynamic _) {
@@ -47,7 +55,10 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   void dispose() {
     _socket.off('safe_zone_created');
+    _socket.off('safe_zone_deleted');
     _socket.off('location_alert');
+    _socket.off('location_alert_resolved');
+    _socket.off('location_ping');
     _nameCtrl.dispose();
     _radiusCtrl.dispose();
     _latCtrl.dispose();
@@ -58,12 +69,150 @@ class _LocationScreenState extends State<LocationScreen> {
   Future<void> _load() async {
     final auth = context.read<AuthProvider>();
     final patientId = auth.activePatientId;
-    if (patientId.isEmpty) return;
+    if (patientId.isEmpty) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
     try {
-      final res = await _api.get('/api/location-safety/patients/$patientId/safe-zones');
-      if (mounted) setState(() { _geofences = res.data as List<dynamic>? ?? []; _loading = false; });
+      final results = await Future.wait([
+        _api.get('/api/location-safety/patients/$patientId/safe-zones'),
+        _api.get('/api/location-safety/patients/$patientId/tracking-status'),
+      ]);
+
+      final zonesRes = results[0];
+      final statusRes = results[1];
+
+      if (mounted) {
+        setState(() {
+          _geofences = zonesRes.data as List<dynamic>? ?? [];
+          final statusData = statusRes.data is Map<String, dynamic>
+              ? statusRes.data as Map<String, dynamic>
+              : {};
+          _isTrackingActive = statusData['isTrackingActive'] == true;
+          _trackingSession = statusData['session'] is Map<String, dynamic>
+              ? statusData['session'] as Map<String, dynamic>
+              : null;
+          _activeAlerts = statusData['activeAlerts'] as List<dynamic>? ?? [];
+          _loading = false;
+        });
+      }
     } catch (_) {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _pingCurrentLocation() async {
+    final auth = context.read<AuthProvider>();
+    final patientId = auth.activePatientId;
+    if (patientId.isEmpty) {
+      context.showToast('No active care recipient selected', type: ToastType.error);
+      return;
+    }
+
+    setState(() => _pingLoading = true);
+    context.showToast('Acquiring GPS fix & evaluating boundaries...', type: ToastType.info);
+
+    try {
+      final res = await LocationService.sendLocationPing(patientId: patientId);
+      if (!mounted) return;
+      setState(() => _pingLoading = false);
+
+      if (res != null) {
+        final inside = res['isInsideSafeZone'] == true;
+        if (inside) {
+          context.showToast('✅ Inside safe zone boundaries. No breach.', type: ToastType.success);
+        } else {
+          final alert = res['alert'];
+          final drift = alert != null ? '${alert['driftDistanceM']}m' : '';
+          context.showToast('⚠️ Breach detected! $drift outside safe zone.', type: ToastType.error);
+        }
+        _load();
+      } else {
+        context.showToast('Could not acquire GPS position.', type: ToastType.error);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _pingLoading = false);
+        context.showToast('Failed to evaluate location: $e', type: ToastType.error);
+      }
+    }
+  }
+
+  Future<void> _deleteSafeZone(String zoneId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Safe Zone'),
+        content: const Text('Are you sure you want to remove this safe zone boundary?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    try {
+      await _api.delete('/api/location-safety/safe-zones/$zoneId');
+      if (mounted) {
+        context.showToast('Safe zone deleted successfully', type: ToastType.success);
+        _load();
+      }
+    } catch (e) {
+      if (mounted) context.showToast('Failed to delete safe zone', type: ToastType.error);
+    }
+  }
+
+  Future<void> _resolveAlert(String alertId) async {
+    final notesCtrl = TextEditingController(text: 'Caregiver confirmed patient safe and returned home.');
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Resolve Geofence Alert'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Enter resolution note confirming care recipient recovery details:',
+              style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: notesCtrl,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                hintText: 'e.g., Accompanied home safely...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.success),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Resolve Alert', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+    try {
+      await _api.patch('/api/location-safety/alerts/$alertId/resolve', data: {
+        'resolutionNotes': notesCtrl.text.trim(),
+      });
+      if (mounted) {
+        context.showToast('Alert resolved safely', type: ToastType.success);
+        _load();
+      }
+    } catch (e) {
+      if (mounted) context.showToast('Failed to resolve alert', type: ToastType.error);
     }
   }
 
@@ -177,8 +326,10 @@ class _LocationScreenState extends State<LocationScreen> {
                     }
                   },
                   icon: const Icon(Icons.my_location, size: 16, color: AppColors.primary),
-                  label: const Text('Use My Current GPS Location',
-                      style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
+                  label: const Text(
+                    'Use My Current GPS Location',
+                    style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 AppButton(
@@ -219,22 +370,156 @@ class _LocationScreenState extends State<LocationScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(AppSpacing.base),
                 children: [
+                  // 1. ACTIVE GEOFENCE BREACH ALERT BANNER
+                  if (_activeAlerts.isNotEmpty) ...[
+                    ..._activeAlerts.map((alert) {
+                      final driftM = alert['driftDistanceM'] ?? 0;
+                      final mapUrl = alert['mapUrl'] ?? '';
+                      final alertId = alert['id'] ?? '';
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.errorFaint,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.error.withValues(alpha: 0.4), width: 1.5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 24),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'CRITICAL: Safe Zone Breach Detected!',
+                                    style: AppTypography.bodyBold(size: AppTypography.md, color: AppColors.error),
+                                  ),
+                                ),
+                                AppBadge(label: 'ACTIVE', variant: BadgeVariant.error),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Patient has drifted ${driftM}m beyond configured safe boundaries. Emergency tracking active.',
+                              style: AppTypography.body(size: AppTypography.sm, color: AppColors.textPrimary),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Last Known: Lat ${alert['lastKnownLat']}, Lng ${alert['lastKnownLng']}',
+                              style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                if (mapUrl.isNotEmpty)
+                                  Expanded(
+                                    child: OutlinedButton.icon(
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: AppColors.primary,
+                                        side: const BorderSide(color: AppColors.primary),
+                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                      ),
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(text: mapUrl));
+                                        context.showToast('Google Maps URL copied to clipboard!', type: ToastType.success);
+                                      },
+                                      icon: const Icon(Icons.map_outlined, size: 16),
+                                      label: const Text('Copy Map Link', style: TextStyle(fontSize: 12)),
+                                    ),
+                                  ),
+                                const SizedBox(width: 8),
+                                if (context.watch<AuthProvider>().canWrite && alertId.isNotEmpty)
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.success,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                      ),
+                                      onPressed: () => _resolveAlert(alertId),
+                                      icon: const Icon(Icons.check_circle_outline, size: 16),
+                                      label: const Text('Resolve Alert', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+
+                  // 2. ACTIVE EMERGENCY TRACKING CARD
+                  if (_isTrackingActive && _trackingSession != null) ...[
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.accent,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text('Live Emergency Tracking Window', style: AppTypography.bodyBold(size: AppTypography.sm)),
+                              ),
+                              AppBadge(label: '30m Window', variant: BadgeVariant.accent),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Time-boxed emergency tracking is actively recording breadcrumb pings to protect patient privacy.',
+                            style: AppTypography.body(size: AppTypography.xs, color: AppColors.textMuted),
+                          ),
+                          if (_trackingSession!['pings'] != null && (_trackingSession!['pings'] as List).isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              'Breadcrumb trail (${(_trackingSession!['pings'] as List).length} pings recorded)',
+                              style: AppTypography.bodySemiBold(size: AppTypography.xs),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // 3. OVERVIEW & MANUAL GPS FIX CARD
                   AppCard(
                     child: Column(
                       children: [
-                        const Icon(Icons.location_on, size: 48, color: AppColors.accent),
-                        const SizedBox(height: 12),
+                        const Icon(Icons.location_on, size: 40, color: AppColors.accent),
+                        const SizedBox(height: 8),
                         Text('Location Safety & Geofencing', style: AppTypography.bodyBold(size: AppTypography.lg)),
                         const SizedBox(height: 4),
                         Text(
-                          'Define safe zones for wandering-risk care recipients. Receive immediate alerts if they leave designated boundaries.',
+                          'Designated safe zones for wandering-risk care recipients. Automatic alerts trigger if boundaries are breached.',
                           textAlign: TextAlign.center,
                           style: AppTypography.body(size: AppTypography.sm, color: AppColors.textMuted),
+                        ),
+                        const SizedBox(height: 16),
+                        AppButton(
+                          label: _pingLoading ? 'Evaluating Position...' : 'Ping My Current GPS Location',
+                          variant: AppButtonVariant.outline,
+                          icon: Icons.my_location,
+                          onPressed: _pingLoading ? null : _pingCurrentLocation,
+                          loading: _pingLoading,
+                          fullWidth: true,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // 4. CONFIGURED SAFE ZONES HEADER
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -248,6 +533,8 @@ class _LocationScreenState extends State<LocationScreen> {
                     ],
                   ),
                   const SizedBox(height: 12),
+
+                  // 5. SAFE ZONES LIST
                   if (_geofences.isEmpty)
                     AppCard(
                       padding: const EdgeInsets.symmetric(vertical: 24),
@@ -257,8 +544,10 @@ class _LocationScreenState extends State<LocationScreen> {
                           const SizedBox(height: 8),
                           Text('No safe zones configured', style: AppTypography.bodyBold(size: AppTypography.md)),
                           const SizedBox(height: 4),
-                          Text('Add boundaries to monitor wandering risk',
-                              style: AppTypography.body(size: AppTypography.sm, color: AppColors.textMuted)),
+                          Text(
+                            'Add boundaries to monitor wandering risk',
+                            style: AppTypography.body(size: AppTypography.sm, color: AppColors.textMuted),
+                          ),
                           const SizedBox(height: 16),
                           AppButton(
                             label: 'Add Safe Zone',
@@ -272,6 +561,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     ..._geofences.map((gf) {
                       final radius = gf['radiusMeters'] ?? gf['radius'] ?? '—';
                       final isActive = gf['isActive'] ?? gf['active'] ?? true;
+                      final zoneId = gf['id']?.toString() ?? '';
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: AppCard(
@@ -303,6 +593,12 @@ class _LocationScreenState extends State<LocationScreen> {
                                 label: isActive == true ? 'Active' : 'Inactive',
                                 variant: isActive == true ? BadgeVariant.success : BadgeVariant.muted,
                               ),
+                              if (context.watch<AuthProvider>().canWrite && zoneId.isNotEmpty)
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                                  onPressed: () => _deleteSafeZone(zoneId),
+                                  tooltip: 'Delete Zone',
+                                ),
                             ],
                           ),
                         ),
