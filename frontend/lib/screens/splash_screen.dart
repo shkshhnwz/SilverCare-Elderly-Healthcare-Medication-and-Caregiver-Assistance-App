@@ -41,15 +41,13 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: AppColors.primaryFaint,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.primary, width: 2),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Image.asset(
+                'assets/brand/silvercare-app-icon-512x512.png',
+                width: 96,
+                height: 96,
               ),
-              child: const Center(child: Text('🏥', style: TextStyle(fontSize: 44))),
             ),
             const SizedBox(height: 20),
             Text('SilverCare',

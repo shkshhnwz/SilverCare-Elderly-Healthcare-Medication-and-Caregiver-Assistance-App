@@ -1,0 +1,22 @@
+<svg viewBox="0 0 200 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&amp;display=swap');
+    .wm-silver {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 600;
+      font-size: 32px;
+      letter-spacing: -0.6px;
+      fill: #000000;
+    }
+    .wm-care {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: -0.6px;
+      fill: #000000;
+    }
+  </style>
+  <text x="0" y="34">
+    <tspan class="wm-silver">Silver</tspan><tspan class="wm-care">Care</tspan>
+  </text>
+</svg>

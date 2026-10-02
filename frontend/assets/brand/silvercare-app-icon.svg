@@ -1,0 +1,43 @@
+<svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#114E5A"/>
+      <stop offset="40%" stop-color="#0C3B44"/>
+      <stop offset="100%" stop-color="#08262C"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.30"/>
+      <stop offset="25%" stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="subtleDrop" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#041215" flood-opacity="0.5"/>
+    </filter>
+    <radialGradient id="softGlow" cx="50%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0"/>
+    </radialGradient>
+    
+  </defs>
+  
+  <!-- Base Background Squircle -->
+  <rect x="0" y="0" width="512" height="512" rx="115" ry="115" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Internal Radial Ambient Light -->
+  <rect x="0" y="0" width="512" height="512" rx="115" ry="115" fill="url(#softGlow)"/>
+
+  <!-- Specular Rim Highlight -->
+  <rect x="1" y="1" width="510" height="510" rx="115" ry="115" fill="none" stroke="url(#rimGrad)" stroke-width="2"/>
+
+  <!-- Symbol: 280x280 at center (x=116, y=116) -->
+  <g transform="translate(116, 116) scale(2.8)" filter="url(#subtleDrop)">
+    <!-- Caregiver / Guardian Figure (Crisp White) -->
+    <circle cx="36" cy="17" r="7.5" fill="#FFFFFF" />
+    <path d="M 36 28 C 24 28, 16 41, 16 57 C 16 73, 30 85, 48 90 C 44 82, 34 73, 34 59 C 34 45, 41 37, 49 33 C 45 29, 40 28, 36 28 Z" fill="#FFFFFF" />
+
+    <!-- Senior / Loved One Figure (Luminous Soft Mint) -->
+    <circle cx="64" cy="21" r="6.5" fill="#2DD4BF" />
+    <path d="M 64 31 C 56 31, 49 38, 49 48 C 48 59, 54 70, 52 90 C 68 84, 84 71, 84 54 C 84 40, 74 31, 64 31 Z" fill="#2DD4BF" />
+  </g>
+</svg>

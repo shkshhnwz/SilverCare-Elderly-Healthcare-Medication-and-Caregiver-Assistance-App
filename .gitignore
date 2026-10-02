@@ -17,6 +17,8 @@ npm-debug.log*
 lerna-debug.log*
 pnpm-debug.log*
 
+/brand
+
 # ==========================================
 # Environment Variables & Secrets (CRITICAL)
 # ==========================================

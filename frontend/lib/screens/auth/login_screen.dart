@@ -199,15 +199,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: AppColors.primaryFaint,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.primary, width: 2),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.asset(
+            'assets/brand/silvercare-app-icon-512x512.png',
+            width: 80,
+            height: 80,
           ),
-          child: const Center(child: Text('🏥', style: TextStyle(fontSize: 36))),
         ),
         const SizedBox(height: AppSpacing.md),
         Text('SilverCare',
